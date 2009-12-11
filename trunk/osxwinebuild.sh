@@ -99,8 +99,6 @@ export ACLOCAL="aclocal -I ${WINEINSTALLPATH}/share/aclocal -I ${X11DIR}/share/a
 
 # make
 export MAKE="make"
-#export MAKEJOBS=$((`system_profiler | grep Cores: | awk -F: '{print $(NF)}'`+1))
-#export MAKEJOBS=$((`sysctl -a | grep -i core_count | awk -F: '{print $(NF)}' | tr -d " "`+1))
 export MAKEJOBS=$((`sysctl machdep.cpu.core_count | awk -F: '{print $(NF)}' | tr -d " "`+1))
 export CONCURRENTMAKE="${MAKE} -j${MAKEJOBS}"
 
@@ -156,6 +154,9 @@ function fail_and_exit {
 #   output a binary and run it
 #
 function compiler_check {
+	if [ ! -d ${WINEBUILDPATH} ] ; then
+		mkdir -p ${WINEBUILDPATH} || fail_and_exit "build directory ${WINEBUILDPATH} doesn't exist and cannot be created"
+	fi
 	cat > ${WINEBUILDPATH}/$$_compiler_check.c << EOF
 #include <stdio.h>
 int main(void)
@@ -172,7 +173,7 @@ EOF
 
 #
 # get_file
-#   receivs a filename, directory and url
+#   receives a filename, directory and url
 #
 function get_file {
 	FILE=${1}
@@ -206,6 +207,9 @@ function get_file {
 function check_sha1sum {
 	FILE=${1}
 	SHASUM=${2}
+	if [ ! -e ${FILE} ] ; then
+		fail_and_exit "${FILE} doesn't seem to exist"
+	fi
 	FILESUM=$(${SHA1SUM} < ${FILE})
 	if [ "${SHASUM}x" != "${FILESUM}x" ] ; then
 		fail_and_exit "failed to verify ${FILE}"
@@ -224,7 +228,7 @@ function clean_source_dir {
 	if [ -d ${BASEDIR}/${SOURCEDIR} ] ; then
 		pushd .
 		echo "cleanning up ${BASEDIR}/${SOURCEDIR} for fresh compile"
-		cd ${BASEDIR}
+		cd ${BASEDIR} || fail_and_exit "could not cd into ${BASEDIR}"
 		rm -rf ${SOURCEDIR} || fail_and_exit "could not clean up ${BASEDIR}/${SOURCEDIR}"
 		popd
 	fi
@@ -243,7 +247,7 @@ function extract_file {
 		mkdir -p ${EXTRACTDIR} || fail_and_exit "could not create ${EXTRACTDIR}"
 	fi
 	pushd .
-	cd ${EXTRACTDIR}
+	cd ${EXTRACTDIR} || fail_and_exit "could not cd into ${EXTRACTDIR}"
 	${EXTRACTCMD} ${EXTRACTFILE} || fail_and_exit "could not extract ${EXTRACTFILE}"
 	echo "successfully extracted ${EXTRACTFILE}"
 	popd
@@ -261,8 +265,8 @@ function configure_package {
 	fi
 	echo "running '${CONFIGURECMD}' in ${SOURCEDIR}"
 	pushd .
-	cd ${SOURCEDIR}
-	${CONFIGURECMD} || fail_and_exit "cound not run configure command '${CONFIGURECMD}' in ${SOURCEDIR}"
+	cd ${SOURCEDIR} || fail_and_exit "source directory ${SOURCEDIR} does not seem to exist"
+	${CONFIGURECMD} || fail_and_exit "could not run configure command '${CONFIGURECMD}' in ${SOURCEDIR}"
 	echo "successfully ran configure in ${SOURCEDIR}"
 	popd
 }
@@ -278,7 +282,7 @@ function build_package {
 		fail_and_exit "${BUILDDIR} does not exist"
 	fi
 	pushd .
-	cd ${BUILDDIR}
+	cd ${BUILDDIR} || fail_and_exit "build directory ${BUILDDIR} does not seem to exist"
 	${BUILDCMD} || fail_and_exit "could not run '${BUILDCMD}' in ${BUILDDIR}"
 	echo "successfully ran '${BUILDCMD}' in ${BUILDDIR}"
 	popd
@@ -294,8 +298,9 @@ function install_package {
 	if [ ! -d ${INSTALLDIR} ] ; then
 		fail_and_exit "${INSTALLDIR} does not exist"
 	fi
+	echo "installing with '${INSTALLCMD}' in ${INSTALLDIR}"
 	pushd .
-	cd ${INSTALLDIR}
+	cd ${INSTALLDIR} || fail_and_exit "directory ${INSTALLDIR} does not seem to exist"
 	${INSTALLCMD}
 	if [ $? != 0 ] ; then
 		echo "some items may have failed to install! check above for errors."
@@ -431,7 +436,7 @@ function extract_jbigkit {
 function build_jbigkit {
 	pushd .
 	echo "now building in ${WINEBUILDPATH}/${JBIGKITDIR}"
-	cd ${WINEBUILDPATH}/${JBIGKITDIR}/libjbig
+	cd ${WINEBUILDPATH}/${JBIGKITDIR}/libjbig || fail_and_exit "could not cd to the JBIG source directory"
 	JBIGKITOBJS=""
 	for JBIGKITSRC in jbig jbig_ar ; do
 		rm -f ${JBIGKITSRC}.o
@@ -439,7 +444,6 @@ function build_jbigkit {
 		${CC} ${CFLAGS} -O2 -Wall -I. -dynamic -ansi -pedantic -c ${JBIGKITSRC}.c -o ${JBIGKITSRC}.o || fail_and_exit "failed building jbigkit's ${JBIGKITSRC}.c"
 		JBIGKITOBJS+="${JBIGKITSRC}.o "
 	done
-	#${CC} ${CFLAGS} -O2 -W -dynamiclib -ansi -pedantic -install_name libjbig.${JBIGKITVER}.dylib -o libjbig.${JBIGKITVER}.dylib ${JBIGKITOBJS} || fail_and_exit "failed to build jbigkit shared library"
 	libtool -dynamic -v -o libjbig.${JBIGKITVER}.dylib -install_name ${WINELIBPATH}/libjbig.${JBIGKITVER}.dylib -compatibility_version ${JBIGKITVER} -current_version ${JBIGKITVER} -lc ${JBIGKITOBJS} || fail_and_exit "failed to build jbigkit shared library"
 	popd
 }
@@ -448,12 +452,12 @@ function install_jbigkit {
 	extract_jbigkit
 	build_jbigkit
 	pushd .
-	cd ${WINEBUILDPATH}/${JBIGKITDIR}/libjbig
-	install -m 755 libjbig.${JBIGKITVER}.dylib ${WINELIBPATH}/libjbig.${JBIGKITVER}.dylib
-	ln -s libjbig.${JBIGKITVER}.dylib ${WINELIBPATH}/libjbig.${JBIGKITMAJOR}.dylib
-	ln -s libjbig.${JBIGKITVER}.dylib ${WINELIBPATH}/libjbig.dylib
+	cd ${WINEBUILDPATH}/${JBIGKITDIR}/libjbig || fail_and_exit "could not cd to the JBIG source directory"
+	install -m 755 libjbig.${JBIGKITVER}.dylib ${WINELIBPATH}/libjbig.${JBIGKITVER}.dylib || fail_and_exit "could not install libjbig dynamic library"
+	ln -s libjbig.${JBIGKITVER}.dylib ${WINELIBPATH}/libjbig.${JBIGKITMAJOR}.dylib || fail_and_exit "could not create libjbig symlink"
+	ln -s libjbig.${JBIGKITVER}.dylib ${WINELIBPATH}/libjbig.dylib || fail_and_exit "could not create libjbig symlink"
 	for JBIGKITHDR in jbig.h jbig_ar.h ; do
-		install -m 644 ${JBIGKITHDR} ${WINEINCLUDEPATH}/${JBIGKITHDR}
+		install -m 644 ${JBIGKITHDR} ${WINEINCLUDEPATH}/${JBIGKITHDR} || fail_and_exit "could not install JBIG header ${JBIGKITHDR}"
 	done
 	popd
 }
@@ -657,7 +661,7 @@ function extract_gsm {
 }
 function build_gsm {
 	pushd .
-	cd ${WINEBUILDPATH}/${GSMDIR}
+	cd ${WINEBUILDPATH}/${GSMDIR} || fail_and_exit "could not cd to the GSM source directory"
 	GSMOBJS=""
 	for GSMSRC in add code debug decode long_term lpc preprocess rpe gsm_destroy gsm_decode gsm_encode gsm_explode gsm_implode gsm_create gsm_print gsm_option short_term table ; do
 		rm -f src/${GSMSRC}.o
@@ -667,7 +671,6 @@ function build_gsm {
 		GSMOBJS+="src/${GSMSRC}.o "
 	done
 	rm -f lib/libgsm.${GSMVER}.${GSMPL}.dylib
-	#${CC} ${CFLAGS} -O2 -W -dynamiclib -ansi -pedantic -o lib/libgsm.${GSMVER}.${GSMPL}.dylib -lc -install_name libgsm.${GSMVER}.${GSMPL}.dylib ${GSMOBJS} || fail_and_exit "failed creating GSM shared library"
 	libtool -dynamic -v -o lib/libgsm.${GSMVER}.${GSMPL}.dylib -install_name ${WINELIBPATH}/libgsm.${GSMVER}.${GSMPL}.dylib -compatibility_version ${GSMVER}.${GSMPL} -current_version ${GSMVER}.${GSMPL} -lc ${GSMOBJS} || fail_and_exit "failed creating GSM shared library"
 	popd
 }
@@ -676,11 +679,11 @@ function install_gsm {
 	extract_gsm
 	build_gsm
 	pushd .
-	cd ${WINEBUILDPATH}/${GSMDIR}
-	install -m 644 inc/gsm.h ${WINEINCLUDEPATH}/gsm.h
-	install -m 755 lib/libgsm.${GSMVER}.${GSMPL}.dylib ${WINELIBPATH}/libgsm.${GSMVER}.${GSMPL}.dylib
-	ln -s libgsm.${GSMVER}.${GSMPL}.dylib ${WINELIBPATH}/libgsm.${GSMMAJOR}.dylib
-	ln -s libgsm.${GSMVER}.${GSMPL}.dylib ${WINELIBPATH}/libgsm.dylib
+	cd ${WINEBUILDPATH}/${GSMDIR} || fail_and_exit "could not cd to the GSM source directory"
+	install -m 644 inc/gsm.h ${WINEINCLUDEPATH}/gsm.h || fail_and_exit "could not install the GSM gsm.h header file"
+	install -m 755 lib/libgsm.${GSMVER}.${GSMPL}.dylib ${WINELIBPATH}/libgsm.${GSMVER}.${GSMPL}.dylib || fail_and_exit "could not install the libgsm dynamic library"
+	ln -s libgsm.${GSMVER}.${GSMPL}.dylib ${WINELIBPATH}/libgsm.${GSMMAJOR}.dylib || fail_and_exit "could not create a libgsm symbolic link"
+	ln -s libgsm.${GSMVER}.${GSMPL}.dylib ${WINELIBPATH}/libgsm.dylib || fail_and_exit "could not create a libgsm symbolic link"
 	popd
 }
 
@@ -706,28 +709,29 @@ function extract_freetype {
 	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${FREETYPEFILE}" "${WINEBUILDPATH}"
 }
 function configure_freetype {
+	# set subpixel rendering flag
+	export FT_CONFIG_OPTION_SUBPIXEL_RENDERING=1
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${FREETYPEDIR}"
+	echo "attempting to enable FreeType's subpixel rendering and bytecode interpretter in ${WINEBUILDPATH}/${FREETYPEDIR}"
 	pushd .
 	cd ${WINEBUILDPATH}/${FREETYPEDIR}
-	export FT_CONFIG_OPTION_SUBPIXEL_RENDERING=1
-	echo "running '${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}' in ${WINEBUILDPATH}/${FREETYPEDIR}"
-	${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} || fail_and_exit "could not run configure in ${WINEBUILDPATH}/${FREETYPEDIR}"
 	# turn on nice but patented hinting
 	if [ ! -f include/freetype/config/ftoption.h.unpatented_hinting ] ; then
 		sed -i.unpatented_hinting \
 			's#\#define TT_CONFIG_OPTION_UNPATENTED_HINTING#/\* \#define TT_CONFIG_OPTION_UNPATENTED_HINTING \*/#g' \
-			include/freetype/config/ftoption.h
+			include/freetype/config/ftoption.h || fail_and_exit "cound not unconfigure TT_CONFIG_OPTION_UNPATENTED_HINTING for freetype"
 	fi
 	if [ ! -f include/freetype/config/ftoption.h.bytecode_interpreter ] ; then
 		sed -i.bytecode_interpreter \
 			's#/\* \#define TT_CONFIG_OPTION_BYTECODE_INTERPRETER \*/#\#define TT_CONFIG_OPTION_BYTECODE_INTERPRETER#g' \
-			include/freetype/config/ftoption.h
+			include/freetype/config/ftoption.h || fail_and_exit "could not conifgure TT_CONFIG_OPTION_BYTECODE_INTERPRETER for freetype"
 	fi
 	if [ ! -f include/freetype/config/ftoption.h.subpixel_rendering ] ; then
 		sed -i.subpixel_rendering \
 			's#/\* \#define FT_CONFIG_OPTION_SUBPIXEL_RENDERING \*/#\#define FT_CONFIG_OPTION_SUBPIXEL_RENDERING#g' \
-			include/freetype/config/ftoption.h
+			include/freetype/config/ftoption.h || fail_and_exit "could not conifgure FT_CONFIG_OPTION_SUBPIXEL_RENDERING for freetype"
 	fi
-	echo "successfully configured and patched in ${WINEBUILDPATH}/${FREETYPEDIR}"
+	echo "successfully configured and patched FreeType in ${WINEBUILDPATH}/${FREETYPEDIR}"
 	popd
 }
 function build_freetype {
@@ -1186,7 +1190,7 @@ WINETRICKSURL="http://www.kegel.com/wine/${WINETRICKSFILE}"
 function get_winetricks {
 	# always get winetricks
 	pushd .
-	cd ${WINESOURCEPATH}
+	cd ${WINESOURCEPATH} || fail_and_exit "could not cd to the Wwine source repo path"
 	echo "downloading ${WINETRICKSURL} to ${WINESOURCEPATH}/${WINETRICKSFILE}"
 	${CURL} ${CURLOPTS} -o ${WINETRICKSFILE}.${TIMESTAMP} ${WINETRICKSURL}
 	if [ $? == 0 ] ; then
