@@ -2,7 +2,7 @@
 #
 # Compile and install Wine and many prerequisites in a self-contained directory.
 #
-# Copyright (C) 2009 Ryan woodsmall <rwoodsmall@gmail.com>
+# Copyright (C) 2009 Ryan Woodsmall <rwoodsmall@gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -639,7 +639,7 @@ function install_libxslt {
 # XXX - CFLAGS is *broken* - have to set everything in CC
 MPG123VER="1.10.0"
 MPG123FILE="mpg123-${MPG123VER}.tar.bz2"
-MPG123URL="http://downloads.sourceforge.net/mpg123//${MPG123FILE}"
+MPG123URL="http://downloads.sourceforge.net/mpg123/${MPG123FILE}"
 MPG123SHA1SUM="6a04d83a32aef1337cd18db26fc08552333bfa13"
 MPG123DIR="mpg123-${MPG123VER}"
 function clean_mpg123 {
