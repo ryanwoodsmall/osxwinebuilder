@@ -45,6 +45,19 @@ export WINEINCLUDEPATH="${WINEINSTALLPATH}/include"
 #  ~/wine/wine-X.Y.Z/lib
 export WINELIBPATH="${WINEINSTALLPATH}/lib"
 
+# darwin/os x major version
+#   10.6 = Darwin 10
+#   10.5 = Darwin 9
+#   ...
+export DARWINMAJ=$(uname -r | awk -F. '{print $1}')
+
+# 16-bit code flag
+#   enable by default, disable on <10.6
+export WIN16FLAG="enable"
+if [ ${DARWINMAJ} -lt 10 ] ; then
+	export WIN16FLAG="disable"
+fi
+
 # os x min version and sdk settings
 #   Mac OS X Tiger/10.4
 #export OSXVERSIONMIN="10.4"
@@ -54,7 +67,10 @@ export WINELIBPATH="${WINEINSTALLPATH}/lib"
 #export OSXVERSIONMIN="10.6"
 #   only set SDK version and deployment target env vars if a min version is set
 if [ ! -z "${OSXVERSIONMIN}" ] ; then
-	export OSXSDK="/Developer/SDKs/MacOSX${OSXVERSIONMIN}.sdk"
+	if [ ${OSXVERSIONMIN} == "10.4" ] ; then
+		export SDKADDITION="u"
+	fi
+	export OSXSDK="/Developer/SDKs/MacOSX${OSXVERSIONMIN}${SDKADDITION+${SDKADDITION}}.sdk"
 	export MACOSX_DEPLOYMENT_TARGET=${OSXVERSIONMIN}
 fi
 
@@ -1234,7 +1250,7 @@ function configure_wine {
 	echo "now configuring wine in ${WINEBUILDPATH}/${WINEDIR}"
 	${CONFIGURE} ${CONFIGURECOMMONPREFIX} \
 		--verbose \
-		--enable-win16 \
+		--${WIN16FLAG}-win16 \
 		--disable-win64 \
 		--without-capi \
 		--without-hal \
