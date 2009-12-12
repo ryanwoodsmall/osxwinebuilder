@@ -1,4 +1,23 @@
 #!/bin/bash
+#
+# Compile and install Wine and many prerequisites in a self-contained directory.
+#
+# Copyright (C) 2009 Ryan woodsmall <rwoodsmall@gmail.com>
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+#
 
 # timestamp
 export TIMESTAMP=$(date '+%Y%m%d%H%M%S')
@@ -618,10 +637,10 @@ function install_libxslt {
 # mpg123
 #
 # XXX - CFLAGS is *broken* - have to set everything in CC
-MPG123VER="1.9.2"
+MPG123VER="1.10.0"
 MPG123FILE="mpg123-${MPG123VER}.tar.bz2"
-MPG123URL="http://www.mpg123.de/download/${MPG123FILE}"
-MPG123SHA1SUM="89d80da4dde0dbed1f605650c06a49d70cabff4c"
+MPG123URL="http://downloads.sourceforge.net/mpg123//${MPG123FILE}"
+MPG123SHA1SUM="6a04d83a32aef1337cd18db26fc08552333bfa13"
 MPG123DIR="mpg123-${MPG123VER}"
 function clean_mpg123 {
 	clean_source_dir "${MPG123DIR}" "${WINEBUILDPATH}"
@@ -907,10 +926,10 @@ function install_libgpg-error {
 #
 # libgcrypt
 #
-LIBGCRYPTVER="1.4.4"
+LIBGCRYPTVER="1.4.5"
 LIBGCRYPTFILE="libgcrypt-${LIBGCRYPTVER}.tar.bz2"
 LIBGCRYPTURL="ftp://ftp.gnupg.org/gcrypt/libgcrypt/${LIBGCRYPTFILE}"
-LIBGCRYPTSHA1SUM="3987f0efcbb7048c136d5c859e88eee1763a14f6"
+LIBGCRYPTSHA1SUM="ef7ecbd3a03a7978094366bcd1257b3654608d28"
 LIBGCRYPTDIR="libgcrypt-${LIBGCRYPTVER}"
 function clean_libgcrypt {
 	clean_source_dir "${LIBGCRYPTDIR}" "${WINEBUILDPATH}"
