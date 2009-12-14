@@ -71,9 +71,13 @@ export WINELIBPATH="${WINEINSTALLPATH}/lib"
 export DARWINMAJ=$(uname -r | awk -F. '{print $1}')
 
 # 16-bit code flag
-#   enable by default, disable on <10.6
+#   enable by default, disable on 10.5
+#   XXX - should be checking Xcode version
+#   2.x can build 16-bit code, works on 10.4, 10.5, 10.6
+#   3.0,3.1 CANNOT build 16-bit code, work on 10.5+
+#   3.2 can build 16-bit code, works only on 10.6
 export WIN16FLAG="enable"
-if [ ${DARWINMAJ} -lt 10 ] ; then
+if [ ${DARWINMAJ} -eq 9 ] ; then
 	export WIN16FLAG="disable"
 fi
 
