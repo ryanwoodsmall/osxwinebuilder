@@ -1,0 +1,4 @@
+README for osxwinebuilder
+
+This is an attempt at creating a simple script to compile Wine and all of its
+dependencies on Mac OS X.  More information to come.
