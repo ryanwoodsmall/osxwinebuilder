@@ -19,20 +19,27 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
+# wine version
+#   wine-X.Y.Z
+export WINEVERSION="1.1.34"
+
 # timestamp
 export TIMESTAMP=$(date '+%Y%m%d%H%M%S')
+
+# fail_and_exit
+#   first function defined since it will be called if there are failures
+function fail_and_exit {
+        echo "${@} - exiting"
+        exit 1
+}
 
 # wine dir
 #   where everything lives - ~/wine by default
 export WINEBASEDIR="${HOME}/wine"
 #   make the base dir if it doesn't exist
 if [ ! -d ${WINEBASEDIR} ] ; then
-	mkdir -p ${WINEBASEDIR} || exit
+	mkdir -p ${WINEBASEDIR} || fail_and_exit "could not create ${WINEBASEDIR}"
 fi
-
-# wine version
-#   wine-X.Y.Z
-export WINEVERSION="1.1.34"
 
 # installation path
 #   ~/wine/wine-X.Y.Z
@@ -42,14 +49,14 @@ export WINEINSTALLPATH="${WINEBASEDIR}/wine-${WINEVERSION}"
 #   ~/wine/source
 export WINESOURCEPATH="${WINEBASEDIR}/source"
 if [ ! -d ${WINESOURCEPATH} ] ; then
-	mkdir -p ${WINESOURCEPATH} || exit
+	mkdir -p ${WINESOURCEPATH} || fail_and_exit "could not create ${WINESOURCEPATH}"
 fi
 
 # build path
 #   ~/wine/build
 export WINEBUILDPATH="${WINEBASEDIR}/build"
 if [ ! -d ${WINEBUILDPATH} ] ; then
-	mkdir -p ${WINEBUILDPATH} || exit
+	mkdir -p ${WINEBUILDPATH} || fail_and_exit "could not create ${WINEBUILDPATH}"
 fi
 
 # binary path
@@ -164,29 +171,8 @@ export PATH=$(echo $PATH | tr ":" "\n" | egrep -v ^"(/opt/local|/sw|/opt/gentoo)
 export PATH="${WINEBINPATH}:${X11BIN}:${PATH}"
 
 #
-# functions
-#   common steps for (pretty much) each source build
-#     clean
-#     get
-#     check
-#     extract
-#     configure
-#     build
-#     install
-#
-
-#
 # helpers
 #
-
-#
-# fail_and_exit
-#   defined first since it will be called if there are failures
-#
-function fail_and_exit {
-	echo "${@} - exiting"
-	exit 1
-}
 
 #
 # compiler_check
@@ -221,14 +207,14 @@ function get_file {
 	if [ ! -d ${DIRECTORY} ] ; then
 		mkdir -p ${DIRECTORY} || fail_and_exit "could not create directory ${DIRECTORY}"
 	fi
-	pushd .
-	cd ${DIRECTORY}
+	pushd . >/dev/null 2>&1
+	cd ${DIRECTORY} || fail_and_exit "could not cd to ${DIRECTORY}"
 	if [ ! -f ${FILE} ] ; then
 		echo "downloading file ${URL} to ${DIRECTORY}/${FILE}"
 		${CURL} ${CURLOPTS} -o ${FILE} ${URL}
 	else
 		echo "${DIRECTORY}/${FILE} already exists - not fetching"
-		popd
+		popd >/dev/null 2>&1
 		return
 	fi
 	if [ $? != 0 ] ; then
@@ -236,7 +222,7 @@ function get_file {
 	else
 		echo "successfully downloaded ${URL} to ${DIRECTORY}/${FILE}"
 	fi
-	popd
+	popd >/dev/null 2>&1
 } 
 
 #
@@ -265,11 +251,11 @@ function clean_source_dir {
 	SOURCEDIR=${1}
 	BASEDIR=${2}
 	if [ -d ${BASEDIR}/${SOURCEDIR} ] ; then
-		pushd .
+		pushd . >/dev/null 2>&1
 		echo "cleanning up ${BASEDIR}/${SOURCEDIR} for fresh compile"
 		cd ${BASEDIR} || fail_and_exit "could not cd into ${BASEDIR}"
 		rm -rf ${SOURCEDIR} || fail_and_exit "could not clean up ${BASEDIR}/${SOURCEDIR}"
-		popd
+		popd >/dev/null 2>&1
 	fi
 }
 
@@ -285,11 +271,11 @@ function extract_file {
 	if [ ! -d ${EXTRACTDIR} ] ; then
 		mkdir -p ${EXTRACTDIR} || fail_and_exit "could not create ${EXTRACTDIR}"
 	fi
-	pushd .
+	pushd . >/dev/null 2>&1
 	cd ${EXTRACTDIR} || fail_and_exit "could not cd into ${EXTRACTDIR}"
 	${EXTRACTCMD} ${EXTRACTFILE} || fail_and_exit "could not extract ${EXTRACTFILE}"
 	echo "successfully extracted ${EXTRACTFILE}"
-	popd
+	popd >/dev/null 2>&1
 }
 
 #
@@ -303,11 +289,11 @@ function configure_package {
 		fail_and_exit "could not find ${SOURCEDIR}"
 	fi
 	echo "running '${CONFIGURECMD}' in ${SOURCEDIR}"
-	pushd .
+	pushd . >/dev/null 2>&1
 	cd ${SOURCEDIR} || fail_and_exit "source directory ${SOURCEDIR} does not seem to exist"
 	${CONFIGURECMD} || fail_and_exit "could not run configure command '${CONFIGURECMD}' in ${SOURCEDIR}"
 	echo "successfully ran configure in ${SOURCEDIR}"
-	popd
+	popd >/dev/null 2>&1
 }
 
 #
@@ -320,11 +306,11 @@ function build_package {
 	if [ ! -d ${BUILDDIR} ] ; then
 		fail_and_exit "${BUILDDIR} does not exist"
 	fi
-	pushd .
+	pushd . >/dev/null 2>&1
 	cd ${BUILDDIR} || fail_and_exit "build directory ${BUILDDIR} does not seem to exist"
 	${BUILDCMD} || fail_and_exit "could not run '${BUILDCMD}' in ${BUILDDIR}"
 	echo "successfully ran '${BUILDCMD}' in ${BUILDDIR}"
-	popd
+	popd >/dev/null 2>&1
 }
 
 #
@@ -338,7 +324,7 @@ function install_package {
 		fail_and_exit "${INSTALLDIR} does not exist"
 	fi
 	echo "installing with '${INSTALLCMD}' in ${INSTALLDIR}"
-	pushd .
+	pushd . >/dev/null 2>&1
 	cd ${INSTALLDIR} || fail_and_exit "directory ${INSTALLDIR} does not seem to exist"
 	${INSTALLCMD}
 	if [ $? != 0 ] ; then
@@ -346,8 +332,20 @@ function install_package {
 	else
 		echo "succesfully ran '${INSTALLCMD}' in ${INSTALLDIR}'"
 	fi
-	popd
+	popd >/dev/null 2>&1
 }
+
+#
+# package functions
+#   common steps for (pretty much) each source build
+#     clean
+#     get
+#     check
+#     extract
+#     configure
+#     build
+#     install
+#
 
 #
 # pkg-config
@@ -473,7 +471,7 @@ function extract_jbigkit {
 	extract_file "${TARGZ}" "${WINESOURCEPATH}/${JBIGKITFILE}" "${WINEBUILDPATH}"
 }
 function build_jbigkit {
-	pushd .
+	pushd . >/dev/null 2>&1
 	echo "now building in ${WINEBUILDPATH}/${JBIGKITDIR}"
 	cd ${WINEBUILDPATH}/${JBIGKITDIR}/libjbig || fail_and_exit "could not cd to the JBIG source directory"
 	JBIGKITOBJS=""
@@ -483,22 +481,25 @@ function build_jbigkit {
 		${CC} ${CFLAGS} -O2 -Wall -I. -dynamic -ansi -pedantic -c ${JBIGKITSRC}.c -o ${JBIGKITSRC}.o || fail_and_exit "failed building jbigkit's ${JBIGKITSRC}.c"
 		JBIGKITOBJS+="${JBIGKITSRC}.o "
 	done
+	echo "creating libjbig shared library with libtool"
 	libtool -dynamic -v -o libjbig.${JBIGKITVER}.dylib -install_name ${WINELIBPATH}/libjbig.${JBIGKITVER}.dylib -compatibility_version ${JBIGKITVER} -current_version ${JBIGKITVER} -lc ${JBIGKITOBJS} || fail_and_exit "failed to build jbigkit shared library"
-	popd
+	popd >/dev/null 2>&1
 }
 function install_jbigkit {
 	clean_jbigkit
 	extract_jbigkit
 	build_jbigkit
-	pushd .
+	pushd . >/dev/null 2>&1
 	cd ${WINEBUILDPATH}/${JBIGKITDIR}/libjbig || fail_and_exit "could not cd to the JBIG source directory"
+	echo "installing libjbig shared library and symbolic links"
 	install -m 755 libjbig.${JBIGKITVER}.dylib ${WINELIBPATH}/libjbig.${JBIGKITVER}.dylib || fail_and_exit "could not install libjbig dynamic library"
 	ln -s libjbig.${JBIGKITVER}.dylib ${WINELIBPATH}/libjbig.${JBIGKITMAJOR}.dylib || fail_and_exit "could not create libjbig symlink"
 	ln -s libjbig.${JBIGKITVER}.dylib ${WINELIBPATH}/libjbig.dylib || fail_and_exit "could not create libjbig symlink"
+	echo "installing libjbig header files"
 	for JBIGKITHDR in jbig.h jbig_ar.h ; do
 		install -m 644 ${JBIGKITHDR} ${WINEINCLUDEPATH}/${JBIGKITHDR} || fail_and_exit "could not install JBIG header ${JBIGKITHDR}"
 	done
-	popd
+	popd >/dev/null 2>&1
 }
 
 #
@@ -699,7 +700,7 @@ function extract_gsm {
 	extract_file "${TARGZ}" "${WINESOURCEPATH}/${GSMFILE}" "${WINEBUILDPATH}"
 }
 function build_gsm {
-	pushd .
+	pushd . >/dev/null 2>&1
 	cd ${WINEBUILDPATH}/${GSMDIR} || fail_and_exit "could not cd to the GSM source directory"
 	GSMOBJS=""
 	for GSMSRC in add code debug decode long_term lpc preprocess rpe gsm_destroy gsm_decode gsm_encode gsm_explode gsm_implode gsm_create gsm_print gsm_option short_term table ; do
@@ -710,20 +711,23 @@ function build_gsm {
 		GSMOBJS+="src/${GSMSRC}.o "
 	done
 	rm -f lib/libgsm.${GSMVER}.${GSMPL}.dylib
+	echo "creating libgsm dynamic library"
 	libtool -dynamic -v -o lib/libgsm.${GSMVER}.${GSMPL}.dylib -install_name ${WINELIBPATH}/libgsm.${GSMVER}.${GSMPL}.dylib -compatibility_version ${GSMVER}.${GSMPL} -current_version ${GSMVER}.${GSMPL} -lc ${GSMOBJS} || fail_and_exit "failed creating GSM shared library"
-	popd
+	popd >/dev/null 2>&1
 }
 function install_gsm {
 	clean_gsm
 	extract_gsm
 	build_gsm
-	pushd .
+	pushd . >/dev/null 2>&1
 	cd ${WINEBUILDPATH}/${GSMDIR} || fail_and_exit "could not cd to the GSM source directory"
-	install -m 644 inc/gsm.h ${WINEINCLUDEPATH}/gsm.h || fail_and_exit "could not install the GSM gsm.h header file"
+	echo "installing libgsm shared library and symbolic links"
 	install -m 755 lib/libgsm.${GSMVER}.${GSMPL}.dylib ${WINELIBPATH}/libgsm.${GSMVER}.${GSMPL}.dylib || fail_and_exit "could not install the libgsm dynamic library"
 	ln -s libgsm.${GSMVER}.${GSMPL}.dylib ${WINELIBPATH}/libgsm.${GSMMAJOR}.dylib || fail_and_exit "could not create a libgsm symbolic link"
 	ln -s libgsm.${GSMVER}.${GSMPL}.dylib ${WINELIBPATH}/libgsm.dylib || fail_and_exit "could not create a libgsm symbolic link"
-	popd
+	echo "installing libgsm header file"
+	install -m 644 inc/gsm.h ${WINEINCLUDEPATH}/gsm.h || fail_and_exit "could not install the GSM gsm.h header file"
+	popd >/dev/null 2>&1
 }
 
 #
@@ -752,8 +756,8 @@ function configure_freetype {
 	export FT_CONFIG_OPTION_SUBPIXEL_RENDERING=1
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${FREETYPEDIR}"
 	echo "attempting to enable FreeType's subpixel rendering and bytecode interpretter in ${WINEBUILDPATH}/${FREETYPEDIR}"
-	pushd .
-	cd ${WINEBUILDPATH}/${FREETYPEDIR}
+	pushd . >/dev/null 2>&1
+	cd ${WINEBUILDPATH}/${FREETYPEDIR} || fail_and_exit "could not cd to ${FREETYPEDIR} for patching"
 	# turn on nice but patented hinting
 	if [ ! -f include/freetype/config/ftoption.h.unpatented_hinting ] ; then
 		sed -i.unpatented_hinting \
@@ -771,7 +775,7 @@ function configure_freetype {
 			include/freetype/config/ftoption.h || fail_and_exit "could not conifgure FT_CONFIG_OPTION_SUBPIXEL_RENDERING for freetype"
 	fi
 	echo "successfully configured and patched FreeType in ${WINEBUILDPATH}/${FREETYPEDIR}"
-	popd
+	popd >/dev/null 2>&1
 }
 function build_freetype {
 	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${FREETYPEDIR}"
@@ -1228,8 +1232,8 @@ WINETRICKSFILE="winetricks"
 WINETRICKSURL="http://www.kegel.com/wine/${WINETRICKSFILE}"
 function get_winetricks {
 	# always get winetricks
-	pushd .
-	cd ${WINESOURCEPATH} || fail_and_exit "could not cd to the Wwine source repo path"
+	pushd . >/dev/null 2>&1
+	cd ${WINESOURCEPATH} || fail_and_exit "could not cd to the Wine source repo path"
 	echo "downloading ${WINETRICKSURL} to ${WINESOURCEPATH}/${WINETRICKSFILE}"
 	${CURL} ${CURLOPTS} -o ${WINETRICKSFILE}.${TIMESTAMP} ${WINETRICKSURL}
 	if [ $? == 0 ] ; then
@@ -1238,7 +1242,7 @@ function get_winetricks {
 		fi
 		mv ${WINETRICKSFILE}.${TIMESTAMP} ${WINETRICKSFILE}
 	fi
-	popd
+	popd >/dev/null 2>&1
 }
 function install_winetricks {
 	if [ -f "${WINESOURCEPATH}/${WINETRICKSFILE}" ] ; then
@@ -1268,8 +1272,8 @@ function extract_wine {
 	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${WINEFILE}" "${WINEBUILDPATH}"
 }
 function configure_wine {
-	pushd .
-	cd ${WINEBUILDPATH}/${WINEDIR}
+	pushd . >/dev/null 2>&1
+	cd ${WINEBUILDPATH}/${WINEDIR} || fail_and_exit "could not cd into ${WINEBUILDPATH}/${WINEDIR} to configure Wine"
 	echo "now configuring wine in ${WINEBUILDPATH}/${WINEDIR}"
 	${CONFIGURE} ${CONFIGURECOMMONPREFIX} \
 		--verbose \
@@ -1302,7 +1306,7 @@ function configure_wine {
 		--x-includes=${X11INC} \
 		--x-libraries=${X11LIB} || fail_and_exit "could not configure wine in ${WINEBUILDPATH}/${WINEDIR}"
 	echo "successfully configured wine in ${WINEBUILDPATH}/${WINEDIR}"
-	popd
+	popd >/dev/null 2>&1
 }
 function depend_wine {
 	build_package "${MAKE} depend" "${WINEBUILDPATH}/${WINEDIR}"
