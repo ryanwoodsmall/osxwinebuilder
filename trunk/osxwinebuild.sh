@@ -21,7 +21,7 @@
 
 # wine version
 #   wine-X.Y.Z
-export WINEVERSION="1.1.34"
+export WINEVERSION="1.1.35"
 
 # timestamp
 export TIMESTAMP=$(date '+%Y%m%d%H%M%S')
@@ -1258,7 +1258,7 @@ function install_winetricks {
 WINEVER=${WINEVERSION}
 WINEFILE="wine-${WINEVER}.tar.bz2"
 WINEURL="http://ibiblio.org/pub/linux/system/emulators/wine/${WINEFILE}"
-WINESHA1SUM="8b27eff6fa4fa29357fbddbc2e284675f7def1a7"
+WINESHA1SUM="9e5fefe469ea104a77b1aaaf56d99c89e905e4b4"
 WINEDIR="wine-${WINEVER}"
 function clean_wine {
 	clean_source_dir "${WINEDIR}" "${WINEBUILDPATH}"
