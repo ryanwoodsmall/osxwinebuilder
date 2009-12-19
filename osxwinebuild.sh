@@ -684,7 +684,8 @@ GSMVER="1.0"
 GSMMAJOR=$(echo ${GSMVER} | awk -F\. '{print $1}')
 GSMPL="13"
 GSMFILE="gsm-${GSMVER}.${GSMPL}.tar.gz"
-GSMURL="http://user.cs.tu-berlin.de/~jutta/gsm/${GSMFILE}"
+#GSMURL="http://user.cs.tu-berlin.de/~jutta/gsm/${GSMFILE}"
+GSMURL="http://http://ffmpeg.arrozcru.org/autobuilds/extra/sources/${GSMFILE}"
 GSMSHA1SUM="668b0a180039a50d379b3d5a22e78da4b1d90afc"
 GSMDIR="gsm-${GSMVER}-pl${GSMPL}"
 function clean_gsm {
