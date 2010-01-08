@@ -21,7 +21,7 @@
 
 # wine version
 #   wine-X.Y.Z
-export WINEVERSION="1.1.35"
+export WINEVERSION="1.1.36"
 
 # timestamp
 export TIMESTAMP=$(date '+%Y%m%d%H%M%S')
@@ -83,7 +83,10 @@ export DARWINMAJ=$(uname -r | awk -F. '{print $1}')
 #   2.x can build 16-bit code, works on 10.4, 10.5, 10.6
 #   3.0,3.1 CANNOT build 16-bit code, work on 10.5+
 #   3.2 can build 16-bit code, works only on 10.6
-export WIN16FLAG="enable"
+#export WIN16FLAG="enable"
+# XXX - Wine 1.1.36 16-bit changes may have broken this on 10.6
+# XXX - disable by default so we never touch it
+export WIN16FLAG="disable"
 if [ ${DARWINMAJ} -eq 9 ] ; then
 	export WIN16FLAG="disable"
 fi
@@ -539,10 +542,15 @@ function install_tiff {
 #
 # libpng
 #
-LIBPNGVER="1.2.41"
+# XXX - 1.4.0 doesn't seem to work w/Wine
+#LIBPNGVER="1.4.0"
+LIBPNGVER="1.2.42"
 LIBPNGFILE="libpng-${LIBPNGVER}.tar.gz"
-LIBPNGURL="ftp://ftp.simplesystems.org/pub/libpng/png/src/${LIBPNGFILE}"
-LIBPNGSHA1SUM="c9e5ea884d8f5551de328210ccfc386c60624366"
+LIBPNGURL="http://downloads.sourceforge.net/libpng/${LIBPNGFILE}"
+#LIBPNGURL="ftp://ftp.simplesystems.org/pub/libpng/png/src/${LIBPNGFILE}"
+# XXX - 1.4.0 SHA1 sum
+#LIBPNGSHA1SUM="a85097d4605374b1cd22651da1b4272d491dafc8"
+LIBPNGSHA1SUM="f29893a50fd25750ea9aadf3161468f49e7f7ad4"
 LIBPNGDIR="libpng-${LIBPNGVER}"
 function clean_libpng {
 	clean_source_dir "${LIBPNGDIR}" "${WINEBUILDPATH}"
@@ -1257,8 +1265,8 @@ function install_winetricks {
 #
 WINEVER=${WINEVERSION}
 WINEFILE="wine-${WINEVER}.tar.bz2"
-WINEURL="http://ibiblio.org/pub/linux/system/emulators/wine/${WINEFILE}"
-WINESHA1SUM="9e5fefe469ea104a77b1aaaf56d99c89e905e4b4"
+WINEURL="http://downloads.sourceforge.net/wine/${WINEFILE}"
+WINESHA1SUM="eab5a09ae4e0d89d17e85143e27e1b5458aff5e4"
 WINEDIR="wine-${WINEVER}"
 function clean_wine {
 	clean_source_dir "${WINEDIR}" "${WINEBUILDPATH}"
