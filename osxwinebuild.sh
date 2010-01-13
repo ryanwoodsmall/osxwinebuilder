@@ -167,6 +167,10 @@ export CURLOPTS="-kL"
 export TARGZ="tar -zxvf"
 export TARBZ2="tar -jxvf"
 
+# git needs these?
+export NO_FINK=1
+export NO_DARWIN_PORTS=1
+
 # path
 #   pull out fink, macports, gentoo - what about homebrew?
 export PATH=$(echo $PATH | tr ":" "\n" | egrep -v ^"(/opt/local|/sw|/opt/gentoo)" | xargs echo  | tr " " ":")
@@ -421,10 +425,10 @@ function install_gettext {
 #
 # jpeg
 #
-JPEGVER="7"
+JPEGVER="8"
 JPEGFILE="jpegsrc.v${JPEGVER}.tar.gz"
 JPEGURL="http://www.ijg.org/files/${JPEGFILE}"
-JPEGSHA1SUM="88cced0fc3dbdbc82115e1d08abce4e9d23a4b47"
+JPEGSHA1SUM="1324834b52428d57479faa062f8b2d98d755d85e"
 JPEGDIR="jpeg-${JPEGVER}"
 function clean_jpeg {
 	clean_source_dir "${JPEGDIR}" "${WINEBUILDPATH}"
@@ -1213,6 +1217,40 @@ function install_cabextract {
 }
 
 #
+# git
+#
+GITVERSION="1.6.6"
+GITFILE="git-${GITVERSION}.tar.bz2"
+GITURL="http://kernel.org/pub/software/scm/git/${GITFILE}"
+GITSHA1SUM="21d83108c618d0f90a166b7ce403c9d1166a0d95"
+GITDIR="git-${GITVERSION}"
+function clean_git {
+	clean_source_dir "${GITDIR}" "${WINEBUILDPATH}"
+}
+function get_git {
+	get_file "${GITFILE}" "${WINESOURCEPATH}" "${GITURL}"
+}
+function check_git {
+	check_sha1sum "${WINESOURCEPATH}/${GITFILE}" "${GITSHA1SUM}"
+}
+function extract_git {
+	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${GITFILE}" "${WINEBUILDPATH}"
+}
+function configure_git {
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX}" "${WINEBUILDPATH}/${GITDIR}"
+}
+function build_git {
+	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${GITDIR}"
+}
+function install_git {
+	clean_git
+	extract_git
+	configure_git
+	build_git
+	install_package "${MAKE} install" "${WINEBUILDPATH}/${GITDIR}"
+}
+
+#
 # gecko
 #
 GECKOVERSION="1.0.0"
@@ -1360,6 +1398,7 @@ function get_sources {
 	get_libgphoto2
 	get_sane-backends
 	get_cabextract
+	get_git
 	get_gecko
 	get_winetricks
 	get_wine
@@ -1393,6 +1432,7 @@ function check_sources {
 	check_libgphoto2
 	check_sane-backends
 	check_cabextract
+	check_git
 	check_gecko
 	check_wine
 }
@@ -1425,6 +1465,7 @@ function install_prereqs {
 	install_sane-backends
 	install_unixodbc
 	install_cabextract
+	install_git
 	install_winetricks
 	install_gecko
 }
