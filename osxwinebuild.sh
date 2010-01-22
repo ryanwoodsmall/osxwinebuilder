@@ -21,7 +21,7 @@
 
 # wine version
 #   wine-X.Y.Z
-export WINEVERSION="1.1.36"
+export WINEVERSION="1.1.37"
 
 # timestamp
 export TIMESTAMP=$(date '+%Y%m%d%H%M%S')
@@ -83,10 +83,10 @@ export DARWINMAJ=$(uname -r | awk -F. '{print $1}')
 #   2.x can build 16-bit code, works on 10.4, 10.5, 10.6
 #   3.0,3.1 CANNOT build 16-bit code, work on 10.5+
 #   3.2 can build 16-bit code, works only on 10.6
-#export WIN16FLAG="enable"
+export WIN16FLAG="enable"
 # XXX - Wine 1.1.36 16-bit changes may have broken this on 10.6
 # XXX - disable by default so we never touch it
-export WIN16FLAG="disable"
+#export WIN16FLAG="disable"
 if [ ${DARWINMAJ} -eq 9 ] ; then
 	export WIN16FLAG="disable"
 fi
@@ -1304,7 +1304,7 @@ function install_winetricks {
 WINEVER=${WINEVERSION}
 WINEFILE="wine-${WINEVER}.tar.bz2"
 WINEURL="http://downloads.sourceforge.net/wine/${WINEFILE}"
-WINESHA1SUM="eab5a09ae4e0d89d17e85143e27e1b5458aff5e4"
+WINESHA1SUM="8a321069f2a0c56d9afc4244830de5fce91cadad"
 WINEDIR="wine-${WINEVER}"
 function clean_wine {
 	clean_source_dir "${WINEDIR}" "${WINEBUILDPATH}"
