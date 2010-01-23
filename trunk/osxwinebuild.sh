@@ -82,11 +82,11 @@ export DARWINMAJ=$(uname -r | awk -F. '{print $1}')
 #   XXX - should be checking Xcode version
 #   2.x can build 16-bit code, works on 10.4, 10.5, 10.6
 #   3.0,3.1 CANNOT build 16-bit code, work on 10.5+
+#     XXX - patched ld/ld64 on 10.5 can be used
 #   3.2 can build 16-bit code, works only on 10.6
 export WIN16FLAG="enable"
-# XXX - Wine 1.1.36 16-bit changes may have broken this on 10.6
-# XXX - disable by default so we never touch it
-#export WIN16FLAG="disable"
+# XXX - Wine 1.1.36 16-bit changes are broken on 10.6
+# XXX - apparently fixed in Wine 1.1.37
 if [ ${DARWINMAJ} -eq 9 ] ; then
 	export WIN16FLAG="disable"
 fi
@@ -1219,10 +1219,10 @@ function install_cabextract {
 #
 # git
 #
-GITVERSION="1.6.6"
+GITVERSION="1.6.6.1"
 GITFILE="git-${GITVERSION}.tar.bz2"
 GITURL="http://kernel.org/pub/software/scm/git/${GITFILE}"
-GITSHA1SUM="21d83108c618d0f90a166b7ce403c9d1166a0d95"
+GITSHA1SUM="6941f1b675ea2047286437c834e6272175102c19"
 GITDIR="git-${GITVERSION}"
 function clean_git {
 	clean_source_dir "${GITDIR}" "${WINEBUILDPATH}"
