@@ -1470,6 +1470,29 @@ function install_prereqs {
 	install_gecko
 }
 
+#
+# build_complete
+#   print out a nice informational message when done
+#
+function build_complete {
+    cat << EOF
+
+Succesffully built and installed Wine version ${WINEVERSION}!
+
+The installation base directory is:
+
+  ${WINEINSTALLPATH}
+
+You can set the following environment variables to use the new Wine install:
+
+  export DYLD_FALLBACK_LIBRARY_PATH="${WINELIBPATH}:${X11LIB}:/usr/lib"
+  export PATH="${WINEBINPATH}:\${PATH}"
+
+Please see http://osxwinebuilder.googlecode.com for more information.
+If you notice any bugs, please file an issue and leave a comment.
+
+EOF
+}
 
 #
 # now that our helper functions are done, run through the actual install
@@ -1494,3 +1517,9 @@ install_prereqs
 
 # install wine, for real, really really real
 install_wine
+
+# we're done
+build_complete
+
+# exit nicely
+exit 0
