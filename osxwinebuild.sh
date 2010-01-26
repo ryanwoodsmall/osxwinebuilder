@@ -1117,10 +1117,10 @@ function install_libusb {
 #
 # libgphoto2
 #
-LIBGPHOTO2VER="2.4.7"
+LIBGPHOTO2VER="2.4.8"
 LIBGPHOTO2FILE="libgphoto2-${LIBGPHOTO2VER}.tar.bz2"
 LIBGPHOTO2URL="http://downloads.sourceforge.net/gphoto/libgphoto/${LIBGPHOTO2FILE}"
-LIBGPHOTO2SHA1SUM="f91aef06204f3b1b0f3e07facba452881bedc2e1"
+LIBGPHOTO2SHA1SUM="6ad0d9ffcafe2e9eba0cae958a4455ebb4cf2037"
 LIBGPHOTO2DIR="libgphoto2-${LIBGPHOTO2VER}"
 function clean_libgphoto2 {
 	clean_source_dir "${LIBGPHOTO2DIR}" "${WINEBUILDPATH}"
