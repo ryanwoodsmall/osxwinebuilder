@@ -21,7 +21,7 @@
 
 # wine version
 #   wine-X.Y.Z
-export WINEVERSION="1.1.37"
+export WINEVERSION="1.1.38"
 
 # timestamp
 export TIMESTAMP=$(date '+%Y%m%d%H%M%S')
@@ -551,9 +551,9 @@ function install_tiff {
 LIBPNGVER="1.2.42"
 LIBPNGFILE="libpng-${LIBPNGVER}.tar.gz"
 LIBPNGURL="http://downloads.sourceforge.net/libpng/${LIBPNGFILE}"
-#LIBPNGURL="ftp://ftp.simplesystems.org/pub/libpng/png/src/${LIBPNGFILE}"
-# XXX - 1.4.0 SHA1 sum
+# XXX - 1.4.0 SHA1
 #LIBPNGSHA1SUM="a85097d4605374b1cd22651da1b4272d491dafc8"
+# XXX - 1.2.42 SHA1
 LIBPNGSHA1SUM="f29893a50fd25750ea9aadf3161468f49e7f7ad4"
 LIBPNGDIR="libpng-${LIBPNGVER}"
 function clean_libpng {
@@ -1304,7 +1304,7 @@ function install_winetricks {
 WINEVER=${WINEVERSION}
 WINEFILE="wine-${WINEVER}.tar.bz2"
 WINEURL="http://downloads.sourceforge.net/wine/${WINEFILE}"
-WINESHA1SUM="8a321069f2a0c56d9afc4244830de5fce91cadad"
+WINESHA1SUM="96eac0edc410c0b59dad2a7b2fddbefdabe41c07"
 WINEDIR="wine-${WINEVER}"
 function clean_wine {
 	clean_source_dir "${WINEDIR}" "${WINEBUILDPATH}"
