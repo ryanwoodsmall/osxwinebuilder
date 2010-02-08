@@ -108,6 +108,7 @@ if [ ! -z "${OSXVERSIONMIN}" ] ; then
 fi
 
 # x11
+#   these need to be changed for Xquartz and the like...
 export X11DIR="/usr/X11"
 export X11BIN="${X11DIR}/bin"
 export X11INC="${X11DIR}/include"
@@ -136,6 +137,8 @@ export CFLAGS="-g -arch i386 -m32 ${OSXSDK+-isysroot $OSXSDK} ${OSXVERSIONMIN+-m
 export CXXFLAGS=${CFLAGS}
 
 # linker flags
+#   always prefer our Wine install path's lib dir
+#   set the sysroot if need be
 export LDFLAGS="-L${WINELIBPATH} ${OSXSDK+-isysroot $OSXSDK} -L${X11LIB} -framework CoreServices -lz -L${X11LIB} -lGL -lGLU"
 
 # pkg-config config
@@ -147,34 +150,44 @@ export PKG_CONFIG_PATH="${WINELIBPATH}/pkgconfig:/usr/lib/pkgconfig:${X11LIB}/pk
 export ACLOCAL="aclocal -I ${WINEINSTALLPATH}/share/aclocal -I ${X11DIR}/share/aclocal -I /usr/share/aclocal"
 
 # make
+#   how many jobs do we run concurrently?
+#   core count + 1
 export MAKE="make"
-export MAKEJOBS=$((`sysctl machdep.cpu.core_count | awk -F: '{print $(NF)}' | tr -d " "`+1))
+export MAKEJOBS=$((`sysctl -n machdep.cpu.core_count | tr -d " "`+1))
 export CONCURRENTMAKE="${MAKE} -j${MAKEJOBS}"
 
 # configure
+#   use a common prefix
+#   disable static libs by default
 export CONFIGURE="./configure"
 export CONFIGURECOMMONPREFIX="--prefix=${WINEINSTALLPATH}"
 export CONFIGURECOMMONLIBOPTS="--enable-shared=yes --enable-static=no"
 
 # SHA-1 sum program
+#   openssl is available everywhere
 export SHA1SUM="openssl dgst -sha1"
 
-# downloader program - curl's avail everywhere!
+# downloader program
+#   curl's avail everywhere!
 export CURL="curl"
 export CURLOPTS="-kL"
 
 # extract commands
+#   currently we only have gzip/bzip2 tar files
 export TARGZ="tar -zxvf"
 export TARBZ2="tar -jxvf"
 
 # git needs these?
+#   not using Git yet, but we will in the future
+#   apparently these have to be set or Git will try to use Fink/MacPorts
+#   so much smarter than us, Git
 export NO_FINK=1
 export NO_DARWIN_PORTS=1
 
 # path
 #   pull out fink, macports, gentoo - what about homebrew?
+#   set our Wine install dir's bin and X11 bin before everything else
 export PATH=$(echo $PATH | tr ":" "\n" | egrep -v ^"(/opt/local|/sw|/opt/gentoo)" | xargs echo  | tr " " ":")
-#   set install dir and X11 bin before everything else
 export PATH="${WINEBINPATH}:${X11BIN}:${PATH}"
 
 #
@@ -546,7 +559,7 @@ function install_tiff {
 #
 # libpng
 #
-# XXX - 1.4.0 doesn't seem to work w/Wine
+# XXX - 1.4.0 doesn't seem to work w/Wine (yet)
 #LIBPNGVER="1.4.0"
 LIBPNGVER="1.2.42"
 LIBPNGFILE="libpng-${LIBPNGVER}.tar.gz"
