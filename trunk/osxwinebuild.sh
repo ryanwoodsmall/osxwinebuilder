@@ -760,10 +760,10 @@ function install_gsm {
 # freetype
 #
 # XXX - CFLAGS issues with GCC 4.2+...
-FREETYPEVER="2.3.11"
+FREETYPEVER="2.3.12"
 FREETYPEFILE="freetype-${FREETYPEVER}.tar.bz2"
 FREETYPEURL="http://downloads.sourceforge.net/freetype/freetype2/${FREETYPEFILE}"
-FREETYPESHA1SUM="693e1b4e423557975c2b2aca63559bc592533a0e"
+FREETYPESHA1SUM="ebf0438429c0bedd310059326d91646c3c91016b"
 FREETYPEDIR="freetype-${FREETYPEVER}"
 function clean_freetype {
 	clean_source_dir "${FREETYPEDIR}" "${WINEBUILDPATH}"
@@ -1232,10 +1232,10 @@ function install_cabextract {
 #
 # git
 #
-GITVERSION="1.6.6.1"
+GITVERSION="1.6.6.2"
 GITFILE="git-${GITVERSION}.tar.bz2"
 GITURL="http://kernel.org/pub/software/scm/git/${GITFILE}"
-GITSHA1SUM="6941f1b675ea2047286437c834e6272175102c19"
+GITSHA1SUM="fb4e44ef73791f16a14c1f7bdb3b1215e25e05ae"
 GITDIR="git-${GITVERSION}"
 function clean_git {
 	clean_source_dir "${GITDIR}" "${WINEBUILDPATH}"
