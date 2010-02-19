@@ -21,7 +21,7 @@
 
 # wine version
 #   wine-X.Y.Z
-export WINEVERSION="1.1.38"
+export WINEVERSION="1.1.39"
 
 # timestamp
 export TIMESTAMP=$(date '+%Y%m%d%H%M%S')
@@ -560,14 +560,14 @@ function install_tiff {
 # libpng
 #
 # XXX - 1.4.0 doesn't seem to work w/Wine (yet)
-#LIBPNGVER="1.4.0"
-LIBPNGVER="1.2.42"
+LIBPNGVER="1.4.0"
+#LIBPNGVER="1.2.42"
 LIBPNGFILE="libpng-${LIBPNGVER}.tar.gz"
 LIBPNGURL="http://downloads.sourceforge.net/libpng/${LIBPNGFILE}"
 # XXX - 1.4.0 SHA1
-#LIBPNGSHA1SUM="a85097d4605374b1cd22651da1b4272d491dafc8"
+LIBPNGSHA1SUM="a85097d4605374b1cd22651da1b4272d491dafc8"
 # XXX - 1.2.42 SHA1
-LIBPNGSHA1SUM="f29893a50fd25750ea9aadf3161468f49e7f7ad4"
+#LIBPNGSHA1SUM="f29893a50fd25750ea9aadf3161468f49e7f7ad4"
 LIBPNGDIR="libpng-${LIBPNGVER}"
 function clean_libpng {
 	clean_source_dir "${LIBPNGDIR}" "${WINEBUILDPATH}"
@@ -1232,10 +1232,10 @@ function install_cabextract {
 #
 # git
 #
-GITVERSION="1.6.6.2"
+GITVERSION="1.7.0"
 GITFILE="git-${GITVERSION}.tar.bz2"
 GITURL="http://kernel.org/pub/software/scm/git/${GITFILE}"
-GITSHA1SUM="fb4e44ef73791f16a14c1f7bdb3b1215e25e05ae"
+GITSHA1SUM="c0b536735a7f593877d61f5a8af72bdad0193d97"
 GITDIR="git-${GITVERSION}"
 function clean_git {
 	clean_source_dir "${GITDIR}" "${WINEBUILDPATH}"
@@ -1317,7 +1317,7 @@ function install_winetricks {
 WINEVER=${WINEVERSION}
 WINEFILE="wine-${WINEVER}.tar.bz2"
 WINEURL="http://downloads.sourceforge.net/wine/${WINEFILE}"
-WINESHA1SUM="96eac0edc410c0b59dad2a7b2fddbefdabe41c07"
+WINESHA1SUM="608c5514c7b0c9d171898b322ab98fa1f44ddec2"
 WINEDIR="wine-${WINEVER}"
 function clean_wine {
 	clean_source_dir "${WINEDIR}" "${WINEBUILDPATH}"
