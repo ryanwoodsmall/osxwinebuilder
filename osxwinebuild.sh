@@ -438,10 +438,10 @@ function install_gettext {
 #
 # jpeg
 #
-JPEGVER="8"
+JPEGVER="8a"
 JPEGFILE="jpegsrc.v${JPEGVER}.tar.gz"
 JPEGURL="http://www.ijg.org/files/${JPEGFILE}"
-JPEGSHA1SUM="1324834b52428d57479faa062f8b2d98d755d85e"
+JPEGSHA1SUM="78077fb22f0b526a506c21199fbca941d5c671a9"
 JPEGDIR="jpeg-${JPEGVER}"
 function clean_jpeg {
 	clean_source_dir "${JPEGDIR}" "${WINEBUILDPATH}"
@@ -559,14 +559,13 @@ function install_tiff {
 #
 # libpng
 #
-# XXX - 1.4.0 doesn't seem to work w/Wine (yet)
-LIBPNGVER="1.4.0"
+LIBPNGVER="1.4.1"
 #LIBPNGVER="1.2.42"
 LIBPNGFILE="libpng-${LIBPNGVER}.tar.gz"
 LIBPNGURL="http://downloads.sourceforge.net/libpng/${LIBPNGFILE}"
-# XXX - 1.4.0 SHA1
-LIBPNGSHA1SUM="a85097d4605374b1cd22651da1b4272d491dafc8"
-# XXX - 1.2.42 SHA1
+# XXX - 1.4.x SHA1
+LIBPNGSHA1SUM="7a3488f5844068d67074f2507dd8a7ed9c69ff04"
+# XXX - 1.2.x SHA1
 #LIBPNGSHA1SUM="f29893a50fd25750ea9aadf3161468f49e7f7ad4"
 LIBPNGDIR="libpng-${LIBPNGVER}"
 function clean_libpng {
@@ -667,10 +666,10 @@ function install_libxslt {
 # mpg123
 #
 # XXX - CFLAGS is *broken* - have to set everything in CC
-MPG123VER="1.10.0"
+MPG123VER="1.10.1"
 MPG123FILE="mpg123-${MPG123VER}.tar.bz2"
 MPG123URL="http://downloads.sourceforge.net/mpg123/${MPG123FILE}"
-MPG123SHA1SUM="6a04d83a32aef1337cd18db26fc08552333bfa13"
+MPG123SHA1SUM="81c67a63a8b698f27c80633c6f1eda179cf36f10"
 MPG123DIR="mpg123-${MPG123VER}"
 function clean_mpg123 {
 	clean_source_dir "${MPG123DIR}" "${WINEBUILDPATH}"
@@ -1232,10 +1231,10 @@ function install_cabextract {
 #
 # git
 #
-GITVERSION="1.7.0"
+GITVERSION="1.7.0.1"
 GITFILE="git-${GITVERSION}.tar.bz2"
 GITURL="http://kernel.org/pub/software/scm/git/${GITFILE}"
-GITSHA1SUM="c0b536735a7f593877d61f5a8af72bdad0193d97"
+GITSHA1SUM="bf77736885f9551a8ba708e186b562e48ce7a926"
 GITDIR="git-${GITVERSION}"
 function clean_git {
 	clean_source_dir "${GITDIR}" "${WINEBUILDPATH}"
@@ -1341,6 +1340,7 @@ function configure_wine {
 		--disable-win64 \
 		--without-capi \
 		--without-hal \
+		--without-v4l \
 		--with-cms \
 		--with-coreaudio \
 		--with-cups \
