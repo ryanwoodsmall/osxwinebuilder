@@ -133,15 +133,52 @@ export CXX="g++"
 #export CXX="distcc g++"
 #   preprocessor/compiler flags
 export CPPFLAGS="-I${WINEINCLUDEPATH} ${OSXSDK+-isysroot $OSXSDK} -I${X11INC}"
+
 # some extra flags based on CPU features
-CPUFLAGS=""
-CPUFLAGS+=$(sysctl -n machdep.cpu.features | tr "[:upper:]" "[:lower:]" | tr " " "\n" | sed s#^#-m#g | egrep -i "(sse|mmx)" | sort -u | xargs echo)
-# this should always be true, but being paranoid never hurt anyone
-if echo $CPUFLAGS | grep \\-msse >/dev/null 2>&1
-then
-	CPUFLAGS+=" -mfpmath=sse"
+export CPUFLAGS=""
+# XXX - no distcc,clang,llvm support yet!
+# some gcc-specific flags
+# a note:
+#   all versions of GCC running on Darwin x86/x86_64 10.4+ require GCC 4.0+
+#   all versions *should* have support for the P4 "nocona" mtune option
+#   all *real* Mac hardware should support SSE3 or better
+#   all of the above are true for the dev kit up to the most recent Macs
+#   that said, don't know how much "optimization" below is going to help
+export USINGGCC=$(echo ${CC} | egrep "(^|/)gcc" | wc -l | tr -d " ")
+if [ ${USINGGCC} -eq 1 ] ; then
+	# gcc versions
+	export GCCVER=$(${CC} --version | head -1 | awk '{print $3}')
+	export GCCMAJVER=$(echo ${GCCVER} | cut -d\. -f 1)
+	export GCCMINVER=$(echo ${GCCVER} | cut -d\. -f 2)
+	# grab all SSE & MMX flags from the CPU feature set
+	export CPUFLAGS+=$(sysctl -n machdep.cpu.features | tr "[:upper:]" "[:lower:]" | tr " " "\n" | sed s#^#-m#g | egrep -i "(sse|mmx)" | sort -u | xargs echo)
+	# this should always be true, but being paranoid never hurt anyone
+	if echo $CPUFLAGS | grep \\-msse >/dev/null 2>&1
+	then
+		export CPUFLAGS+=" -mfpmath=sse"
+	fi
+	# set the mtune on GCC based on version
+	# should never need to check for GCC <4, but why not?
+	if [ ${GCCMAJVER} -eq 4 ] ; then
+		# use p4/nocona on GCC 4.0... ugly
+		if [ ${GCCMINVER} -eq 0 ] ; then
+			export CPUFLAGS+=" -mtune=nocona"
+			# no SSE4+ w/4.0
+			export CPUFLAGS=$(echo ${CPUFLAGS} | tr " " "\n" | sort -u | grep -vi sse4 | xargs echo)
+			# and no SSSE3 on Xcode 2.5; should be gcc 4.0, builds in the 53xx series
+			${CC} --version | grep -i "build 53" >/dev/null 2>&1
+			if [ $? == 0 ] ; then
+				export CPUFLAGS=$(echo ${CPUFLAGS} | tr " " "\n" | sort -u | grep -vi ssse3 | xargs echo)
+			fi
+		fi
+		# use native on 4.2+
+		if [ ${GCCMINVER} -ge 2 ] ; then
+			export CPUFLAGS+=" -mtune=native"
+		fi
+	fi
 fi
-export CFLAGS="-g -arch i386 -m32 -mtune=native ${CPUFLAGS} ${OSXSDK+-isysroot $OSXSDK} ${OSXVERSIONMIN+-mmacosx-version-min=$OSXVERSIONMIN} ${CPPFLAGS}"
+# set our CFLAGS to something useful, and specify we should be using 32-bit
+export CFLAGS="-g -O2 -arch i386 -m32 ${CPUFLAGS} ${OSXSDK+-isysroot $OSXSDK} ${OSXVERSIONMIN+-mmacosx-version-min=$OSXVERSIONMIN} ${CPPFLAGS}"
 export CXXFLAGS=${CFLAGS}
 
 # linker flags
