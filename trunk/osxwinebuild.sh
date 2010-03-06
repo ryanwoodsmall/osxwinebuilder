@@ -133,7 +133,15 @@ export CXX="g++"
 #export CXX="distcc g++"
 #   preprocessor/compiler flags
 export CPPFLAGS="-I${WINEINCLUDEPATH} ${OSXSDK+-isysroot $OSXSDK} -I${X11INC}"
-export CFLAGS="-g -arch i386 -m32 ${OSXSDK+-isysroot $OSXSDK} ${OSXVERSIONMIN+-mmacosx-version-min=$OSXVERSIONMIN} ${CPPFLAGS}"
+# some extra flags based on CPU features
+CPUFLAGS=""
+CPUFLAGS+=$(sysctl -n machdep.cpu.features | tr "[:upper:]" "[:lower:]" | tr " " "\n" | sed s#^#-m#g | egrep -i "(sse|mmx)" | sort -u | xargs echo)
+# this should always be true, but being paranoid never hurt anyone
+if echo $CPUFLAGS | grep \\-msse >/dev/null 2>&1
+then
+	CPUFLAGS+=" -mfpmath=sse"
+fi
+export CFLAGS="-g -arch i386 -m32 -mtune=native ${CPUFLAGS} ${OSXSDK+-isysroot $OSXSDK} ${OSXVERSIONMIN+-mmacosx-version-min=$OSXVERSIONMIN} ${CPPFLAGS}"
 export CXXFLAGS=${CFLAGS}
 
 # linker flags
@@ -210,7 +218,7 @@ int main(void)
   return(0);
 }
 EOF
-	${CC} ${WINEBUILDPATH}/$$_compiler_check.c -o ${WINEBUILDPATH}/$$_compiler_check || fail_and_exit "compiler cannot ouput executables"
+	${CC} ${CFLAGS} ${WINEBUILDPATH}/$$_compiler_check.c -o ${WINEBUILDPATH}/$$_compiler_check || fail_and_exit "compiler cannot ouput executables"
 	${WINEBUILDPATH}/$$_compiler_check | grep hello >/dev/null 2>&1 || fail_and_exit "source compiled fine, but unexpected output was encountered"
 	echo "compiler works fine for a simple test"
 	rm -f ${WINEBUILDPATH}/$$_compiler_check.c ${WINEBUILDPATH}/$$_compiler_check
