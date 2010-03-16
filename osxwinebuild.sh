@@ -642,10 +642,10 @@ function install_libpng {
 #
 # libxml
 #
-LIBXML2VER="2.7.6"
+LIBXML2VER="2.7.7"
 LIBXML2FILE="libxml2-${LIBXML2VER}.tar.gz"
 LIBXML2URL="ftp://xmlsoft.org/libxml2/${LIBXML2FILE}"
-LIBXML2SHA1SUM="b0f6bf8408e759ac4b8b9650005ee8adea911e1d"
+LIBXML2SHA1SUM="8592824a2788574a172cbddcdc72f734ff87abe3"
 LIBXML2DIR="libxml2-${LIBXML2VER}"
 function clean_libxml2 {
 	clean_source_dir "${LIBXML2DIR}" "${WINEBUILDPATH}"
@@ -748,13 +748,12 @@ function install_mpg123 {
 #
 # gsm
 #
-# XXX - GSM is a HUGE HACK on OS X... and it doesn't appear to work.
+# XXX - GSM is a HUGE HACK on OS X... and it may or may not work.
 GSMVER="1.0"
 GSMMAJOR=$(echo ${GSMVER} | awk -F\. '{print $1}')
 GSMPL="13"
 GSMFILE="gsm-${GSMVER}.${GSMPL}.tar.gz"
-#GSMURL="http://user.cs.tu-berlin.de/~jutta/gsm/${GSMFILE}"
-GSMURL="http://ffmpeg.arrozcru.org/autobuilds/extra/sources/${GSMFILE}"
+GSMURL="http://osxwinebuilder.googlecode.com/files/${GSMFILE}"
 GSMSHA1SUM="668b0a180039a50d379b3d5a22e78da4b1d90afc"
 GSMDIR="gsm-${GSMVER}-pl${GSMPL}"
 function clean_gsm {
@@ -1038,10 +1037,10 @@ function install_libgcrypt {
 #
 # gnutls
 #
-GNUTLSVER="2.8.5"
+GNUTLSVER="2.8.6"
 GNUTLSFILE="gnutls-${GNUTLSVER}.tar.bz2"
 GNUTLSURL="ftp://ftp.gnu.org/pub/gnu/gnutls/${GNUTLSFILE}"
-GNUTLSSHA1SUM="5121c52efd4718ad3d8b641d28343b0c6abaa571"
+GNUTLSSHA1SUM="bff911d4fd7389aa6698a644b3748eb2d23715bc"
 GNUTLSDIR="gnutls-${GNUTLSVER}"
 function clean_gnutls {
 	clean_source_dir "${GNUTLSDIR}" "${WINEBUILDPATH}"
@@ -1072,10 +1071,10 @@ function install_gnutls {
 #
 # unixodbc
 #
-UNIXODBCVER="2.2.14"
+UNIXODBCVER="2.2.14-p2"
 UNIXODBCFILE="unixODBC-${UNIXODBCVER}.tar.gz"
 UNIXODBCURL="http://www.unixodbc.org/${UNIXODBCFILE}"
-UNIXODBCSHA1SUM="ab18464c83d30d7b38b8bb58e1dd01e3ec211488"
+UNIXODBCSHA1SUM="7aa71147466f44f8ced4401d7eccc89610038b09"
 UNIXODBCDIR="unixODBC-${UNIXODBCVER}"
 function clean_unixodbc {
 	clean_source_dir "${UNIXODBCDIR}" "${WINEBUILDPATH}"
@@ -1276,10 +1275,10 @@ function install_cabextract {
 #
 # git
 #
-GITVERSION="1.7.0.1"
+GITVERSION="1.7.0.2"
 GITFILE="git-${GITVERSION}.tar.bz2"
 GITURL="http://kernel.org/pub/software/scm/git/${GITFILE}"
-GITSHA1SUM="bf77736885f9551a8ba708e186b562e48ce7a926"
+GITSHA1SUM="82ec53af5950b3c70f8e3c54b347ac476e3c1d51"
 GITDIR="git-${GITVERSION}"
 function clean_git {
 	clean_source_dir "${GITDIR}" "${WINEBUILDPATH}"
