@@ -1,0 +1,50 @@
+#summary Some nice winetricks recipes to use on Mac OS X
+
+= Winetricks =
+
+[http://wiki.winehq.org/winetricks Winetricks] is a nice little program that makes installing a few commonly-used components into a new [http://wiki.jswindle.com/index.php/Wine_Prefixes Wine prefix] very simple.  There are a few nice winetricks you can use to make your Wine environment a little nicer.  All of the examples below should be run from a terminal after installing Wine.  The `winetricks` and `wine` programs need to be in your path as well.  You can verify this with:
+
+{{{
+which wine
+which winetricks
+}}}
+
+The commands above should output the full paths to the program executables.
+
+= Examples =
+
+To simply get a list of what winetricks can do for you:
+{{{
+winetricks --help
+}}}
+
+To set the Wine "soundcard" to Core Audio output, you can run:
+{{{
+winetricks sound=coreaudio
+}}}
+
+To enable [http://en.wikipedia.org/wiki/ClearType Cleartype]-style font smoothing in programs running under Wine:
+{{{
+winetricks allfonts fontfix fontsmooth-rgb
+}}}
+
+To disable the GUI dialog box that pops up on a program crash:
+{{{
+winetricks nocrashdialog
+}}}
+
+= Updating only winetricks =
+
+There are occasionally `winetricks` updates.  To check your `winetricks` version, you can run:
+
+{{{
+winetricks -V
+}}}
+
+You can backup the current `winetricks` script, then grab a newer version and replace what's currently in your path with the commands:
+
+{{{
+cp $(which winetrics){,`date '+%Y%m%d%H%M%S'`}
+curl -kLo $(which winetricks) http://www.kegel.com/wine/winetricks
+winetricks -V
+}}}
