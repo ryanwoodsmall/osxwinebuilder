@@ -28,7 +28,31 @@ To enable [http://en.wikipedia.org/wiki/ClearType ClearType]-style font smoothin
 winetricks allfonts fontfix fontsmooth-rgb
 }}}
 
-To disable the GUI dialog box that pops up on a program crash:
+For Windows Firefox:
+{{{
+winetricks firefox
+}}}
+
+And for IE 6:
+{{{
+winetricks ie6
+}}}
+IE 7:
+{{{
+winetricks ie7
+}}}
+
+Install Windows versions of Adobe's Flash player:
+{{{
+winetricks flash
+}}}
+
+Valve's Steam was recently added to `winetricks` as well!
+{{{
+winetricks steam
+}}}
+
+Disable the GUI dialog box that pops up on a program crash:
 {{{
 winetricks nocrashdialog
 }}}
