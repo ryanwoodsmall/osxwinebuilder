@@ -1,0 +1,39 @@
+#summary List of software packages built along with Wine
+
+= Other Software =
+
+This project builds a number of other packages as prerequisites of Wine.  Some useful links:
+
+  * [http://wiki.winehq.org/MacOSX/Building] - Mac OS X-specific
+  * [http://wiki.winehq.org/Recommended_Packages] - Mostly for Linux/BSD/Solaris, but still useful
+
+I will attempt to keep this page updated with every Subversion check in, but svn commit messages may be more reliable.  License information below is based on both websites and included licensing/copyright/etc. files.
+
+|| *Project* || *Version* || *Home* || *License* || *Other Info* ||
+|| cabextract || 1.2 || [http://www.cabextract.org.uk/] || GPL || used by winetricks ||
+|| !FreeType || 2.3.12 || http://freetype.sourceforge.net/ || GPL/BSD || font rendering in Wine; patented hinting and subpixel rendering enabled ||
+|| Fontconfig || 2.8 || [http://www.fontconfig.org/wiki/] || copyright Keith Packard || font configurations for Wine ||
+|| gecko || varies || [http://wiki.winehq.org/Gecko], [https://developer.mozilla.org/en/Gecko] || Mozilla tri-license (MPL/GPL/LGPL) || used for HTML rendering in Wine ||
+|| gettext || 0.17 || [http://www.gnu.org/software/gettext/] || LGPL/GPL/GFDL || used for translations ||
+|| Git || 1.7.0.2 || [http://git-scm.com/] || GPL || not used (yet) ||
+|| GnuTLS || 2.8.6 || [http://www.gnu.org/software/gnutls/] || LGPL/GPL || used for Wine's secure channel support ||
+|| JBIG-KIT || 2.0 || [http://www.cl.cam.ac.uk/~mgk25/jbigkit/] || GPL || used by tiff ||
+|| jpeg || 8a || [http://www.ijg.org/] || Independent JPEG Group, copyright Thomas G. Lane, Guido Vollbeding || JPEG support in Wine ||
+|| lcms || 1.19 || [http://www.littlecms.com/] || copyright Marti Maria Saguer, MIT license || used for color management in Wine ||
+|| libexif || 0.6.19 || [http://libexif.sourceforge.net/] || LGPL || used by libgphoto2 ||
+|| libgcrypt || 1.4.5 || [http://www.gnupg.org/] || GPL || used by GnuTLS ||
+|| libgpg-error || 1.7 || [http://www.gnupg.org/] || GPL || used by GnuTLS ||
+|| libgphoto2 || 2.4.8 || [http://www.gphoto.org/] || LGPL || used for imaging/camera support in Wine ||
+|| libpng || 1.2.43/1.4.1 || [http://www.libpng.org/] || libpng license || PNG support in Wine ||
+|| libtiff || 3.9.2 || [http://www.remotesensing.org/libtiff/] || coypright Sam Leffler, Silicon Graphics, Inc || used for TIFF support in Wine ||
+|| libxml2 || 2.7.7 || [http://xmlsoft.org/] || copyright Daniel Veillard || XML support in Wine ||
+|| libxslt || 1.1.26 || [http://xmlsoft.org/] || copyright Thomas Broyer, Charlie Bozeman and Daniel Veillard || XSL/XSLT support in Wine ||
+|| libusb || 0.1.12 || [http://www.libusb.org/] || LGPL || used by libgphoto2 ||
+|| lzo || 2.03 || [http://www.oberhumer.com/opensource/lzo/] || GPL || used by GnuTLS ||
+|| mpg123 || 1.10.1 || [http://www.mpg123.de/] || LGPL || used for MP3/audio support in Wine ||
+|| pkg-config || 0.23 || [http://pkg-config.freedesktop.org/wiki/] || GPL v2 or later || used by multiple packages ||
+|| SANE Backends || 1.0.20 || [http://www.sane-project.org/] || GPL || scanner/imaging access in Wine ||
+|| toast (GSM) || 1.0.13 || formerly [http://user.cs.tu-berlin.de/~jutta/toast.html] || see [http://osxwinebuilder.googlecode.com/files/gsm-COPYRIGHT] || used by Wine for audio encode/decode ||
+|| unixODBC || 2.2.14-p2 || [http://www.unixodbc.org/] || LGPL || used for native ODBC bridge to Wine ||
+|| Wine || 1.1.40 || [http://www.winehq.org/] || LGPL || Wine is used for Wine, right? ||
+|| winetricks || varies || [http://wiki.winehq.org/winetricks], [http://code.google.com/p/winezeug/] || LGPL || quick install script for some Windows programs ||
