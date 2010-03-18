@@ -23,7 +23,7 @@ To set the Wine "soundcard" to Core Audio output, you can run:
 winetricks sound=coreaudio
 }}}
 
-To enable [http://en.wikipedia.org/wiki/ClearType Cleartype]-style font smoothing in programs running under Wine:
+To enable [http://en.wikipedia.org/wiki/ClearType ClearType]-style font smoothing in programs running under Wine:
 {{{
 winetricks allfonts fontfix fontsmooth-rgb
 }}}
