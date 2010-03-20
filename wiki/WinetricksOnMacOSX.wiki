@@ -68,7 +68,7 @@ winetricks -V
 You can backup the current `winetricks` script, then grab a newer version and replace what's currently in your path with the commands:
 
 {{{
-cp $(which winetrics){,`date '+%Y%m%d%H%M%S'`}
+cp $(which winetricks){,`date '+%Y%m%d%H%M%S'`}
 curl -kLo $(which winetricks) http://www.kegel.com/wine/winetricks
 winetricks -V
 }}}
