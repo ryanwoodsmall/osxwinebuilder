@@ -711,10 +711,11 @@ function install_libxslt {
 # mpg123
 #
 # XXX - CFLAGS is *broken* - have to set everything in CC
-MPG123VER="1.10.1"
+# XXX - CFLAGS may be fixed in 1.10/1.11 series - test
+MPG123VER="1.11.0"
 MPG123FILE="mpg123-${MPG123VER}.tar.bz2"
 MPG123URL="http://downloads.sourceforge.net/mpg123/${MPG123FILE}"
-MPG123SHA1SUM="81c67a63a8b698f27c80633c6f1eda179cf36f10"
+MPG123SHA1SUM="a5ba4f643d0880ad1b029ca4e2eb9c858dbc290c"
 MPG123DIR="mpg123-${MPG123VER}"
 function clean_mpg123 {
 	clean_source_dir "${MPG123DIR}" "${WINEBUILDPATH}"
@@ -1225,6 +1226,7 @@ function extract_sane-backends {
 	extract_file "${TARGZ}" "${WINESOURCEPATH}/${SANEBACKENDSFILE}" "${WINEBUILDPATH}"
 }
 function configure_sane-backends {
+	# XXX - add "--with-group $(groups | cut -f 1 -d\ )" and test!
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --with-gphoto2" "${WINEBUILDPATH}/${SANEBACKENDSDIR}"
 }
 function build_sane-backends {
@@ -1275,10 +1277,10 @@ function install_cabextract {
 #
 # git
 #
-GITVERSION="1.7.0.2"
+GITVERSION="1.7.0.3"
 GITFILE="git-${GITVERSION}.tar.bz2"
 GITURL="http://kernel.org/pub/software/scm/git/${GITFILE}"
-GITSHA1SUM="82ec53af5950b3c70f8e3c54b347ac476e3c1d51"
+GITSHA1SUM="7244e2ac0c439c9acdd1432072a9ff3dce8bc319"
 GITDIR="git-${GITVERSION}"
 function clean_git {
 	clean_source_dir "${GITDIR}" "${WINEBUILDPATH}"
