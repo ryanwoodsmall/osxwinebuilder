@@ -11,7 +11,7 @@ I will attempt to keep this page updated with every Subversion check in, but svn
 
 || *Project* || *Version* || *Home* || *License* || *Other Info* ||
 || cabextract || 1.2 || [http://www.cabextract.org.uk/] || GPL || used by winetricks ||
-|| !FreeType || 2.3.12 || http://freetype.sourceforge.net/ || GPL/BSD || font rendering in Wine; patented hinting and subpixel rendering enabled ||
+|| !FreeType || 2.3.12 || [http://freetype.sourceforge.net/] || GPL/BSD || font rendering in Wine; patented hinting and subpixel rendering enabled ||
 || Fontconfig || 2.8 || [http://www.fontconfig.org/wiki/] || copyright Keith Packard || font configurations for Wine ||
 || gecko || varies || [http://wiki.winehq.org/Gecko], [https://developer.mozilla.org/en/Gecko] || Mozilla tri-license (MPL/GPL/LGPL) || used for HTML rendering in Wine ||
 || gettext || 0.17 || [http://www.gnu.org/software/gettext/] || LGPL/GPL/GFDL || used for translations ||
@@ -31,7 +31,7 @@ I will attempt to keep this page updated with every Subversion check in, but svn
 || libusb || 0.1.12 || [http://www.libusb.org/] || LGPL || used by libgphoto2 ||
 || lzo || 2.03 || [http://www.oberhumer.com/opensource/lzo/] || GPL || used by GnuTLS ||
 || mpg123 || 1.11.0 || [http://www.mpg123.de/] || LGPL || used for MP3/audio support in Wine ||
-|| pkg-config || 0.23 || [http://pkg-config.freedesktop.org/wiki/] || GPL v2 or later || used by multiple packages ||
+|| pkg-config || 0.23 || [http://pkg-config.freedesktop.org/wiki/] || GPL || used by multiple packages ||
 || SANE Backends || 1.0.20 || [http://www.sane-project.org/] || GPL || scanner/imaging access in Wine ||
 || toast (GSM) || 1.0.13 || formerly [http://user.cs.tu-berlin.de/~jutta/toast.html] || see [http://osxwinebuilder.googlecode.com/files/gsm-COPYRIGHT] || used by Wine for audio encode/decode ||
 || unixODBC || 2.2.14-p2 || [http://www.unixodbc.org/] || LGPL || used for native ODBC bridge to Wine ||
