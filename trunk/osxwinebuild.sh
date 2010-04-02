@@ -21,7 +21,7 @@
 
 # wine version
 #   wine-X.Y.Z
-export WINEVERSION="1.1.41"
+export WINEVERSION="1.1.42"
 
 # timestamp
 export TIMESTAMP=$(date '+%Y%m%d%H%M%S')
@@ -712,10 +712,10 @@ function install_libxslt {
 #
 # XXX - CFLAGS is *broken* - have to set everything in CC
 # XXX - CFLAGS may be fixed in 1.10/1.11 series - test
-MPG123VER="1.11.0"
+MPG123VER="1.12.1"
 MPG123FILE="mpg123-${MPG123VER}.tar.bz2"
 MPG123URL="http://downloads.sourceforge.net/mpg123/${MPG123FILE}"
-MPG123SHA1SUM="a5ba4f643d0880ad1b029ca4e2eb9c858dbc290c"
+MPG123SHA1SUM="eaec53831298ce19f7246830f3058917dae9154d"
 MPG123DIR="mpg123-${MPG123VER}"
 function clean_mpg123 {
 	clean_source_dir "${MPG123DIR}" "${WINEBUILDPATH}"
@@ -1277,10 +1277,10 @@ function install_cabextract {
 #
 # git
 #
-GITVERSION="1.7.0.3"
+GITVERSION="1.7.0.4"
 GITFILE="git-${GITVERSION}.tar.bz2"
 GITURL="http://kernel.org/pub/software/scm/git/${GITFILE}"
-GITSHA1SUM="7244e2ac0c439c9acdd1432072a9ff3dce8bc319"
+GITSHA1SUM="ed4d3375b5ee3640433270d2f2fedaf69d021801"
 GITDIR="git-${GITVERSION}"
 function clean_git {
 	clean_source_dir "${GITDIR}" "${WINEBUILDPATH}"
@@ -1362,7 +1362,7 @@ function install_winetricks {
 WINEVER=${WINEVERSION}
 WINEFILE="wine-${WINEVER}.tar.bz2"
 WINEURL="http://downloads.sourceforge.net/wine/${WINEFILE}"
-WINESHA1SUM="2f634db8bcf39a13f55d61f00eadc1c0c73e02de"
+WINESHA1SUM="ea932f19528a22eacc49f16100dbf2251cb4ad5c"
 WINEDIR="wine-${WINEVER}"
 function clean_wine {
 	clean_source_dir "${WINEDIR}" "${WINEBUILDPATH}"
