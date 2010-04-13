@@ -1174,9 +1174,13 @@ function install_libusb {
 #
 # libgphoto2
 #
+# XXX - 2.4.9 - broken due to usbscsi module
+#LIBGPHOTO2VER="2.4.9"
 LIBGPHOTO2VER="2.4.8"
 LIBGPHOTO2FILE="libgphoto2-${LIBGPHOTO2VER}.tar.bz2"
 LIBGPHOTO2URL="http://downloads.sourceforge.net/gphoto/libgphoto/${LIBGPHOTO2FILE}"
+# XXX - 2.4.9 - SHA1 sum
+#LIBGPHOTO2SHA1SUM="7d876fd650430e4f52fe10e53f378688e6026387"
 LIBGPHOTO2SHA1SUM="6ad0d9ffcafe2e9eba0cae958a4455ebb4cf2037"
 LIBGPHOTO2DIR="libgphoto2-${LIBGPHOTO2VER}"
 function clean_libgphoto2 {
@@ -1277,10 +1281,10 @@ function install_cabextract {
 #
 # git
 #
-GITVERSION="1.7.0.4"
+GITVERSION="1.7.0.5"
 GITFILE="git-${GITVERSION}.tar.bz2"
 GITURL="http://kernel.org/pub/software/scm/git/${GITFILE}"
-GITSHA1SUM="ed4d3375b5ee3640433270d2f2fedaf69d021801"
+GITSHA1SUM="684c21dac937703ab7df9c91f7a6a962620487b2"
 GITDIR="git-${GITVERSION}"
 function clean_git {
 	clean_source_dir "${GITDIR}" "${WINEBUILDPATH}"

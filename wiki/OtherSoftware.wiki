@@ -15,7 +15,7 @@ I will attempt to keep this page updated with every Subversion check in, but svn
 || Fontconfig || 2.8 || [http://www.fontconfig.org/wiki/] || copyright Keith Packard || font configurations for Wine ||
 || gecko || varies || [http://wiki.winehq.org/Gecko], [https://developer.mozilla.org/en/Gecko] || Mozilla tri-license (MPL/GPL/LGPL) || used for HTML rendering in Wine ||
 || gettext || 0.17 || [http://www.gnu.org/software/gettext/] || LGPL/GPL/GFDL || used for translations ||
-|| Git || 1.7.0.4 || [http://git-scm.com/] || GPL || not used (yet) ||
+|| Git || 1.7.0.5 || [http://git-scm.com/] || GPL || not used (yet) ||
 || GnuTLS || 2.8.6 || [http://www.gnu.org/software/gnutls/] || LGPL/GPL || used for Wine's secure channel support ||
 || JBIG-KIT || 2.0 || [http://www.cl.cam.ac.uk/~mgk25/jbigkit/] || GPL || used by tiff ||
 || jpeg || 8a || [http://www.ijg.org/] || Independent JPEG Group, copyright Thomas G. Lane, Guido Vollbeding || JPEG support in Wine ||
