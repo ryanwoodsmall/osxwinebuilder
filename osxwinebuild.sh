@@ -21,7 +21,7 @@
 
 # wine version
 #   wine-X.Y.Z
-export WINEVERSION="1.1.42"
+export WINEVERSION="1.1.43"
 
 # timestamp
 export TIMESTAMP=$(date '+%Y%m%d%H%M%S')
@@ -1366,7 +1366,7 @@ function install_winetricks {
 WINEVER=${WINEVERSION}
 WINEFILE="wine-${WINEVER}.tar.bz2"
 WINEURL="http://downloads.sourceforge.net/wine/${WINEFILE}"
-WINESHA1SUM="ea932f19528a22eacc49f16100dbf2251cb4ad5c"
+WINESHA1SUM="2f77eab13f29b7942d5507ef925c40ff1ecfd3a5"
 WINEDIR="wine-${WINEVER}"
 function clean_wine {
 	clean_source_dir "${WINEDIR}" "${WINEBUILDPATH}"
