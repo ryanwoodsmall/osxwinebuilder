@@ -85,8 +85,6 @@ export DARWINMAJ=$(uname -r | awk -F. '{print $1}')
 #     XXX - patched ld/ld64 on 10.5 can be used
 #   3.2 can build 16-bit code, works only on 10.6
 export WIN16FLAG="enable"
-# XXX - Wine 1.1.36 16-bit changes are broken on 10.6
-# XXX - apparently fixed in Wine 1.1.37
 if [ ${DARWINMAJ} -eq 9 ] ; then
 	export WIN16FLAG="disable"
 fi
@@ -255,7 +253,7 @@ int main(void)
   return(0);
 }
 EOF
-	${CC} ${CFLAGS} ${WINEBUILDPATH}/$$_compiler_check.c -o ${WINEBUILDPATH}/$$_compiler_check || fail_and_exit "compiler cannot ouput executables"
+	${CC} ${CFLAGS} ${WINEBUILDPATH}/$$_compiler_check.c -o ${WINEBUILDPATH}/$$_compiler_check || fail_and_exit "compiler cannot output executables"
 	${WINEBUILDPATH}/$$_compiler_check | grep hello >/dev/null 2>&1 || fail_and_exit "source compiled fine, but unexpected output was encountered"
 	echo "compiler works fine for a simple test"
 	rm -f ${WINEBUILDPATH}/$$_compiler_check.c ${WINEBUILDPATH}/$$_compiler_check
@@ -304,7 +302,7 @@ function check_sha1sum {
 	if [ "${SHASUM}x" != "${FILESUM}x" ] ; then
 		fail_and_exit "failed to verify ${FILE}"
 	else
-		echo "succssfully verified ${FILE}"
+		echo "successfully verified ${FILE}"
 	fi
 }
 
@@ -1174,14 +1172,10 @@ function install_libusb {
 #
 # libgphoto2
 #
-# XXX - 2.4.9 - broken due to usbscsi module
-#LIBGPHOTO2VER="2.4.9"
-LIBGPHOTO2VER="2.4.8"
+LIBGPHOTO2VER="2.4.9.1"
 LIBGPHOTO2FILE="libgphoto2-${LIBGPHOTO2VER}.tar.bz2"
 LIBGPHOTO2URL="http://downloads.sourceforge.net/gphoto/libgphoto/${LIBGPHOTO2FILE}"
-# XXX - 2.4.9 - SHA1 sum
-#LIBGPHOTO2SHA1SUM="7d876fd650430e4f52fe10e53f378688e6026387"
-LIBGPHOTO2SHA1SUM="6ad0d9ffcafe2e9eba0cae958a4455ebb4cf2037"
+LIBGPHOTO2SHA1SUM="7a5fb35b9c050bae3ceac096245071ab1e699af5"
 LIBGPHOTO2DIR="libgphoto2-${LIBGPHOTO2VER}"
 function clean_libgphoto2 {
 	clean_source_dir "${LIBGPHOTO2DIR}" "${WINEBUILDPATH}"
