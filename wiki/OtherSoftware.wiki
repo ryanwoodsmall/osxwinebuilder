@@ -23,7 +23,7 @@ I will attempt to keep this page updated with every Subversion check in, but svn
 || libexif || 0.6.19 || [http://libexif.sourceforge.net/] || LGPL || used by libgphoto2 ||
 || libgcrypt || 1.4.5 || [http://www.gnupg.org/] || GPL || used by GnuTLS ||
 || libgpg-error || 1.7 || [http://www.gnupg.org/] || GPL || used by GnuTLS ||
-|| libgphoto2 || 2.4.8 || [http://www.gphoto.org/] || LGPL || used for imaging/camera support in Wine ||
+|| libgphoto2 || 2.4.9.1 || [http://www.gphoto.org/] || LGPL || used for imaging/camera support in Wine ||
 || libpng || 1.2.43/1.4.1 || [http://www.libpng.org/] || libpng license || PNG support in Wine ||
 || libtiff || 3.9.2 || [http://www.remotesensing.org/libtiff/] || coypright Sam Leffler, Silicon Graphics, Inc || used for TIFF support in Wine ||
 || libxml2 || 2.7.7 || [http://xmlsoft.org/] || copyright Daniel Veillard || XML support in Wine ||
