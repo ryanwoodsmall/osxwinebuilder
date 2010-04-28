@@ -606,9 +606,9 @@ LIBPNGVER="1.4.1"
 #LIBPNGVER="1.2.43"
 LIBPNGFILE="libpng-${LIBPNGVER}.tar.gz"
 LIBPNGURL="http://downloads.sourceforge.net/libpng/${LIBPNGFILE}"
-# XXX - 1.4.x SHA1
+# 1.4.x SHA1 sum
 LIBPNGSHA1SUM="7a3488f5844068d67074f2507dd8a7ed9c69ff04"
-# XXX - 1.2.x SHA1
+# 1.2.x SHA1 sum
 #LIBPNGSHA1SUM="44c1231c74f13b4f3e5870e039abeb35c7860a3f"
 LIBPNGDIR="libpng-${LIBPNGVER}"
 function clean_libpng {
@@ -1070,10 +1070,10 @@ function install_gnutls {
 #
 # unixodbc
 #
-UNIXODBCVER="2.2.14-p2"
+UNIXODBCVER="2.3.0"
 UNIXODBCFILE="unixODBC-${UNIXODBCVER}.tar.gz"
 UNIXODBCURL="http://www.unixodbc.org/${UNIXODBCFILE}"
-UNIXODBCSHA1SUM="7aa71147466f44f8ced4401d7eccc89610038b09"
+UNIXODBCSHA1SUM="b2839b5210906e3ee286a4b621f177db9c7be7a8"
 UNIXODBCDIR="unixODBC-${UNIXODBCVER}"
 function clean_unixodbc {
 	clean_source_dir "${UNIXODBCDIR}" "${WINEBUILDPATH}"
@@ -1138,6 +1138,7 @@ function install_libexif {
 #
 # libusb
 #
+# XXX - replace with libusb 1.0 + libusb-compat 0.1 eventually, gphoto2+sane-backends USB coverage
 LIBUSBVER="0.1.12"
 LIBUSBFILE="libusb-${LIBUSBVER}.tar.gz"
 LIBUSBURL="http://downloads.sourceforge.net/libusb/libusb-0.1%20%28LEGACY%29/${LIBUSBFILE}"
@@ -1172,6 +1173,7 @@ function install_libusb {
 #
 # libgphoto2
 #
+# XXX - libgd inclusion for further photo manipulation?
 LIBGPHOTO2VER="2.4.9.1"
 LIBGPHOTO2FILE="libgphoto2-${LIBGPHOTO2VER}.tar.bz2"
 LIBGPHOTO2URL="http://downloads.sourceforge.net/gphoto/libgphoto/${LIBGPHOTO2FILE}"
@@ -1206,10 +1208,10 @@ function install_libgphoto2 {
 #
 # sane-backends
 #
-SANEBACKENDSVER="1.0.20"
+SANEBACKENDSVER="1.0.21"
 SANEBACKENDSFILE="sane-backends-${SANEBACKENDSVER}.tar.gz"
-SANEBACKENDSURL="ftp://ftp.sane-project.org/pub/sane/sane-backends-1.0.20/${SANEBACKENDSFILE}"
-SANEBACKENDSSHA1SUM="3b4d2ecde8be404bb44269771cf5dc6e4c10b086"
+SANEBACKENDSURL="ftp://ftp.sane-project.org/pub/sane/sane-backends-${SANEBACKENDSVER}/${SANEBACKENDSFILE}"
+SANEBACKENDSSHA1SUM="4a2789ea9dae1ece090d016abd14b0f2450d9bdb"
 SANEBACKENDSDIR="sane-backends-${SANEBACKENDSVER}"
 function clean_sane-backends {
 	clean_source_dir "${SANEBACKENDSDIR}" "${WINEBUILDPATH}"
@@ -1224,7 +1226,6 @@ function extract_sane-backends {
 	extract_file "${TARGZ}" "${WINESOURCEPATH}/${SANEBACKENDSFILE}" "${WINEBUILDPATH}"
 }
 function configure_sane-backends {
-	# XXX - add "--with-group $(groups | cut -f 1 -d\ )" and test!
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --with-gphoto2" "${WINEBUILDPATH}/${SANEBACKENDSDIR}"
 }
 function build_sane-backends {
@@ -1275,10 +1276,10 @@ function install_cabextract {
 #
 # git
 #
-GITVERSION="1.7.0.5"
+GITVERSION="1.7.0.6"
 GITFILE="git-${GITVERSION}.tar.bz2"
 GITURL="http://kernel.org/pub/software/scm/git/${GITFILE}"
-GITSHA1SUM="684c21dac937703ab7df9c91f7a6a962620487b2"
+GITSHA1SUM="aaf9aed1b81bae70d90acce3e750d083c22ef339"
 GITDIR="git-${GITVERSION}"
 function clean_git {
 	clean_source_dir "${GITDIR}" "${WINEBUILDPATH}"
@@ -1330,7 +1331,7 @@ function install_gecko {
 #
 # winetricks
 #
-# XXX - get latest version, install as exectuable!
+# always get latest version, install as exectuable
 WINETRICKSFILE="winetricks"
 WINETRICKSURL="http://www.kegel.com/wine/${WINETRICKSFILE}"
 function get_winetricks {
