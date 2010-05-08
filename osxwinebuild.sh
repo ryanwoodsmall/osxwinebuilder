@@ -21,7 +21,7 @@
 
 # wine version
 #   wine-X.Y.Z
-export WINEVERSION="1.1.43"
+export WINEVERSION="1.1.44"
 
 # timestamp
 export TIMESTAMP=$(date '+%Y%m%d%H%M%S')
@@ -898,7 +898,7 @@ function install_fontconfig {
 #
 LCMSVER="1.19"
 LCMSFILE="lcms-${LCMSVER}.tar.gz"
-LCMSURL="http://www.littlecms.com/${LCMSFILE}"
+LCMSURL="http://downloads.sourceforge.net/lcms/${LCMSFILE}"
 LCMSSHA1SUM="d5b075ccffc0068015f74f78e4bc39138bcfe2d4"
 LCMSDIR="lcms-${LCMSVER}"
 function clean_lcms {
@@ -926,6 +926,46 @@ function install_lcms {
 	build_lcms
 	install_package "${MAKE} install" "${WINEBUILDPATH}/${LCMSDIR}"
 }
+
+#
+# lcms2
+#
+LCMS2VER="2.0"
+LCMS2FILE="lcms2-${LCMS2VER}.tar.gz"
+LCMS2URL="http://downloads.sourceforge.net/lcms/${LCMS2FILE}"
+LCMS2SHA1SUM="c204158d0b4b15d918664750fcd5579f1347a38d"
+LCMS2DIR="lcms-${LCMS2VER}"
+function clean_lcms2 {
+        clean_source_dir "${LCMS2DIR}" "${WINEBUILDPATH}"
+}
+function get_lcms2 {
+        get_file "${LCMS2FILE}" "${WINESOURCEPATH}" "${LCMS2URL}"
+}
+function check_lcms2 {
+        check_sha1sum "${WINESOURCEPATH}/${LCMS2FILE}" "${LCMS2SHA1SUM}"
+}
+function extract_lcms2 {
+        extract_file "${TARGZ}" "${WINESOURCEPATH}/${LCMS2FILE}" "${WINEBUILDPATH}"
+}
+function configure_lcms2 {
+        configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --with-jpeg --with-tiff --with-zlib" "${WINEBUILDPATH}/${LCMS2DIR}"
+}
+function build_lcms2 {
+        build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${LCMS2DIR}"
+}
+function install_lcms2 {
+        clean_lcms2
+        extract_lcms2
+        configure_lcms2
+        build_lcms2
+        # lcms2 v2.0 install-sh is not executable
+        pushd . >/dev/null 2>&1
+        cd ${WINEBUILDPATH}/${LCMS2DIR} || fail_and_exit "could not cd to ${WINEBUILDPATH}/${LCMS2DIR}"
+        chmod 755 install-sh || fail_and_exit "could not set exec permissions on 'install-sh' for LCMS2"
+        popd >/dev/null 2>&1
+        install_package "${MAKE} install" "${WINEBUILDPATH}/${LCMS2DIR}"
+}
+
 
 #
 # lzo
@@ -968,10 +1008,10 @@ function install_lzo {
 #
 # libgpg-error
 #
-LIBGPGERRORVER="1.7"
+LIBGPGERRORVER="1.8"
 LIBGPGERRORFILE="libgpg-error-${LIBGPGERRORVER}.tar.bz2"
 LIBGPGERRORURL="ftp://ftp.gnupg.org/gcrypt/libgpg-error/${LIBGPGERRORFILE}"
-LIBGPGERRORSHA1SUM="bf8c6babe1e28cae7dd6374ca24ddcc42d57e902"
+LIBGPGERRORSHA1SUM="f5cf677a7cd684645feaa9704d09eb5cd6d97e8a"
 LIBGPGERRORDIR="libgpg-error-${LIBGPGERRORVER}"
 function clean_libgpg-error {
 	clean_source_dir "${LIBGPGERRORDIR}" "${WINEBUILDPATH}"
@@ -1276,10 +1316,10 @@ function install_cabextract {
 #
 # git
 #
-GITVERSION="1.7.0.6"
+GITVERSION="1.7.1"
 GITFILE="git-${GITVERSION}.tar.bz2"
 GITURL="http://kernel.org/pub/software/scm/git/${GITFILE}"
-GITSHA1SUM="aaf9aed1b81bae70d90acce3e750d083c22ef339"
+GITSHA1SUM="0b031d1ab63506f945ad3c6fb5f814c6a4fc3095"
 GITDIR="git-${GITVERSION}"
 function clean_git {
 	clean_source_dir "${GITDIR}" "${WINEBUILDPATH}"
@@ -1361,7 +1401,7 @@ function install_winetricks {
 WINEVER=${WINEVERSION}
 WINEFILE="wine-${WINEVER}.tar.bz2"
 WINEURL="http://downloads.sourceforge.net/wine/${WINEFILE}"
-WINESHA1SUM="2f77eab13f29b7942d5507ef925c40ff1ecfd3a5"
+WINESHA1SUM="60f11693161b28ff9814949f2b6bbccee1d07a2c"
 WINEDIR="wine-${WINEVER}"
 function clean_wine {
 	clean_source_dir "${WINEDIR}" "${WINEBUILDPATH}"
@@ -1446,6 +1486,7 @@ function get_sources {
 	get_freetype
 	get_fontconfig
 	get_lcms
+	#get_lcms2
 	get_lzo
 	get_libgpg-error
 	get_libgcrypt
@@ -1480,6 +1521,7 @@ function check_sources {
 	check_freetype
 	check_fontconfig
 	check_lcms
+	#check_lcms2
 	check_lzo
 	check_libgpg-error
 	check_libgcrypt
@@ -1513,6 +1555,7 @@ function install_prereqs {
 	install_freetype
 	install_fontconfig
 	install_lcms
+	#install_lcms2
 	install_lzo
 	install_libgpg-error
 	install_libgcrypt
