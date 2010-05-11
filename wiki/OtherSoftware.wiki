@@ -37,3 +37,4 @@ I will attempt to keep this page updated with every Subversion check in, but svn
 || unixODBC || 2.3.0 || [http://www.unixodbc.org/] || LGPL || used for native ODBC bridge to Wine ||
 || Wine || 1.1.44 || [http://www.winehq.org/] || LGPL || Wine is used for Wine, right? ||
 || winetricks || varies || [http://wiki.winehq.org/winetricks], [http://code.google.com/p/winezeug/] || LGPL || quick install script for some Windows programs ||
+|| wisotool || varies || [http://wiki.winehq.org/wisotool], [http://winezeug.googlecode.com/svn/trunk/wisotool] || LGPL || quick install/building blocks for common games/demos/etc. ||
