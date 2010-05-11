@@ -1396,6 +1396,33 @@ function install_winetricks {
 }
 
 #
+# wisotool
+#
+# always get latest version, install as exectuable
+WISOTOOLFILE="wisotool"
+WISOTOOLURL="http://winezeug.googlecode.com/svn/trunk/${WISOTOOLFILE}"
+function get_wisotool {
+	# always get wisotool
+	pushd . >/dev/null 2>&1
+	cd ${WINESOURCEPATH} || fail_and_exit "could not cd to the Wine source repo path"
+	echo "downloading ${WISOTOOLURL} to ${WINESOURCEPATH}/${WISOTOOLFILE}"
+	${CURL} ${CURLOPTS} -o ${WISOTOOLFILE}.${TIMESTAMP} ${WISOTOOLURL}
+	if [ $? == 0 ] ; then
+		if [ -f ${WISOTOOLFILE} ] ; then
+			mv ${WISOTOOLFILE} ${WISOTOOLFILE}.PRE-${TIMESTAMP}
+		fi
+		mv ${WISOTOOLFILE}.${TIMESTAMP} ${WISOTOOLFILE}
+	fi
+	popd >/dev/null 2>&1
+}
+function install_wisotool {
+	if [ -f "${WINESOURCEPATH}/${WISOTOOLFILE}" ] ; then
+		echo "installing ${WISOTOOLFILE} into ${WINEBINPATH}"
+		install -m 755 ${WINESOURCEPATH}/${WISOTOOLFILE} ${WINEBINPATH}/${WISOTOOLFILE} || echo "could not install install wisotool to ${WINEBINPATH}/${WISOTOOLFILE} - not fatal, install manually"
+	fi
+}
+
+#
 # build wine, finally
 #
 WINEVER=${WINEVERSION}
@@ -1500,6 +1527,7 @@ function get_sources {
 	get_git
 	get_gecko
 	get_winetricks
+	get_wisotool
 	get_wine
 }
 
@@ -1568,6 +1596,7 @@ function install_prereqs {
 	install_cabextract
 	install_git
 	install_winetricks
+	install_wisotool
 	install_gecko
 }
 
