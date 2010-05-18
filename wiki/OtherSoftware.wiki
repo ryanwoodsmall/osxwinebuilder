@@ -14,11 +14,11 @@ I will attempt to keep this page updated with every Subversion check in, but svn
 || !FreeType || 2.3.12 || [http://freetype.sourceforge.net/] || GPL/BSD || font rendering in Wine; patented hinting and subpixel rendering enabled ||
 || Fontconfig || 2.8 || [http://www.fontconfig.org/wiki/] || copyright Keith Packard || font configurations for Wine ||
 || gecko || varies || [http://wiki.winehq.org/Gecko], [https://developer.mozilla.org/en/Gecko] || Mozilla tri-license (MPL/GPL/LGPL) || used for HTML rendering in Wine ||
-|| gettext || 0.17 || [http://www.gnu.org/software/gettext/] || LGPL/GPL/GFDL || used for translations ||
+|| gettext || 0.18 || [http://www.gnu.org/software/gettext/] || LGPL/GPL/GFDL || used for translations ||
 || Git || 1.7.1 || [http://git-scm.com/] || GPL || not used (yet) ||
 || GnuTLS || 2.8.6 || [http://www.gnu.org/software/gnutls/] || LGPL/GPL || used for Wine's secure channel support ||
 || JBIG-KIT || 2.0 || [http://www.cl.cam.ac.uk/~mgk25/jbigkit/] || GPL || used by tiff ||
-|| jpeg || 8a || [http://www.ijg.org/] || Independent JPEG Group, copyright Thomas G. Lane, Guido Vollbeding || JPEG support in Wine ||
+|| jpeg || 8b || [http://www.ijg.org/] || Independent JPEG Group, copyright Thomas G. Lane, Guido Vollbeding || JPEG support in Wine ||
 || lcms || 1.19/2.0 || [http://www.littlecms.com/] || copyright Marti Maria Saguer, MIT license || used for color management in Wine ||
 || libexif || 0.6.19 || [http://libexif.sourceforge.net/] || LGPL || used by libgphoto2 ||
 || libgcrypt || 1.4.5 || [http://www.gnupg.org/] || GPL || used by GnuTLS ||

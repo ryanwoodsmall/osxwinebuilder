@@ -447,10 +447,10 @@ function install_pkg-config {
 #
 # gettext
 #
-GETTEXTVER="0.17"
+GETTEXTVER="0.18"
 GETTEXTFILE="gettext-${GETTEXTVER}.tar.gz"
 GETTEXTURL="http://ftp.gnu.org/pub/gnu/gettext/${GETTEXTFILE}"
-GETTEXTSHA1SUM="c51803d9f745f6ace36bd09c0486d5735ce399cf"
+GETTEXTSHA1SUM="de396ec6877a451427d8597197d18c2d4b8f1a26"
 GETTEXTDIR="gettext-${GETTEXTVER}"
 function clean_gettext {
 	clean_source_dir "${GETTEXTDIR}" "${WINEBUILDPATH}"
@@ -481,10 +481,10 @@ function install_gettext {
 #
 # jpeg
 #
-JPEGVER="8a"
+JPEGVER="8b"
 JPEGFILE="jpegsrc.v${JPEGVER}.tar.gz"
 JPEGURL="http://www.ijg.org/files/${JPEGFILE}"
-JPEGSHA1SUM="78077fb22f0b526a506c21199fbca941d5c671a9"
+JPEGSHA1SUM="15dc1939ea1a5b9d09baea11cceb13ca59e4f9df"
 JPEGDIR="jpeg-${JPEGVER}"
 function clean_jpeg {
 	clean_source_dir "${JPEGDIR}" "${WINEBUILDPATH}"
