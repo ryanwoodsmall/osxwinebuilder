@@ -33,7 +33,7 @@ I will attempt to keep this page updated with every Subversion check in, but svn
 || mpg123 || 1.12.1 || [http://www.mpg123.de/] || LGPL || used for MP3/audio support in Wine ||
 || pkg-config || 0.23 || [http://pkg-config.freedesktop.org/wiki/] || GPL || used by multiple packages ||
 || SANE Backends || 1.0.21 || [http://www.sane-project.org/] || GPL || scanner/imaging access in Wine ||
-|| toast (GSM) || 1.0.13 || formerly [http://user.cs.tu-berlin.de/~jutta/toast.html] || see [http://osxwinebuilder.googlecode.com/files/gsm-COPYRIGHT] || used by Wine for audio encode/decode ||
+|| toast (GSM) || 1.0.13 || formerly [http://user.cs.tu-berlin.de/~jutta/toast.html], now [http://www.quut.com/gsm/] || see [http://osxwinebuilder.googlecode.com/files/gsm-COPYRIGHT] || used by Wine for audio encode/decode ||
 || unixODBC || 2.3.0 || [http://www.unixodbc.org/] || LGPL || used for native ODBC bridge to Wine ||
 || Wine || 1.1.44 || [http://www.winehq.org/] || LGPL || Wine is used for Wine, right? ||
 || winetricks || varies || [http://wiki.winehq.org/winetricks], [http://code.google.com/p/winezeug/] || LGPL || quick install script for some Windows programs ||
