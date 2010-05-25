@@ -413,10 +413,10 @@ function install_package {
 #
 # pkg-config
 #
-PKGCONFIGVER="0.23"
+PKGCONFIGVER="0.24"
 PKGCONFIGFILE="pkg-config-${PKGCONFIGVER}.tar.gz"
 PKGCONFIGURL="http://pkgconfig.freedesktop.org/releases/${PKGCONFIGFILE}"
-PKGCONFIGSHA1SUM="b59dddd6b5320bd74c0f74b3339618a327096b2a"
+PKGCONFIGSHA1SUM="e40ef36026fc7bccf335b88a9f848d404fb7d261"
 PKGCONFIGDIR="pkg-config-${PKGCONFIGVER}"
 function clean_pkg-config {
 	clean_source_dir "${PKGCONFIGDIR}" "${WINEBUILDPATH}"
@@ -1178,11 +1178,10 @@ function install_libexif {
 #
 # libusb
 #
-# XXX - replace with libusb 1.0 + libusb-compat 0.1 eventually, gphoto2+sane-backends USB coverage
-LIBUSBVER="0.1.12"
-LIBUSBFILE="libusb-${LIBUSBVER}.tar.gz"
-LIBUSBURL="http://downloads.sourceforge.net/libusb/libusb-0.1%20%28LEGACY%29/${LIBUSBFILE}"
-LIBUSBSHA1SUM="599a5168590f66bc6f1f9a299579fd8500614807"
+LIBUSBVER="1.0.8"
+LIBUSBFILE="libusb-${LIBUSBVER}.tar.bz2"
+LIBUSBURL="http://downloads.sourceforge.net/libusb/${LIBUSBFILE}"
+LIBUSBSHA1SUM="5484397860f709c9b51611d224819f8ed5994063"
 LIBUSBDIR="libusb-${LIBUSBVER}"
 function clean_libusb {
 	clean_source_dir "${LIBUSBDIR}" "${WINEBUILDPATH}"
@@ -1194,7 +1193,7 @@ function check_libusb {
 	check_sha1sum "${WINESOURCEPATH}/${LIBUSBFILE}" "${LIBUSBSHA1SUM}"
 }
 function extract_libusb {
-	extract_file "${TARGZ}" "${WINESOURCEPATH}/${LIBUSBFILE}" "${WINEBUILDPATH}"
+	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${LIBUSBFILE}" "${WINEBUILDPATH}"
 }
 function configure_libusb {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${LIBUSBDIR}"
@@ -1208,6 +1207,40 @@ function install_libusb {
 	configure_libusb
 	build_libusb
 	install_package "${MAKE} install" "${WINEBUILDPATH}/${LIBUSBDIR}"
+}
+
+#
+# libusb-compat
+#
+LIBUSBCOMPATVER="0.1.3"
+LIBUSBCOMPATFILE="libusb-compat-${LIBUSBCOMPATVER}.tar.bz2"
+LIBUSBCOMPATURL="http://downloads.sourceforge.net/libusb/${LIBUSBCOMPATFILE}"
+LIBUSBCOMPATSHA1SUM="d5710d5bc4b67c5344e779475b76168c7ccc5e69"
+LIBUSBCOMPATDIR="libusb-compat-${LIBUSBCOMPATVER}"
+function clean_libusb-compat {
+	clean_source_dir "${LIBUSBCOMPATDIR}" "${WINEBUILDPATH}"
+}
+function get_libusb-compat {
+	get_file "${LIBUSBCOMPATFILE}" "${WINESOURCEPATH}" "${LIBUSBCOMPATURL}"
+}
+function check_libusb-compat {
+	check_sha1sum "${WINESOURCEPATH}/${LIBUSBCOMPATFILE}" "${LIBUSBCOMPATSHA1SUM}"
+}
+function extract_libusb-compat {
+	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${LIBUSBCOMPATFILE}" "${WINEBUILDPATH}"
+}
+function configure_libusb-compat {
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${LIBUSBCOMPATDIR}"
+}
+function build_libusb-compat {
+	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${LIBUSBCOMPATDIR}"
+}
+function install_libusb-compat {
+	clean_libusb-compat
+	extract_libusb-compat
+	configure_libusb-compat
+	build_libusb-compat
+	install_package "${MAKE} install" "${WINEBUILDPATH}/${LIBUSBCOMPATDIR}"
 }
 
 #
@@ -1266,7 +1299,7 @@ function extract_sane-backends {
 	extract_file "${TARGZ}" "${WINESOURCEPATH}/${SANEBACKENDSFILE}" "${WINEBUILDPATH}"
 }
 function configure_sane-backends {
-	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --with-gphoto2" "${WINEBUILDPATH}/${SANEBACKENDSDIR}"
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --with-gphoto2 --enable-libusb_1_0" "${WINEBUILDPATH}/${SANEBACKENDSDIR}"
 }
 function build_sane-backends {
 	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${SANEBACKENDSDIR}"
@@ -1521,6 +1554,7 @@ function get_sources {
 	get_unixodbc
 	get_libexif
 	get_libusb
+	get_libusb-compat
 	get_libgphoto2
 	get_sane-backends
 	get_cabextract
@@ -1557,6 +1591,7 @@ function check_sources {
 	check_unixodbc
 	check_libexif
 	check_libusb
+	check_libusb-compat
 	check_libgphoto2
 	check_sane-backends
 	check_cabextract
@@ -1590,6 +1625,7 @@ function install_prereqs {
 	install_gnutls
 	install_libexif
 	install_libusb
+	install_libusb-compat
 	install_libgphoto2
 	install_sane-backends
 	install_unixodbc
