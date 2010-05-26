@@ -286,7 +286,7 @@ function get_file {
 		echo "successfully downloaded ${URL} to ${DIRECTORY}/${FILE}"
 	fi
 	popd >/dev/null 2>&1
-} 
+}
 
 #
 # check_sha1sum
@@ -1244,9 +1244,42 @@ function install_libusb-compat {
 }
 
 #
+# gd
+#
+GDVER="2.0.36RC1"
+GDFILE="gd-${GDVER}.tar.bz2"
+GDURL="http://www.libgd.org/releases/${GDFILE}"
+GDSHA1SUM="415300e288348ed0d806fa2f3b7815604d8b5eec"
+GDDIR="gd-${GDVER}"
+function clean_gd {
+	clean_source_dir "${GDDIR}" "${WINEBUILDPATH}"
+}
+function get_gd {
+	get_file "${GDFILE}" "${WINESOURCEPATH}" "${GDURL}"
+}
+function check_gd {
+	check_sha1sum "${WINESOURCEPATH}/${GDFILE}" "${GDSHA1SUM}"
+}
+function extract_gd {
+	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${GDFILE}" "${WINEBUILDPATH}"
+}
+function configure_gd {
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} --with-png=${WINEINSTALLPATH} --with-freetype=${WINEINSTALLPATH} --with-fontconfig=${WINEINSTALLPATH} --with-jpeg=${WINEINSTALLPATH}" "${WINEBUILDPATH}/${GDDIR}"
+}
+function build_gd {
+	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${GDDIR}"
+}
+function install_gd {
+	clean_gd
+	extract_gd
+	configure_gd
+	build_gd
+	install_package "${MAKE} install" "${WINEBUILDPATH}/${GDDIR}"
+}
+
+#
 # libgphoto2
 #
-# XXX - libgd inclusion for further photo manipulation?
 LIBGPHOTO2VER="2.4.9.1"
 LIBGPHOTO2FILE="libgphoto2-${LIBGPHOTO2VER}.tar.bz2"
 LIBGPHOTO2URL="http://downloads.sourceforge.net/gphoto/libgphoto/${LIBGPHOTO2FILE}"
@@ -1555,6 +1588,7 @@ function get_sources {
 	get_libexif
 	get_libusb
 	get_libusb-compat
+	get_gd
 	get_libgphoto2
 	get_sane-backends
 	get_cabextract
@@ -1592,6 +1626,7 @@ function check_sources {
 	check_libexif
 	check_libusb
 	check_libusb-compat
+	check_gd
 	check_libgphoto2
 	check_sane-backends
 	check_cabextract
@@ -1626,6 +1661,7 @@ function install_prereqs {
 	install_libexif
 	install_libusb
 	install_libusb-compat
+	install_gd
 	install_libgphoto2
 	install_sane-backends
 	install_unixodbc
