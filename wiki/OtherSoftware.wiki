@@ -13,6 +13,7 @@ I will attempt to keep this page updated with every Subversion check in, but svn
 || cabextract || 1.2 || [http://www.cabextract.org.uk/] || GPL || used by winetricks ||
 || !FreeType || 2.3.12 || [http://freetype.sourceforge.net/] || GPL/BSD || font rendering in Wine; patented hinting and subpixel rendering enabled ||
 || Fontconfig || 2.8 || [http://www.fontconfig.org/wiki/] || copyright Keith Packard || font configurations for Wine ||
+|| GD || 2.0.36RC1 || [http://www.libgd.org/] || BSD-like || image manipulation support for libgphoto2 ||
 || gecko || varies || [http://wiki.winehq.org/Gecko], [https://developer.mozilla.org/en/Gecko] || Mozilla tri-license (MPL/GPL/LGPL) || used for HTML rendering in Wine ||
 || gettext || 0.18 || [http://www.gnu.org/software/gettext/] || LGPL/GPL/GFDL || used for translations ||
 || Git || 1.7.1 || [http://git-scm.com/] || GPL || not used (yet) ||
