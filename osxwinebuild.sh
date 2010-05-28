@@ -21,7 +21,7 @@
 
 # wine version
 #   wine-X.Y.Z
-export WINEVERSION="1.2-rc1"
+export WINEVERSION="1.2-rc2"
 
 # timestamp
 export TIMESTAMP=$(date '+%Y%m%d%H%M%S')
@@ -413,10 +413,10 @@ function install_package {
 #
 # pkg-config
 #
-PKGCONFIGVER="0.24"
+PKGCONFIGVER="0.25"
 PKGCONFIGFILE="pkg-config-${PKGCONFIGVER}.tar.gz"
 PKGCONFIGURL="http://pkgconfig.freedesktop.org/releases/${PKGCONFIGFILE}"
-PKGCONFIGSHA1SUM="e40ef36026fc7bccf335b88a9f848d404fb7d261"
+PKGCONFIGSHA1SUM="8922aeb4edeff7ed554cc1969cbb4ad5a4e6b26e"
 PKGCONFIGDIR="pkg-config-${PKGCONFIGVER}"
 function clean_pkg-config {
 	clean_source_dir "${PKGCONFIGDIR}" "${WINEBUILDPATH}"
@@ -1494,7 +1494,7 @@ function install_wisotool {
 WINEVER=${WINEVERSION}
 WINEFILE="wine-${WINEVER}.tar.bz2"
 WINEURL="http://downloads.sourceforge.net/wine/${WINEFILE}"
-WINESHA1SUM="31ea3a75ea560cd486fb58825242ac0a6fc664ca"
+WINESHA1SUM="6952b5036f218e0be917184933cf0a252b8f8e86"
 WINEDIR="wine-${WINEVER}"
 function clean_wine {
 	clean_source_dir "${WINEDIR}" "${WINEBUILDPATH}"
