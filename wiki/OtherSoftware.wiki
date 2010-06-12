@@ -15,7 +15,7 @@ I will attempt to keep this page updated with every Subversion check in, but svn
 || Fontconfig || 2.8 || [http://www.fontconfig.org/wiki/] || copyright Keith Packard || font configurations for Wine ||
 || GD || 2.0.36RC1 || [http://www.libgd.org/] || BSD-like || image manipulation support for libgphoto2 ||
 || gecko || varies || [http://wiki.winehq.org/Gecko], [https://developer.mozilla.org/en/Gecko] || Mozilla tri-license (MPL/GPL/LGPL) || used for HTML rendering in Wine ||
-|| gettext || 0.18 || [http://www.gnu.org/software/gettext/] || LGPL/GPL/GFDL || used for translations ||
+|| gettext || 0.18.1.1 || [http://www.gnu.org/software/gettext/] || LGPL/GPL/GFDL || used for translations ||
 || Git || 1.7.1 || [http://git-scm.com/] || GPL || not used (yet) ||
 || GnuTLS || 2.8.6 || [http://www.gnu.org/software/gnutls/] || LGPL/GPL || used for Wine's secure channel support ||
 || JBIG-KIT || 2.0 || [http://www.cl.cam.ac.uk/~mgk25/jbigkit/] || GPL || used by tiff ||
@@ -26,7 +26,7 @@ I will attempt to keep this page updated with every Subversion check in, but svn
 || libgpg-error || 1.8 || [http://www.gnupg.org/] || GPL || used by GnuTLS ||
 || libgphoto2 || 2.4.9.1 || [http://www.gphoto.org/] || LGPL || used for imaging/camera support in Wine ||
 || libpng || 1.2.43/1.4.2 || [http://www.libpng.org/] || libpng license || PNG support in Wine ||
-|| libtiff || 3.9.2 || [http://www.remotesensing.org/libtiff/] || coypright Sam Leffler, Silicon Graphics, Inc || used for TIFF support in Wine ||
+|| libtiff || 3.9.3 || [http://www.remotesensing.org/libtiff/] || coypright Sam Leffler, Silicon Graphics, Inc || used for TIFF support in Wine ||
 || libxml2 || 2.7.7 || [http://xmlsoft.org/] || copyright Daniel Veillard || XML support in Wine ||
 || libxslt || 1.1.26 || [http://xmlsoft.org/] || copyright Thomas Broyer, Charlie Bozeman and Daniel Veillard || XSL/XSLT support in Wine ||
 || libusb || 1.0.8 || [http://www.libusb.org/] || LGPL || used by sane-backends ||
@@ -37,6 +37,6 @@ I will attempt to keep this page updated with every Subversion check in, but svn
 || SANE Backends || 1.0.21 || [http://www.sane-project.org/] || GPL || scanner/imaging access in Wine ||
 || toast (GSM) || 1.0.13 || formerly [http://user.cs.tu-berlin.de/~jutta/toast.html], now [http://www.quut.com/gsm/] || see [http://osxwinebuilder.googlecode.com/files/gsm-COPYRIGHT] || used by Wine for audio encode/decode ||
 || unixODBC || 2.3.0 || [http://www.unixodbc.org/] || LGPL || used for native ODBC bridge to Wine ||
-|| Wine || 1.2-rc2 || [http://www.winehq.org/] || LGPL || Wine is used for Wine, right? ||
+|| Wine || 1.2-rc3 || [http://www.winehq.org/] || LGPL || Wine is used for Wine, right? ||
 || winetricks || varies || [http://wiki.winehq.org/winetricks], [http://code.google.com/p/winezeug/] || LGPL || quick install script for some Windows programs ||
 || wisotool || varies || [http://wiki.winehq.org/wisotool], [http://winezeug.googlecode.com/svn/trunk/wisotool] || LGPL || quick install/building blocks for common games/demos/etc. ||

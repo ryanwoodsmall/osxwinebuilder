@@ -21,7 +21,7 @@
 
 # wine version
 #   wine-X.Y.Z
-export WINEVERSION="1.2-rc2"
+export WINEVERSION="1.2-rc3"
 
 # timestamp
 export TIMESTAMP=$(date '+%Y%m%d%H%M%S')
@@ -447,10 +447,10 @@ function install_pkg-config {
 #
 # gettext
 #
-GETTEXTVER="0.18"
+GETTEXTVER="0.18.1.1"
 GETTEXTFILE="gettext-${GETTEXTVER}.tar.gz"
 GETTEXTURL="http://ftp.gnu.org/pub/gnu/gettext/${GETTEXTFILE}"
-GETTEXTSHA1SUM="de396ec6877a451427d8597197d18c2d4b8f1a26"
+GETTEXTSHA1SUM="5009deb02f67fc3c59c8ce6b82408d1d35d4e38f"
 GETTEXTDIR="gettext-${GETTEXTVER}"
 function clean_gettext {
 	clean_source_dir "${GETTEXTDIR}" "${WINEBUILDPATH}"
@@ -568,10 +568,10 @@ function install_jbigkit {
 #
 # tiff
 #
-TIFFVER="3.9.2"
+TIFFVER="3.9.3"
 TIFFFILE="tiff-${TIFFVER}.tar.gz"
 TIFFURL="ftp://ftp.remotesensing.org/pub/libtiff/${TIFFFILE}"
-TIFFSHA1SUM="5c054d31e350e53102221b7760c3700cf70b4327"
+TIFFSHA1SUM="0d1eef69e58711d77320921bcb4d447f52265dc1"
 TIFFDIR="tiff-${TIFFVER}"
 function clean_tiff {
 	clean_source_dir "${TIFFDIR}" "${WINEBUILDPATH}"
@@ -1494,7 +1494,7 @@ function install_wisotool {
 WINEVER=${WINEVERSION}
 WINEFILE="wine-${WINEVER}.tar.bz2"
 WINEURL="http://downloads.sourceforge.net/wine/${WINEFILE}"
-WINESHA1SUM="6952b5036f218e0be917184933cf0a252b8f8e86"
+WINESHA1SUM="cfe848f76a0ea4983bb04b63008b63829f881703"
 WINEDIR="wine-${WINEVER}"
 function clean_wine {
 	clean_source_dir "${WINEDIR}" "${WINEBUILDPATH}"
