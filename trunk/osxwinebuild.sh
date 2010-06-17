@@ -19,19 +19,50 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-# wine version
-#   wine-X.Y.Z
-export WINEVERSION="1.2-rc3"
-
-# timestamp
-export TIMESTAMP=$(date '+%Y%m%d%H%M%S')
-
 # fail_and_exit
 #   first function defined since it will be called if there are failures
 function fail_and_exit {
         echo "${@} - exiting"
         exit 1
 }
+
+# usage
+#   defined early; may be called if "--help" or a bunk option is passed
+function usage {
+	echo "usage: $(basename ${0}) [--help] [--no-clean-prefix] [--no-clean-source]"
+	echo "    --help: display this help message"
+	echo "    --no-clean-prefix: do not move and create a new prefix if one already exists"
+	echo "    --no-clean-source: do not remove/extract/configure source if already done"
+}
+
+# options
+#   we remove and rebuild everything in a new prefix by default
+NOCLEANPREFIX=0
+NOCLEANSOURCE=0
+#   cycle through options and set appropriate vars
+if [ ${#} -gt 0 ] ; then
+	until [ -z ${1} ] ; do
+		case ${1} in
+			--no-clean-prefix)
+				NOCLEANPREFIX=1
+				echo "found --no-clean-prefix option, will install to existing prefix if it exists" ; shift ;;
+			--no-clean-source)
+				NOCLEANSOURCE=1
+				echo "found --no-clean-source option, will not remove/rextract existing source directories" ; shift ;;
+			--help)
+				usage ; exit 0 ;;
+			*)
+				usage ; exit 1 ;;
+		esac
+	done
+fi
+
+# wine version
+#   wine-X.Y.Z
+export WINEVERSION="1.2-rc3"
+
+# timestamp
+export TIMESTAMP=$(date '+%Y%m%d%H%M%S')
 
 # wine dir
 #   where everything lives - ~/wine by default
@@ -313,6 +344,10 @@ function check_sha1sum {
 function clean_source_dir {
 	SOURCEDIR=${1}
 	BASEDIR=${2}
+	if [ ${NOCLEANSOURCE} -eq 1 ] ; then
+		echo "--no-clean-source set, not cleaning ${BASEDIR}/${SOURCEDIR}"
+		return
+	fi
 	if [ -d ${BASEDIR}/${SOURCEDIR} ] ; then
 		pushd . >/dev/null 2>&1
 		echo "cleanning up ${BASEDIR}/${SOURCEDIR} for fresh compile"
@@ -330,6 +365,13 @@ function extract_file {
 	EXTRACTCMD=${1}
 	EXTRACTFILE=${2}
 	EXTRACTDIR=${3}
+	SOURCEDIR=${4}
+	if [ ${NOCLEANSOURCE} -eq 1 ] ; then
+		if [ -d ${EXTRACTDIR}/${SOURCEDIR} ] ; then
+			echo "--no-clean-source set, not extracting ${EXTRACTFILE}"
+			return
+		fi
+	fi
 	echo "extracting ${EXTRACTFILE} to ${EXTRACTDIR} with '${EXTRACTCMD}'"
 	if [ ! -d ${EXTRACTDIR} ] ; then
 		mkdir -p ${EXTRACTDIR} || fail_and_exit "could not create ${EXTRACTDIR}"
@@ -428,7 +470,7 @@ function check_pkg-config {
 	check_sha1sum "${WINESOURCEPATH}/${PKGCONFIGFILE}" "${PKGCONFIGSHA1SUM}"
 }
 function extract_pkg-config {
-	extract_file "${TARGZ}" "${WINESOURCEPATH}/${PKGCONFIGFILE}" "${WINEBUILDPATH}"
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${PKGCONFIGFILE}" "${WINEBUILDPATH}" "${PKGCONFIGDIR}"
 }
 function configure_pkg-config {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${PKGCONFIGDIR}"
@@ -462,10 +504,10 @@ function check_gettext {
 	check_sha1sum "${WINESOURCEPATH}/${GETTEXTFILE}" "${GETTEXTSHA1SUM}"
 }
 function extract_gettext {
-	extract_file "${TARGZ}" "${WINESOURCEPATH}/${GETTEXTFILE}" "${WINEBUILDPATH}"
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${GETTEXTFILE}" "${WINEBUILDPATH}" "${GETTEXTDIR}"
 }
 function configure_gettext {
-	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --disable-java --disable-native-java --without-emacs" "${WINEBUILDPATH}/${GETTEXTDIR}"
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --disable-java --disable-native-java --without-emacs --without-git" "${WINEBUILDPATH}/${GETTEXTDIR}"
 }
 function build_gettext {
 	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${GETTEXTDIR}"
@@ -496,7 +538,7 @@ function check_jpeg {
 	check_sha1sum "${WINESOURCEPATH}/${JPEGFILE}" "${JPEGSHA1SUM}"
 }
 function extract_jpeg {
-	extract_file "${TARGZ}" "${WINESOURCEPATH}/${JPEGFILE}" "${WINEBUILDPATH}"
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${JPEGFILE}" "${WINEBUILDPATH}" "${JPEGDIR}"
 }
 function configure_jpeg {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${JPEGDIR}"
@@ -531,7 +573,7 @@ function check_jbigkit {
 	check_sha1sum "${WINESOURCEPATH}/${JBIGKITFILE}" "${JBIGKITSHA1SUM}"
 }
 function extract_jbigkit {
-	extract_file "${TARGZ}" "${WINESOURCEPATH}/${JBIGKITFILE}" "${WINEBUILDPATH}"
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${JBIGKITFILE}" "${WINEBUILDPATH}" "${JBIGKITDIR}"
 }
 function build_jbigkit {
 	pushd . >/dev/null 2>&1
@@ -556,6 +598,15 @@ function install_jbigkit {
 	cd ${WINEBUILDPATH}/${JBIGKITDIR}/libjbig || fail_and_exit "could not cd to the JBIG source directory"
 	echo "installing libjbig shared library and symbolic links"
 	install -m 755 libjbig.${JBIGKITVER}.dylib ${WINELIBPATH}/libjbig.${JBIGKITVER}.dylib || fail_and_exit "could not install libjbig dynamic library"
+	if [ ${NOCLEANPREFIX} -eq 1 ] ; then
+		echo "--no-clean-prefix, manually removing libjbig symlinks"
+		if [ -L ${WINELIBPATH}/libjbig.${JBIGKITMAJOR}.dylib ] ; then
+			unlink ${WINELIBPATH}/libjbig.${JBIGKITMAJOR}.dylib || fail_and_exit "could not remove existing libjbig symbolic link"
+		fi
+		if [ -L ${WINELIBPATH}/libjbig.dylib ] ; then
+			unlink ${WINELIBPATH}/libjbig.dylib || fail_and_exit "could not remove existing libjbig symbolic link"
+		fi
+	fi
 	ln -s libjbig.${JBIGKITVER}.dylib ${WINELIBPATH}/libjbig.${JBIGKITMAJOR}.dylib || fail_and_exit "could not create libjbig symlink"
 	ln -s libjbig.${JBIGKITVER}.dylib ${WINELIBPATH}/libjbig.dylib || fail_and_exit "could not create libjbig symlink"
 	echo "installing libjbig header files"
@@ -583,7 +634,7 @@ function check_tiff {
 	check_sha1sum "${WINESOURCEPATH}/${TIFFFILE}" "${TIFFSHA1SUM}"
 }
 function extract_tiff {
-	extract_file "${TARGZ}" "${WINESOURCEPATH}/${TIFFFILE}" "${WINEBUILDPATH}"
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${TIFFFILE}" "${WINEBUILDPATH}" "${TIFFDIR}"
 }
 function configure_tiff {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --with-jpeg-include-dir=${WINEINCLUDEPATH} --with-jbig-include-dir=${WINEINCLUDEPATH} --with-jpeg-lib-dir=${WINELIBPATH} --with-jbig-lib-dir=${WINELIBPATH} --with-apple-opengl-framework" "${WINEBUILDPATH}/${TIFFDIR}"
@@ -621,7 +672,7 @@ function check_libpng {
 	check_sha1sum "${WINESOURCEPATH}/${LIBPNGFILE}" "${LIBPNGSHA1SUM}"
 }
 function extract_libpng {
-	extract_file "${TARGZ}" "${WINESOURCEPATH}/${LIBPNGFILE}" "${WINEBUILDPATH}"
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${LIBPNGFILE}" "${WINEBUILDPATH}" "${LIBPNGDIR}"
 }
 function configure_libpng {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${LIBPNGDIR}"
@@ -655,7 +706,7 @@ function check_libxml2 {
 	check_sha1sum "${WINESOURCEPATH}/${LIBXML2FILE}" "${LIBXML2SHA1SUM}"
 }
 function extract_libxml2 {
-	extract_file "${TARGZ}" "${WINESOURCEPATH}/${LIBXML2FILE}" "${WINEBUILDPATH}"
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${LIBXML2FILE}" "${WINEBUILDPATH}" "${LIBXML2DIR}"
 }
 function configure_libxml2 {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --without-python" "${WINEBUILDPATH}/${LIBXML2DIR}"
@@ -689,7 +740,7 @@ function check_libxslt {
 	check_sha1sum "${WINESOURCEPATH}/${LIBXSLTFILE}" "${LIBXSLTSHA1SUM}"
 }
 function extract_libxslt {
-	extract_file "${TARGZ}" "${WINESOURCEPATH}/${LIBXSLTFILE}" "${WINEBUILDPATH}"
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${LIBXSLTFILE}" "${WINEBUILDPATH}" "${LIBXSLTDIR}"
 }
 function configure_libxslt {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --with-libxml-prefix=${WINEINSTALLPATH} --without-crypto --without-python" "${WINEBUILDPATH}/${LIBXSLTDIR}"
@@ -725,7 +776,7 @@ function check_mpg123 {
 	check_sha1sum "${WINESOURCEPATH}/${MPG123FILE}" "${MPG123SHA1SUM}"
 }
 function extract_mpg123 {
-	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${MPG123FILE}" "${WINEBUILDPATH}"
+	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${MPG123FILE}" "${WINEBUILDPATH}" "${MPG123DIR}"
 }
 function configure_mpg123 {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --with-cpu=x86" "${WINEBUILDPATH}/${MPG123DIR}"
@@ -765,7 +816,7 @@ function check_gsm {
 	check_sha1sum "${WINESOURCEPATH}/${GSMFILE}" "${GSMSHA1SUM}"
 }
 function extract_gsm {
-	extract_file "${TARGZ}" "${WINESOURCEPATH}/${GSMFILE}" "${WINEBUILDPATH}"
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${GSMFILE}" "${WINEBUILDPATH}" "${GSMDIR}"
 }
 function build_gsm {
 	pushd . >/dev/null 2>&1
@@ -791,6 +842,15 @@ function install_gsm {
 	cd ${WINEBUILDPATH}/${GSMDIR} || fail_and_exit "could not cd to the GSM source directory"
 	echo "installing libgsm shared library and symbolic links"
 	install -m 755 lib/libgsm.${GSMVER}.${GSMPL}.dylib ${WINELIBPATH}/libgsm.${GSMVER}.${GSMPL}.dylib || fail_and_exit "could not install the libgsm dynamic library"
+	if [ ${NOCLEANPREFIX} -eq 1 ] ; then
+		echo "--no-clean-prefix, manually removing libgsm symlinks"
+		if [ -L ${WINELIBPATH}/libgsm.${GSMMAJOR}.dylib ] ; then
+			unlink ${WINELIBPATH}/libgsm.${GSMMAJOR}.dylib || fail_and_exit "could not remove existing libgsm symbolic link"
+		fi
+		if [ -L ${WINELIBPATH}/libgsm.dylib ] ; then
+			unlink ${WINELIBPATH}/libgsm.dylib || fail_and_exit "could not remove existing libgsm symbolic link"
+		fi
+	fi
 	ln -s libgsm.${GSMVER}.${GSMPL}.dylib ${WINELIBPATH}/libgsm.${GSMMAJOR}.dylib || fail_and_exit "could not create a libgsm symbolic link"
 	ln -s libgsm.${GSMVER}.${GSMPL}.dylib ${WINELIBPATH}/libgsm.dylib || fail_and_exit "could not create a libgsm symbolic link"
 	echo "installing libgsm header file"
@@ -817,7 +877,7 @@ function check_freetype {
 	check_sha1sum "${WINESOURCEPATH}/${FREETYPEFILE}" "${FREETYPESHA1SUM}"
 }
 function extract_freetype {
-	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${FREETYPEFILE}" "${WINEBUILDPATH}"
+	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${FREETYPEFILE}" "${WINEBUILDPATH}" "${FREETYPEDIR}"
 }
 function configure_freetype {
 	# set subpixel rendering flag
@@ -877,7 +937,7 @@ function check_fontconfig {
 	check_sha1sum "${WINESOURCEPATH}/${FONTCONFIGFILE}" "${FONTCONFIGSHA1SUM}"
 }
 function extract_fontconfig {
-	extract_file "${TARGZ}" "${WINESOURCEPATH}/${FONTCONFIGFILE}" "${WINEBUILDPATH}"
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${FONTCONFIGFILE}" "${WINEBUILDPATH}" "${FONTCONFIGDIR}"
 }
 function configure_fontconfig {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --with-default-fonts=${X11LIB}/X11/fonts --with-confdir=${WINELIBPATH}/fontconfig --with-cache-dir=${X11DIR}/var/cache/fontconfig" "${WINEBUILDPATH}/${FONTCONFIGDIR}"
@@ -911,7 +971,7 @@ function check_lcms {
 	check_sha1sum "${WINESOURCEPATH}/${LCMSFILE}" "${LCMSSHA1SUM}"
 }
 function extract_lcms {
-	extract_file "${TARGZ}" "${WINESOURCEPATH}/${LCMSFILE}" "${WINEBUILDPATH}"
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${LCMSFILE}" "${WINEBUILDPATH}" "${LCMSDIR}"
 }
 function configure_lcms {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --without-python --with-jpeg --with-tiff --with-zlib" "${WINEBUILDPATH}/${LCMSDIR}"
@@ -945,7 +1005,7 @@ function check_lcms2 {
         check_sha1sum "${WINESOURCEPATH}/${LCMS2FILE}" "${LCMS2SHA1SUM}"
 }
 function extract_lcms2 {
-        extract_file "${TARGZ}" "${WINESOURCEPATH}/${LCMS2FILE}" "${WINEBUILDPATH}"
+        extract_file "${TARGZ}" "${WINESOURCEPATH}/${LCMS2FILE}" "${WINEBUILDPATH}" "${LCMS2DIR}"
 }
 function configure_lcms2 {
         configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --with-jpeg --with-tiff --with-zlib" "${WINEBUILDPATH}/${LCMS2DIR}"
@@ -986,7 +1046,7 @@ function check_lzo {
 	check_sha1sum "${WINESOURCEPATH}/${LZOFILE}" "${LZOSHA1SUM}"
 }
 function extract_lzo {
-	extract_file "${TARGZ}" "${WINESOURCEPATH}/${LZOFILE}" "${WINEBUILDPATH}"
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${LZOFILE}" "${WINEBUILDPATH}" "${LZODIR}"
 }
 function configure_lzo {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --disable-asm" "${WINEBUILDPATH}/${LZODIR}"
@@ -1023,7 +1083,7 @@ function check_libgpg-error {
 	check_sha1sum "${WINESOURCEPATH}/${LIBGPGERRORFILE}" "${LIBGPGERRORSHA1SUM}"
 }
 function extract_libgpg-error {
-	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${LIBGPGERRORFILE}" "${WINEBUILDPATH}"
+	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${LIBGPGERRORFILE}" "${WINEBUILDPATH}" "${LIBGPGERRORDIR}"
 }
 function configure_libgpg-error {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${LIBGPGERRORDIR}"
@@ -1057,7 +1117,7 @@ function check_libgcrypt {
 	check_sha1sum "${WINESOURCEPATH}/${LIBGCRYPTFILE}" "${LIBGCRYPTSHA1SUM}"
 }
 function extract_libgcrypt {
-	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${LIBGCRYPTFILE}" "${WINEBUILDPATH}"
+	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${LIBGCRYPTFILE}" "${WINEBUILDPATH}" "${LIBGCRYPTDIR}"
 }
 function configure_libgcrypt {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --with-gpg-error-prefix=${WINEINSTALLPATH}" "${WINEBUILDPATH}/${LIBGCRYPTDIR}"
@@ -1091,7 +1151,7 @@ function check_gnutls {
 	check_sha1sum "${WINESOURCEPATH}/${GNUTLSFILE}" "${GNUTLSSHA1SUM}"
 }
 function extract_gnutls {
-	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${GNUTLSFILE}" "${WINEBUILDPATH}"
+	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${GNUTLSFILE}" "${WINEBUILDPATH}" "${GNUTLSDIR}"
 }
 function configure_gnutls {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --with-libgcrypt-prefix=${WINEINSTALLPATH} --with-included-libcfg --with-included-libtasn1 --with-lzo" "${WINEBUILDPATH}/${GNUTLSDIR}"
@@ -1125,7 +1185,7 @@ function check_unixodbc {
 	check_sha1sum "${WINESOURCEPATH}/${UNIXODBCFILE}" "${UNIXODBCSHA1SUM}"
 }
 function extract_unixodbc {
-	extract_file "${TARGZ}" "${WINESOURCEPATH}/${UNIXODBCFILE}" "${WINEBUILDPATH}"
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${UNIXODBCFILE}" "${WINEBUILDPATH}" "${UNIXODBCDIR}"
 }
 function configure_unixodbc {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --enable-gui=no" "${WINEBUILDPATH}/${UNIXODBCDIR}"
@@ -1159,7 +1219,7 @@ function check_libexif {
 	check_sha1sum "${WINESOURCEPATH}/${LIBEXIFFILE}" "${LIBEXIFSHA1SUM}"
 }
 function extract_libexif {
-	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${LIBEXIFFILE}" "${WINEBUILDPATH}"
+	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${LIBEXIFFILE}" "${WINEBUILDPATH}" "${LIBEXIFDIR}"
 }
 function configure_libexif {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${LIBEXIFDIR}"
@@ -1193,7 +1253,7 @@ function check_libusb {
 	check_sha1sum "${WINESOURCEPATH}/${LIBUSBFILE}" "${LIBUSBSHA1SUM}"
 }
 function extract_libusb {
-	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${LIBUSBFILE}" "${WINEBUILDPATH}"
+	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${LIBUSBFILE}" "${WINEBUILDPATH}" "${LIBUSBDIR}"
 }
 function configure_libusb {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${LIBUSBDIR}"
@@ -1227,7 +1287,7 @@ function check_libusb-compat {
 	check_sha1sum "${WINESOURCEPATH}/${LIBUSBCOMPATFILE}" "${LIBUSBCOMPATSHA1SUM}"
 }
 function extract_libusb-compat {
-	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${LIBUSBCOMPATFILE}" "${WINEBUILDPATH}"
+	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${LIBUSBCOMPATFILE}" "${WINEBUILDPATH}" "${LIBUSBCOMPATDIR}"
 }
 function configure_libusb-compat {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${LIBUSBCOMPATDIR}"
@@ -1261,7 +1321,7 @@ function check_gd {
 	check_sha1sum "${WINESOURCEPATH}/${GDFILE}" "${GDSHA1SUM}"
 }
 function extract_gd {
-	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${GDFILE}" "${WINEBUILDPATH}"
+	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${GDFILE}" "${WINEBUILDPATH}" "${GDDIR}"
 }
 function configure_gd {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} --with-png=${WINEINSTALLPATH} --with-freetype=${WINEINSTALLPATH} --with-fontconfig=${WINEINSTALLPATH} --with-jpeg=${WINEINSTALLPATH}" "${WINEBUILDPATH}/${GDDIR}"
@@ -1295,7 +1355,7 @@ function check_libgphoto2 {
 	check_sha1sum "${WINESOURCEPATH}/${LIBGPHOTO2FILE}" "${LIBGPHOTO2SHA1SUM}"
 }
 function extract_libgphoto2 {
-	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${LIBGPHOTO2FILE}" "${WINEBUILDPATH}"
+	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${LIBGPHOTO2FILE}" "${WINEBUILDPATH}" "${LIBGPHOTO2DIR}"
 }
 function configure_libgphoto2 {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --with-libexif=auto" "${WINEBUILDPATH}/${LIBGPHOTO2DIR}"
@@ -1329,7 +1389,7 @@ function check_sane-backends {
 	check_sha1sum "${WINESOURCEPATH}/${SANEBACKENDSFILE}" "${SANEBACKENDSSHA1SUM}"
 }
 function extract_sane-backends {
-	extract_file "${TARGZ}" "${WINESOURCEPATH}/${SANEBACKENDSFILE}" "${WINEBUILDPATH}"
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${SANEBACKENDSFILE}" "${WINEBUILDPATH}" "${SANEBACKENDSDIR}"
 }
 function configure_sane-backends {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --with-gphoto2 --enable-libusb_1_0" "${WINEBUILDPATH}/${SANEBACKENDSDIR}"
@@ -1363,7 +1423,7 @@ function check_cabextract {
 	check_sha1sum "${WINESOURCEPATH}/${CABEXTRACTFILE}" "${CABEXTRACTSHA1SUM}"
 }
 function extract_cabextract {
-	extract_file "${TARGZ}" "${WINESOURCEPATH}/${CABEXTRACTFILE}" "${WINEBUILDPATH}"
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${CABEXTRACTFILE}" "${WINEBUILDPATH}" "${CABEXTRACTDIR}"
 }
 function configure_cabextract {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX}" "${WINEBUILDPATH}/${CABEXTRACTDIR}"
@@ -1397,7 +1457,7 @@ function check_git {
 	check_sha1sum "${WINESOURCEPATH}/${GITFILE}" "${GITSHA1SUM}"
 }
 function extract_git {
-	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${GITFILE}" "${WINEBUILDPATH}"
+	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${GITFILE}" "${WINEBUILDPATH}" "${GITDIR}"
 }
 function configure_git {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX}" "${WINEBUILDPATH}/${GITDIR}"
@@ -1506,7 +1566,7 @@ function check_wine {
 	check_sha1sum "${WINESOURCEPATH}/${WINEFILE}" "${WINESHA1SUM}"
 }
 function extract_wine {
-	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${WINEFILE}" "${WINEBUILDPATH}"
+	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${WINEFILE}" "${WINEBUILDPATH}" "${WINEDIR}"
 }
 function configure_wine {
 	pushd . >/dev/null 2>&1
@@ -1556,7 +1616,7 @@ function install_wine {
 	clean_wine
 	extract_wine
 	configure_wine
-	depend_wine
+	#depend_wine
 	build_wine
 	install_package "${MAKE} install" "${WINEBUILDPATH}/${WINEDIR}"
 }
@@ -1701,8 +1761,13 @@ EOF
 #
 
 # move the install dir out of the way if it exists
-if [ -d ${WINEINSTALLPATH} ] ; then
-	mv ${WINEINSTALLPATH}{,.PRE-${TIMESTAMP}}
+if [ ${NOCLEANPREFIX} -eq 1 ] ; then
+	echo "--no-clean-prefix set, not moving existing prefix aside"
+else 
+	if [ -d ${WINEINSTALLPATH} ] ; then
+		echo "moving existing prefix ${WINEINSTALLPATH} to ${WINEINSTALLPATH}.PRE-${TIMESTAMP}"
+		mv ${WINEINSTALLPATH}{,.PRE-${TIMESTAMP}}
+	fi
 fi
 
 # check compiler before anything else
