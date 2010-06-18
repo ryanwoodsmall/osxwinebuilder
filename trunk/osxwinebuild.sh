@@ -29,7 +29,7 @@ function fail_and_exit {
 # usage
 #   defined early; may be called if "--help" or a bunk option is passed
 function usage {
-	echo "usage: $(basename ${0}) [--help] [--no-clean-prefix] [--no-clean-source]"
+	echo "usage: $(basename ${0}) [--help] [--no-clean-prefix] [--no-clean-source] [--no-rebuild] [--no-reconfigure]"
 	echo "    --help: display this help message"
 	echo "    --no-clean-prefix: do not move and create a new prefix if one already exists"
 	echo "    --no-clean-source: do not remove/extract source if already done"
