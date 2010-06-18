@@ -653,10 +653,10 @@ function install_jbigkit {
 #
 # tiff
 #
-TIFFVER="3.9.3"
+TIFFVER="3.9.4"
 TIFFFILE="tiff-${TIFFVER}.tar.gz"
 TIFFURL="ftp://ftp.remotesensing.org/pub/libtiff/${TIFFFILE}"
-TIFFSHA1SUM="0d1eef69e58711d77320921bcb4d447f52265dc1"
+TIFFSHA1SUM="a4e32d55afbbcabd0391a9c89995e8e8a19961de"
 TIFFDIR="tiff-${TIFFVER}"
 function clean_tiff {
 	clean_source_dir "${TIFFDIR}" "${WINEBUILDPATH}"
