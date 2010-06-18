@@ -32,13 +32,17 @@ function usage {
 	echo "usage: $(basename ${0}) [--help] [--no-clean-prefix] [--no-clean-source]"
 	echo "    --help: display this help message"
 	echo "    --no-clean-prefix: do not move and create a new prefix if one already exists"
-	echo "    --no-clean-source: do not remove/extract/configure source if already done"
+	echo "    --no-clean-source: do not remove/extract source if already done"
+	echo "    --no-rebuild: do not rebuild packages, just reinstall"
+	echo "    --no-reconfigure: do not re-run 'configure' for any packages"
 }
 
 # options
 #   we remove and rebuild everything in a new prefix by default
 NOCLEANPREFIX=0
 NOCLEANSOURCE=0
+NOREBUILD=0
+NORECONFIGURE=0
 #   cycle through options and set appropriate vars
 if [ ${#} -gt 0 ] ; then
 	until [ -z ${1} ] ; do
@@ -49,6 +53,12 @@ if [ ${#} -gt 0 ] ; then
 			--no-clean-source)
 				NOCLEANSOURCE=1
 				echo "found --no-clean-source option, will not remove/rextract existing source directories" ; shift ;;
+			--no-rebuild)
+				NOREBUILD=1
+				echo "found --no-rebuild option, will not re-run 'make' on existing source directories" ; shift ;;
+			--no-reconfigure)
+				NORECONFIGURE=1
+				echo "found --no-reconfigure option, will not re-run 'configure' on existing source directories" ; shift ;;
 			--help)
 				usage ; exit 0 ;;
 			*)
@@ -390,13 +400,21 @@ function extract_file {
 function configure_package {
 	CONFIGURECMD=${1}
 	SOURCEDIR=${2}
+	CONFIGUREDFILE="${SOURCEDIR}/.$(basename ${0})-configured"
 	if [ ! -d ${SOURCEDIR} ] ; then
 		fail_and_exit "could not find ${SOURCEDIR}"
+	fi
+	if [ ${NORECONFIGURE} -eq 1 ] ; then
+		if [ -f ${CONFIGUREDFILE} ] ; then
+			echo "--no-reconfigure set, not reconfiguring in ${SOURCEDIR}"
+			return
+		fi
 	fi
 	echo "running '${CONFIGURECMD}' in ${SOURCEDIR}"
 	pushd . >/dev/null 2>&1
 	cd ${SOURCEDIR} || fail_and_exit "source directory ${SOURCEDIR} does not seem to exist"
 	${CONFIGURECMD} || fail_and_exit "could not run configure command '${CONFIGURECMD}' in ${SOURCEDIR}"
+	touch ${CONFIGUREDFILE} || fail_and_exit "could not touch ${CONFIGUREDFILE}"
 	echo "successfully ran configure in ${SOURCEDIR}"
 	popd >/dev/null 2>&1
 }
@@ -408,12 +426,20 @@ function configure_package {
 function build_package {
 	BUILDCMD=${1}
 	BUILDDIR=${2}
+	BUILTFILE="${BUILDDIR}/.$(basename ${0})-built"
 	if [ ! -d ${BUILDDIR} ] ; then
 		fail_and_exit "${BUILDDIR} does not exist"
+	fi
+	if [ ${NOREBUILD} -eq 1 ] ; then
+		if [ -f ${BUILTFILE} ] ; then
+			echo "--no-rebuild set, not rebuilding in ${BUILDDIR}"
+			return
+		fi
 	fi
 	pushd . >/dev/null 2>&1
 	cd ${BUILDDIR} || fail_and_exit "build directory ${BUILDDIR} does not seem to exist"
 	${BUILDCMD} || fail_and_exit "could not run '${BUILDCMD}' in ${BUILDDIR}"
+	touch ${BUILTFILE} || fail_and_exit "could not touch ${BUILTFILE}"
 	echo "successfully ran '${BUILDCMD}' in ${BUILDDIR}"
 	popd >/dev/null 2>&1
 }
@@ -579,6 +605,13 @@ function build_jbigkit {
 	pushd . >/dev/null 2>&1
 	echo "now building in ${WINEBUILDPATH}/${JBIGKITDIR}"
 	cd ${WINEBUILDPATH}/${JBIGKITDIR}/libjbig || fail_and_exit "could not cd to the JBIG source directory"
+	BUILTFILE="${WINEBUILDPATH}/${JBIGKITDIR}/.$(basename ${0})-built"
+	if [ ${NOREBUILD} -eq 1 ] ; then
+		if [ -f ${BUILTFILE} ] ; then
+			echo "--no-rebuild set, not rebuilding in ${WINEBUILDPATH}/${JBIGKITDIR}/libjbig"
+			return
+		fi
+	fi
 	JBIGKITOBJS=""
 	for JBIGKITSRC in jbig jbig_ar ; do
 		rm -f ${JBIGKITSRC}.o
@@ -588,6 +621,7 @@ function build_jbigkit {
 	done
 	echo "creating libjbig shared library with libtool"
 	libtool -dynamic -v -o libjbig.${JBIGKITVER}.dylib -install_name ${WINELIBPATH}/libjbig.${JBIGKITVER}.dylib -compatibility_version ${JBIGKITVER} -current_version ${JBIGKITVER} -lc ${JBIGKITOBJS} || fail_and_exit "failed to build jbigkit shared library"
+	touch ${BUILTFILE} || fail_and_exit "could not touch ${BUILTFILE}"
 	popd >/dev/null 2>&1
 }
 function install_jbigkit {
@@ -821,6 +855,13 @@ function extract_gsm {
 function build_gsm {
 	pushd . >/dev/null 2>&1
 	cd ${WINEBUILDPATH}/${GSMDIR} || fail_and_exit "could not cd to the GSM source directory"
+	BUILTFILE="${WINEBUILDPATH}/${GSMDIR}/.$(basename ${0})-built"
+	if [ ${NOREBUILD} -eq 1 ] ; then
+		if [ -f ${BUILTFILE} ] ; then
+			echo "--no-rebuild set, not rebuilding in ${WINEBUILDPATH}/${GSMDIR}"
+			return
+		fi
+	fi
 	GSMOBJS=""
 	for GSMSRC in add code debug decode long_term lpc preprocess rpe gsm_destroy gsm_decode gsm_encode gsm_explode gsm_implode gsm_create gsm_print gsm_option short_term table ; do
 		rm -f src/${GSMSRC}.o
@@ -832,6 +873,7 @@ function build_gsm {
 	rm -f lib/libgsm.${GSMVER}.${GSMPL}.dylib
 	echo "creating libgsm dynamic library"
 	libtool -dynamic -v -o lib/libgsm.${GSMVER}.${GSMPL}.dylib -install_name ${WINELIBPATH}/libgsm.${GSMVER}.${GSMPL}.dylib -compatibility_version ${GSMVER}.${GSMPL} -current_version ${GSMVER}.${GSMPL} -lc ${GSMOBJS} || fail_and_exit "failed creating GSM shared library"
+	touch ${BUILTFILE} || fail_and_exit "could not touch ${BUILTFILE}"
 	popd >/dev/null 2>&1
 }
 function install_gsm {
@@ -1569,42 +1611,38 @@ function extract_wine {
 	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${WINEFILE}" "${WINEBUILDPATH}" "${WINEDIR}"
 }
 function configure_wine {
-	pushd . >/dev/null 2>&1
-	cd ${WINEBUILDPATH}/${WINEDIR} || fail_and_exit "could not cd into ${WINEBUILDPATH}/${WINEDIR} to configure Wine"
-	echo "now configuring wine in ${WINEBUILDPATH}/${WINEDIR}"
-	${CONFIGURE} ${CONFIGURECOMMONPREFIX} \
-		--verbose \
-		--${WIN16FLAG}-win16 \
-		--disable-win64 \
-		--without-capi \
-		--without-hal \
-		--without-v4l \
-		--with-cms \
-		--with-coreaudio \
-		--with-cups \
-		--with-curses \
-		--with-fontconfig \
-		--with-freetype \
-		--with-glu \
-		--with-gnutls \
-		--with-gphoto \
-		--with-gsm \
-		--with-jpeg \
-		--with-ldap \
-		--with-mpg123 \
-		--with-openal \
-		--with-opengl \
-		--with-openssl \
-		--with-png \
-		--with-pthread \
-		--with-sane \
-		--with-xml \
-		--with-xslt \
-		--with-x \
-		--x-includes=${X11INC} \
-		--x-libraries=${X11LIB} || fail_and_exit "could not configure wine in ${WINEBUILDPATH}/${WINEDIR}"
-	echo "successfully configured wine in ${WINEBUILDPATH}/${WINEDIR}"
-	popd >/dev/null 2>&1
+	WINECONFIGUREOPTS=""
+	WINECONFIGUREOPTS+="--verbose "
+	WINECONFIGUREOPTS+="--${WIN16FLAG}-win16 "
+	WINECONFIGUREOPTS+="--disable-win64 "
+	WINECONFIGUREOPTS+="--without-capi "
+	WINECONFIGUREOPTS+="--without-hal "
+	WINECONFIGUREOPTS+="--without-v4l "
+	WINECONFIGUREOPTS+="--with-cms "
+	WINECONFIGUREOPTS+="--with-coreaudio "
+	WINECONFIGUREOPTS+="--with-cups "
+	WINECONFIGUREOPTS+="--with-curses "
+	WINECONFIGUREOPTS+="--with-fontconfig "
+	WINECONFIGUREOPTS+="--with-freetype "
+	WINECONFIGUREOPTS+="--with-glu "
+	WINECONFIGUREOPTS+="--with-gnutls "
+	WINECONFIGUREOPTS+="--with-gphoto "
+	WINECONFIGUREOPTS+="--with-gsm "
+	WINECONFIGUREOPTS+="--with-jpeg "
+	WINECONFIGUREOPTS+="--with-ldap "
+	WINECONFIGUREOPTS+="--with-mpg123 "
+	WINECONFIGUREOPTS+="--with-openal "
+	WINECONFIGUREOPTS+="--with-opengl "
+	WINECONFIGUREOPTS+="--with-openssl "
+	WINECONFIGUREOPTS+="--with-png "
+	WINECONFIGUREOPTS+="--with-pthread "
+	WINECONFIGUREOPTS+="--with-sane "
+	WINECONFIGUREOPTS+="--with-xml "
+	WINECONFIGUREOPTS+="--with-xslt "
+	WINECONFIGUREOPTS+="--with-x "
+	WINECONFIGUREOPTS+="--x-includes=${X11INC} "
+	WINECONFIGUREOPTS+="--x-libraries=${X11LIB} "
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${WINECONFIGUREOPTS}" "${WINEBUILDPATH}/${WINEDIR}"
 }
 function depend_wine {
 	build_package "${MAKE} depend" "${WINEBUILDPATH}/${WINEDIR}"
@@ -1739,7 +1777,7 @@ function install_prereqs {
 function build_complete {
     cat << EOF
 
-Succesffully built and installed Wine version ${WINEVERSION}!
+Successfully built and installed Wine version ${WINEVERSION}!
 
 The installation base directory is:
 
