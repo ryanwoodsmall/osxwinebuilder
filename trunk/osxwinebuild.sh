@@ -69,7 +69,7 @@ fi
 
 # wine version
 #   wine-X.Y.Z
-export WINEVERSION="1.2-rc3"
+export WINEVERSION="1.2-rc4"
 
 # timestamp
 export TIMESTAMP=$(date '+%Y%m%d%H%M%S')
@@ -1596,7 +1596,7 @@ function install_wisotool {
 WINEVER=${WINEVERSION}
 WINEFILE="wine-${WINEVER}.tar.bz2"
 WINEURL="http://downloads.sourceforge.net/wine/${WINEFILE}"
-WINESHA1SUM="cfe848f76a0ea4983bb04b63008b63829f881703"
+WINESHA1SUM="808cdd4f8e2d29736393efc42e422f1bae2ca8e5"
 WINEDIR="wine-${WINEVER}"
 function clean_wine {
 	clean_source_dir "${WINEDIR}" "${WINEBUILDPATH}"
