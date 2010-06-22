@@ -795,10 +795,10 @@ function install_libxslt {
 #
 # XXX - CFLAGS is *broken* - have to set everything in CC
 # XXX - CFLAGS may be fixed in 1.10/1.11 series - test
-MPG123VER="1.12.1"
+MPG123VER="1.12.2"
 MPG123FILE="mpg123-${MPG123VER}.tar.bz2"
 MPG123URL="http://downloads.sourceforge.net/mpg123/${MPG123FILE}"
-MPG123SHA1SUM="eaec53831298ce19f7246830f3058917dae9154d"
+MPG123SHA1SUM="7cb9bcb51366ea6f4b11d0e160c2d42a2c153212"
 MPG123DIR="mpg123-${MPG123VER}"
 function clean_mpg123 {
 	clean_source_dir "${MPG123DIR}" "${WINEBUILDPATH}"
