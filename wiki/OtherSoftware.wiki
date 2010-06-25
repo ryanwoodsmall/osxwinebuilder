@@ -37,6 +37,6 @@ I will attempt to keep this page updated with every Subversion check in, but svn
 || SANE Backends || 1.0.21 || [http://www.sane-project.org/] || GPL || scanner/imaging access in Wine ||
 || toast (GSM) || 1.0.13 || formerly [http://user.cs.tu-berlin.de/~jutta/toast.html], now [http://www.quut.com/gsm/] || see [http://osxwinebuilder.googlecode.com/files/gsm-COPYRIGHT] || used by Wine for audio encode/decode ||
 || unixODBC || 2.3.0 || [http://www.unixodbc.org/] || LGPL || used for native ODBC bridge to Wine ||
-|| Wine || 1.2-rc4 || [http://www.winehq.org/] || LGPL || Wine is used for Wine, right? ||
+|| Wine || 1.2-rc5 || [http://www.winehq.org/] || LGPL || Wine is used for Wine, right? ||
 || winetricks || varies || [http://wiki.winehq.org/winetricks], [http://code.google.com/p/winezeug/] || LGPL || quick install script for some Windows programs ||
 || wisotool || varies || [http://wiki.winehq.org/wisotool], [http://winezeug.googlecode.com/svn/trunk/wisotool] || LGPL || quick install/building blocks for common games/demos/etc. ||
