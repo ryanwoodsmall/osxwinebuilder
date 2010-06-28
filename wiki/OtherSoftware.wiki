@@ -25,7 +25,7 @@ I will attempt to keep this page updated with every Subversion check in, but svn
 || libgcrypt || 1.4.5 || [http://www.gnupg.org/] || GPL || used by GnuTLS ||
 || libgpg-error || 1.8 || [http://www.gnupg.org/] || GPL || used by GnuTLS ||
 || libgphoto2 || 2.4.9.1 || [http://www.gphoto.org/] || LGPL || used for imaging/camera support in Wine ||
-|| libpng || 1.2.43/1.4.2 || [http://www.libpng.org/] || libpng license || PNG support in Wine ||
+|| libpng || 1.2.44/1.4.3 || [http://www.libpng.org/] || libpng license || PNG support in Wine ||
 || libtiff || 3.9.4 || [http://www.remotesensing.org/libtiff/] || coypright Sam Leffler, Silicon Graphics, Inc || used for TIFF support in Wine ||
 || libxml2 || 2.7.7 || [http://xmlsoft.org/] || copyright Daniel Veillard || XML support in Wine ||
 || libxslt || 1.1.26 || [http://xmlsoft.org/] || copyright Thomas Broyer, Charlie Bozeman and Daniel Veillard || XSL/XSLT support in Wine ||
