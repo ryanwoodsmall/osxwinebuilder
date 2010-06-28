@@ -687,14 +687,14 @@ function install_tiff {
 #
 # libpng
 #
-LIBPNGVER="1.4.2"
-#LIBPNGVER="1.2.43"
+LIBPNGVER="1.4.3"
+#LIBPNGVER="1.2.44"
 LIBPNGFILE="libpng-${LIBPNGVER}.tar.gz"
 LIBPNGURL="http://downloads.sourceforge.net/libpng/${LIBPNGFILE}"
 # 1.4.x SHA1 sum
-LIBPNGSHA1SUM="ab48f2452a020f0182af25c82b9aa719fe1a779d"
+LIBPNGSHA1SUM="dd56c9ecef2d41aa991740a3da6f136412e3b077"
 # 1.2.x SHA1 sum
-#LIBPNGSHA1SUM="44c1231c74f13b4f3e5870e039abeb35c7860a3f"
+#LIBPNGSHA1SUM="776bb8e42d86bd71ae58e0d96f85472c1d63beeb"
 LIBPNGDIR="libpng-${LIBPNGVER}"
 function clean_libpng {
 	clean_source_dir "${LIBPNGDIR}" "${WINEBUILDPATH}"
