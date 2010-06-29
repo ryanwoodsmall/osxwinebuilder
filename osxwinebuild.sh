@@ -486,29 +486,29 @@ PKGCONFIGFILE="pkg-config-${PKGCONFIGVER}.tar.gz"
 PKGCONFIGURL="http://pkgconfig.freedesktop.org/releases/${PKGCONFIGFILE}"
 PKGCONFIGSHA1SUM="8922aeb4edeff7ed554cc1969cbb4ad5a4e6b26e"
 PKGCONFIGDIR="pkg-config-${PKGCONFIGVER}"
-function clean_pkg-config {
+function clean_pkgconfig {
 	clean_source_dir "${PKGCONFIGDIR}" "${WINEBUILDPATH}"
 }
-function get_pkg-config {
+function get_pkgconfig {
 	get_file "${PKGCONFIGFILE}" "${WINESOURCEPATH}" "${PKGCONFIGURL}"
 }
-function check_pkg-config {
+function check_pkgconfig {
 	check_sha1sum "${WINESOURCEPATH}/${PKGCONFIGFILE}" "${PKGCONFIGSHA1SUM}"
 }
-function extract_pkg-config {
+function extract_pkgconfig {
 	extract_file "${TARGZ}" "${WINESOURCEPATH}/${PKGCONFIGFILE}" "${WINEBUILDPATH}" "${PKGCONFIGDIR}"
 }
-function configure_pkg-config {
+function configure_pkgconfig {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${PKGCONFIGDIR}"
 }
-function build_pkg-config {
+function build_pkgconfig {
 	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${PKGCONFIGDIR}"
 }
-function install_pkg-config {
-	clean_pkg-config
-	extract_pkg-config
-	configure_pkg-config
-	build_pkg-config
+function install_pkgconfig {
+	clean_pkgconfig
+	extract_pkgconfig
+	configure_pkgconfig
+	build_pkgconfig
 	install_package "${MAKE} install" "${WINEBUILDPATH}/${PKGCONFIGDIR}"
 }
 
@@ -1115,29 +1115,29 @@ LIBGPGERRORFILE="libgpg-error-${LIBGPGERRORVER}.tar.bz2"
 LIBGPGERRORURL="ftp://ftp.gnupg.org/gcrypt/libgpg-error/${LIBGPGERRORFILE}"
 LIBGPGERRORSHA1SUM="f5cf677a7cd684645feaa9704d09eb5cd6d97e8a"
 LIBGPGERRORDIR="libgpg-error-${LIBGPGERRORVER}"
-function clean_libgpg-error {
+function clean_libgpgerror {
 	clean_source_dir "${LIBGPGERRORDIR}" "${WINEBUILDPATH}"
 }
-function get_libgpg-error {
+function get_libgpgerror {
 	get_file "${LIBGPGERRORFILE}" "${WINESOURCEPATH}" "${LIBGPGERRORURL}"
 }
-function check_libgpg-error {
+function check_libgpgerror {
 	check_sha1sum "${WINESOURCEPATH}/${LIBGPGERRORFILE}" "${LIBGPGERRORSHA1SUM}"
 }
-function extract_libgpg-error {
+function extract_libgpgerror {
 	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${LIBGPGERRORFILE}" "${WINEBUILDPATH}" "${LIBGPGERRORDIR}"
 }
-function configure_libgpg-error {
+function configure_libgpgerror {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${LIBGPGERRORDIR}"
 }
-function build_libgpg-error {
+function build_libgpgerror {
 	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${LIBGPGERRORDIR}"
 }
-function install_libgpg-error {
-	clean_libgpg-error
-	extract_libgpg-error
-	configure_libgpg-error
-	build_libgpg-error
+function install_libgpgerror {
+	clean_libgpgerror
+	extract_libgpgerror
+	configure_libgpgerror
+	build_libgpgerror
 	install_package "${MAKE} install" "${WINEBUILDPATH}/${LIBGPGERRORDIR}"
 }
 
@@ -1319,29 +1319,29 @@ LIBUSBCOMPATFILE="libusb-compat-${LIBUSBCOMPATVER}.tar.bz2"
 LIBUSBCOMPATURL="http://downloads.sourceforge.net/libusb/${LIBUSBCOMPATFILE}"
 LIBUSBCOMPATSHA1SUM="d5710d5bc4b67c5344e779475b76168c7ccc5e69"
 LIBUSBCOMPATDIR="libusb-compat-${LIBUSBCOMPATVER}"
-function clean_libusb-compat {
+function clean_libusbcompat {
 	clean_source_dir "${LIBUSBCOMPATDIR}" "${WINEBUILDPATH}"
 }
-function get_libusb-compat {
+function get_libusbcompat {
 	get_file "${LIBUSBCOMPATFILE}" "${WINESOURCEPATH}" "${LIBUSBCOMPATURL}"
 }
-function check_libusb-compat {
+function check_libusbcompat {
 	check_sha1sum "${WINESOURCEPATH}/${LIBUSBCOMPATFILE}" "${LIBUSBCOMPATSHA1SUM}"
 }
-function extract_libusb-compat {
+function extract_libusbcompat {
 	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${LIBUSBCOMPATFILE}" "${WINEBUILDPATH}" "${LIBUSBCOMPATDIR}"
 }
-function configure_libusb-compat {
+function configure_libusbcompat {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${LIBUSBCOMPATDIR}"
 }
-function build_libusb-compat {
+function build_libusbcompat {
 	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${LIBUSBCOMPATDIR}"
 }
-function install_libusb-compat {
-	clean_libusb-compat
-	extract_libusb-compat
-	configure_libusb-compat
-	build_libusb-compat
+function install_libusbcompat {
+	clean_libusbcompat
+	extract_libusbcompat
+	configure_libusbcompat
+	build_libusbcompat
 	install_package "${MAKE} install" "${WINEBUILDPATH}/${LIBUSBCOMPATDIR}"
 }
 
@@ -1421,29 +1421,29 @@ SANEBACKENDSFILE="sane-backends-${SANEBACKENDSVER}.tar.gz"
 SANEBACKENDSURL="ftp://ftp.sane-project.org/pub/sane/sane-backends-${SANEBACKENDSVER}/${SANEBACKENDSFILE}"
 SANEBACKENDSSHA1SUM="4a2789ea9dae1ece090d016abd14b0f2450d9bdb"
 SANEBACKENDSDIR="sane-backends-${SANEBACKENDSVER}"
-function clean_sane-backends {
+function clean_sanebackends {
 	clean_source_dir "${SANEBACKENDSDIR}" "${WINEBUILDPATH}"
 }
-function get_sane-backends {
+function get_sanebackends {
 	get_file "${SANEBACKENDSFILE}" "${WINESOURCEPATH}" "${SANEBACKENDSURL}"
 }
-function check_sane-backends {
+function check_sanebackends {
 	check_sha1sum "${WINESOURCEPATH}/${SANEBACKENDSFILE}" "${SANEBACKENDSSHA1SUM}"
 }
-function extract_sane-backends {
+function extract_sanebackends {
 	extract_file "${TARGZ}" "${WINESOURCEPATH}/${SANEBACKENDSFILE}" "${WINEBUILDPATH}" "${SANEBACKENDSDIR}"
 }
-function configure_sane-backends {
+function configure_sanebackends {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --with-gphoto2 --enable-libusb_1_0" "${WINEBUILDPATH}/${SANEBACKENDSDIR}"
 }
-function build_sane-backends {
+function build_sanebackends {
 	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${SANEBACKENDSDIR}"
 }
-function install_sane-backends {
-	clean_sane-backends
-	extract_sane-backends
-	configure_sane-backends
-	build_sane-backends
+function install_sanebackends {
+	clean_sanebackends
+	extract_sanebackends
+	configure_sanebackends
+	build_sanebackends
 	install_package "${MAKE} install" "${WINEBUILDPATH}/${SANEBACKENDSDIR}"
 }
 
@@ -1664,7 +1664,7 @@ function install_wine {
 #   fetches all source packages
 #
 function get_sources {
-	get_pkg-config
+	get_pkgconfig
 	get_gettext
 	get_jpeg
 	get_jbigkit
@@ -1679,16 +1679,16 @@ function get_sources {
 	get_lcms
 	#get_lcms2
 	get_lzo
-	get_libgpg-error
+	get_libgpgerror
 	get_libgcrypt
 	get_gnutls
 	get_unixodbc
 	get_libexif
 	get_libusb
-	get_libusb-compat
+	get_libusbcompat
 	get_gd
 	get_libgphoto2
-	get_sane-backends
+	get_sanebackends
 	get_cabextract
 	get_git
 	get_gecko
@@ -1702,7 +1702,7 @@ function get_sources {
 #   checks all source SHA-1 sums
 #
 function check_sources {
-	check_pkg-config
+	check_pkgconfig
 	check_gettext
 	check_jpeg
 	check_jbigkit
@@ -1717,16 +1717,16 @@ function check_sources {
 	check_lcms
 	#check_lcms2
 	check_lzo
-	check_libgpg-error
+	check_libgpgerror
 	check_libgcrypt
 	check_gnutls
 	check_unixodbc
 	check_libexif
 	check_libusb
-	check_libusb-compat
+	check_libusbcompat
 	check_gd
 	check_libgphoto2
-	check_sane-backends
+	check_sanebackends
 	check_cabextract
 	check_git
 	check_gecko
@@ -1738,7 +1738,7 @@ function check_sources {
 #   extracts, builds and installs prereqs
 #
 function install_prereqs {
-	install_pkg-config
+	install_pkgconfig
 	install_gettext
 	install_jpeg
 	install_jbigkit
@@ -1753,15 +1753,15 @@ function install_prereqs {
 	install_lcms
 	#install_lcms2
 	install_lzo
-	install_libgpg-error
+	install_libgpgerror
 	install_libgcrypt
 	install_gnutls
 	install_libexif
 	install_libusb
-	install_libusb-compat
+	install_libusbcompat
 	install_gd
 	install_libgphoto2
-	install_sane-backends
+	install_sanebackends
 	install_unixodbc
 	install_cabextract
 	install_git
