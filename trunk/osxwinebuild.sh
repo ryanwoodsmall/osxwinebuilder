@@ -1178,10 +1178,10 @@ function install_libgcrypt {
 #
 # gnutls
 #
-GNUTLSVER="2.8.6"
+GNUTLSVER="2.10.0"
 GNUTLSFILE="gnutls-${GNUTLSVER}.tar.bz2"
 GNUTLSURL="ftp://ftp.gnu.org/pub/gnu/gnutls/${GNUTLSFILE}"
-GNUTLSSHA1SUM="bff911d4fd7389aa6698a644b3748eb2d23715bc"
+GNUTLSSHA1SUM="16c94a1262f8ea3c4dd34eec495bd57203bbcd3a"
 GNUTLSDIR="gnutls-${GNUTLSVER}"
 function clean_gnutls {
 	clean_source_dir "${GNUTLSDIR}" "${WINEBUILDPATH}"
