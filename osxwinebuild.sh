@@ -69,7 +69,7 @@ fi
 
 # wine version
 #   wine-X.Y.Z
-export WINEVERSION="1.2-rc5"
+export WINEVERSION="1.2-rc6"
 
 # timestamp
 export TIMESTAMP=$(date '+%Y%m%d%H%M%S')
@@ -1484,10 +1484,10 @@ function install_cabextract {
 #
 # git
 #
-GITVERSION="1.7.1"
+GITVERSION="1.7.1.1"
 GITFILE="git-${GITVERSION}.tar.bz2"
 GITURL="http://kernel.org/pub/software/scm/git/${GITFILE}"
-GITSHA1SUM="0b031d1ab63506f945ad3c6fb5f814c6a4fc3095"
+GITSHA1SUM="466b802272804cfcbe86a08879c6edb10b7a5a30"
 GITDIR="git-${GITVERSION}"
 function clean_git {
 	clean_source_dir "${GITDIR}" "${WINEBUILDPATH}"
@@ -1596,7 +1596,7 @@ function install_wisotool {
 WINEVER=${WINEVERSION}
 WINEFILE="wine-${WINEVER}.tar.bz2"
 WINEURL="http://downloads.sourceforge.net/wine/${WINEFILE}"
-WINESHA1SUM="bdae575d50608ec1c0d932070a2a6f7c6c7819d9"
+WINESHA1SUM="07cb82572090347ba671abebc6347d75bcd4a8f6"
 WINEDIR="wine-${WINEVER}"
 function clean_wine {
 	clean_source_dir "${WINEDIR}" "${WINEBUILDPATH}"
