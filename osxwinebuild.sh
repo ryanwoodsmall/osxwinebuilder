@@ -69,7 +69,7 @@ fi
 
 # wine version
 #   wine-X.Y.Z
-export WINEVERSION="1.2-rc7"
+export WINEVERSION="1.2"
 
 # timestamp
 export TIMESTAMP=$(date '+%Y%m%d%H%M%S')
@@ -795,10 +795,10 @@ function install_libxslt {
 #
 # XXX - CFLAGS is *broken* - have to set everything in CC
 # XXX - CFLAGS may be fixed in 1.10/1.11 series - test
-MPG123VER="1.12.2"
+MPG123VER="1.12.3"
 MPG123FILE="mpg123-${MPG123VER}.tar.bz2"
 MPG123URL="http://downloads.sourceforge.net/mpg123/${MPG123FILE}"
-MPG123SHA1SUM="7cb9bcb51366ea6f4b11d0e160c2d42a2c153212"
+MPG123SHA1SUM="5e92d3c918f6095264089f711a9f38a5d2168b31"
 MPG123DIR="mpg123-${MPG123VER}"
 function clean_mpg123 {
 	clean_source_dir "${MPG123DIR}" "${WINEBUILDPATH}"
@@ -904,10 +904,14 @@ function install_gsm {
 # freetype
 #
 # XXX - CFLAGS issues with GCC 4.2+...
-FREETYPEVER="2.3.12"
+#FREETYPEVER="2.3.12"
+FREETYPEVER="2.4.0"
 FREETYPEFILE="freetype-${FREETYPEVER}.tar.bz2"
 FREETYPEURL="http://downloads.sourceforge.net/freetype/freetype2/${FREETYPEFILE}"
-FREETYPESHA1SUM="ebf0438429c0bedd310059326d91646c3c91016b"
+# XXX - 2.3.12 SHA1 SUM
+#FREETYPESHA1SUM="ebf0438429c0bedd310059326d91646c3c91016b"
+# XXX - 2.4.0 SHA1 SUM
+FREETYPESHA1SUM="4cbb92847b90da5babdaaab260cc09e801a60e74"
 FREETYPEDIR="freetype-${FREETYPEVER}"
 function clean_freetype {
 	clean_source_dir "${FREETYPEDIR}" "${WINEBUILDPATH}"
@@ -929,11 +933,12 @@ function configure_freetype {
 	pushd . >/dev/null 2>&1
 	cd ${WINEBUILDPATH}/${FREETYPEDIR} || fail_and_exit "could not cd to ${FREETYPEDIR} for patching"
 	# turn on nice but patented hinting
-	if [ ! -f include/freetype/config/ftoption.h.unpatented_hinting ] ; then
-		sed -i.unpatented_hinting \
-			's#\#define TT_CONFIG_OPTION_UNPATENTED_HINTING#/\* \#define TT_CONFIG_OPTION_UNPATENTED_HINTING \*/#g' \
-			include/freetype/config/ftoption.h || fail_and_exit "cound not unconfigure TT_CONFIG_OPTION_UNPATENTED_HINTING for freetype"
-	fi
+	# XXX - not necessary with 2.4+
+	#if [ ! -f include/freetype/config/ftoption.h.unpatented_hinting ] ; then
+	#	sed -i.unpatented_hinting \
+	#		's#\#define TT_CONFIG_OPTION_UNPATENTED_HINTING#/\* \#define TT_CONFIG_OPTION_UNPATENTED_HINTING \*/#g' \
+	#		include/freetype/config/ftoption.h || fail_and_exit "cound not unconfigure TT_CONFIG_OPTION_UNPATENTED_HINTING for freetype"
+	#fi
 	if [ ! -f include/freetype/config/ftoption.h.bytecode_interpreter ] ; then
 		sed -i.bytecode_interpreter \
 			's#/\* \#define TT_CONFIG_OPTION_BYTECODE_INTERPRETER \*/#\#define TT_CONFIG_OPTION_BYTECODE_INTERPRETER#g' \
@@ -1144,10 +1149,10 @@ function install_libgpgerror {
 #
 # libgcrypt
 #
-LIBGCRYPTVER="1.4.5"
+LIBGCRYPTVER="1.4.6"
 LIBGCRYPTFILE="libgcrypt-${LIBGCRYPTVER}.tar.bz2"
 LIBGCRYPTURL="ftp://ftp.gnupg.org/gcrypt/libgcrypt/${LIBGCRYPTFILE}"
-LIBGCRYPTSHA1SUM="ef7ecbd3a03a7978094366bcd1257b3654608d28"
+LIBGCRYPTSHA1SUM="445b9e158aaf91e24eae3d1040c6213e9d9f5ba6"
 LIBGCRYPTDIR="libgcrypt-${LIBGCRYPTVER}"
 function clean_libgcrypt {
 	clean_source_dir "${LIBGCRYPTDIR}" "${WINEBUILDPATH}"
@@ -1596,7 +1601,7 @@ function install_wisotool {
 WINEVER=${WINEVERSION}
 WINEFILE="wine-${WINEVER}.tar.bz2"
 WINEURL="http://downloads.sourceforge.net/wine/${WINEFILE}"
-WINESHA1SUM="aca42cac98e4f09b6b44a2672115e38e2ac3283d"
+WINESHA1SUM="dc37a32edb274167990ca7820f92c2d85962e37d"
 WINEDIR="wine-${WINEVER}"
 function clean_wine {
 	clean_source_dir "${WINEDIR}" "${WINEBUILDPATH}"
