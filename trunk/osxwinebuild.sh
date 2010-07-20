@@ -905,13 +905,13 @@ function install_gsm {
 #
 # XXX - CFLAGS issues with GCC 4.2+...
 #FREETYPEVER="2.3.12"
-FREETYPEVER="2.4.0"
+FREETYPEVER="2.4.1"
 FREETYPEFILE="freetype-${FREETYPEVER}.tar.bz2"
 FREETYPEURL="http://downloads.sourceforge.net/freetype/freetype2/${FREETYPEFILE}"
 # XXX - 2.3.12 SHA1 SUM
 #FREETYPESHA1SUM="ebf0438429c0bedd310059326d91646c3c91016b"
 # XXX - 2.4.0 SHA1 SUM
-FREETYPESHA1SUM="4cbb92847b90da5babdaaab260cc09e801a60e74"
+FREETYPESHA1SUM="1870cc142be52a721031fcf16c4f8110dfb84fdb"
 FREETYPEDIR="freetype-${FREETYPEVER}"
 function clean_freetype {
 	clean_source_dir "${FREETYPEDIR}" "${WINEBUILDPATH}"
