@@ -154,22 +154,29 @@ export X11INC="${X11DIR}/include"
 export X11LIB="${X11DIR}/lib"
 
 # compiler and preprocessor flags
-#   default
-export CC="gcc"
-export CXX="g++"
+#   default - set to GCC
+: ${CC:="gcc"}
+: ${CXX:="g++"}
 #   GCC 4.0
-#export CC="gcc-4.0"
-#export CXX="g++-4.0"
+#: ${CC:="gcc-4.0"}
+#: ${CXX:="g++-4.0"}
 #   GCC 4.2
-#export CC="gcc-4.2"
-#export CXX="g++-4.2"
+#: ${CC:="gcc-4.2"}
+#: ${CXX:="g++-4.2"}
 #   CLANG/LLVM
-#export CC="/Developer/usr/bin/clang"
-#export CC="/Developer/usr/bin/llvm-gcc-4.2"
-#export CXX="/Developer/usr/bin/llvm-g++-4.2"
+#: ${CC:="clang"}
+#: ${CC:="llvm-gcc-4.2"}
+#: ${CXX:="llvm-g++-4.2"}
 #   distcc
-#export CC="distcc gcc"
-#export CXX="distcc g++"
+#: ${CC:="distcc gcc"}
+#: ${CXX:="distcc g++"}
+#   ccache
+#: ${CC:="ccache gcc"}
+#: ${CXX:="ccache g++"}
+export CC
+export CXX
+echo "C compiler set to: \$CC = \"${CC}\""
+echo "C++ compiler set to: \$CXX = \"${CXX}\""
 #   preprocessor/compiler flags
 export CPPFLAGS="-I${WINEINCLUDEPATH} ${OSXSDK+-isysroot $OSXSDK} -I${X11INC}"
 
