@@ -148,7 +148,28 @@ fi
 
 # x11
 #   these need to be changed for Xquartz and the like...
-export X11DIR="/usr/X11"
+#   XXX - super paranoid checks below!
+#   default is to use OS-provided /usr/X11
+export DEFAULTX11DIR="/usr/X11"
+export X11DIR="${DEFAULTX11DIR}"
+# check for XQuartz in /opt/X11 on 10.6+
+if [ ${DARWINMAJ} -ge 10 ] ; then
+	# check for the XQuartz launchd entry
+	launchctl list | grep -i startx | grep -v ^\\- | grep -i xquartz >/dev/null 2>&1
+	if [ $? -eq 0 ] ; then
+		echo "XQuartz launchd startup found, checking for installation"
+		# check that directory /opt/X11 exists and use it
+		if [ -d /opt/X11 ] ; then
+			echo "using XQuartz installed in /opt/X11"
+			export X11DIR="/opt/X11"
+		else
+			echo "XQuartz launchd startup found, but no /opt/X11; reinstall XQuartz?"
+		fi
+	else
+		echo "no XQuartz launchd startup found, assuming system X11 in ${DEFAULTX11DIR}"
+	fi
+fi
+echo "X11 installation set to: \$X11DIR = ${X11DIR}"
 export X11BIN="${X11DIR}/bin"
 export X11INC="${X11DIR}/include"
 export X11LIB="${X11DIR}/lib"
