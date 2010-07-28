@@ -1115,10 +1115,10 @@ function install_lzo {
 #
 # libgpg-error
 #
-LIBGPGERRORVER="1.8"
+LIBGPGERRORVER="1.9"
 LIBGPGERRORFILE="libgpg-error-${LIBGPGERRORVER}.tar.bz2"
 LIBGPGERRORURL="ftp://ftp.gnupg.org/gcrypt/libgpg-error/${LIBGPGERRORFILE}"
-LIBGPGERRORSHA1SUM="f5cf677a7cd684645feaa9704d09eb5cd6d97e8a"
+LIBGPGERRORSHA1SUM="6836579e42320b057a2372bbcd0325130fe2561e"
 LIBGPGERRORDIR="libgpg-error-${LIBGPGERRORVER}"
 function clean_libgpgerror {
 	clean_source_dir "${LIBGPGERRORDIR}" "${WINEBUILDPATH}"
@@ -1183,10 +1183,10 @@ function install_libgcrypt {
 #
 # gnutls
 #
-GNUTLSVER="2.10.0"
+GNUTLSVER="2.10.1"
 GNUTLSFILE="gnutls-${GNUTLSVER}.tar.bz2"
 GNUTLSURL="ftp://ftp.gnu.org/pub/gnu/gnutls/${GNUTLSFILE}"
-GNUTLSSHA1SUM="16c94a1262f8ea3c4dd34eec495bd57203bbcd3a"
+GNUTLSSHA1SUM="507ff8ad7c1e042f8ecaa4314f32777e74caf0d3"
 GNUTLSDIR="gnutls-${GNUTLSVER}"
 function clean_gnutls {
 	clean_source_dir "${GNUTLSDIR}" "${WINEBUILDPATH}"
@@ -1455,10 +1455,10 @@ function install_sanebackends {
 #
 # cabextract
 #
-CABEXTRACTVER="1.2"
+CABEXTRACTVER="1.3"
 CABEXTRACTFILE="cabextract-${CABEXTRACTVER}.tar.gz"
 CABEXTRACTURL="http://www.cabextract.org.uk/${CABEXTRACTFILE}"
-CABEXTRACTSHA1SUM="871b3db4bc2629eb5726659c147aecea1af6a6d0"
+CABEXTRACTSHA1SUM="112469b9e58497a5cfa2ecb3d9eeb9d3a4151c9f"
 CABEXTRACTDIR="cabextract-${CABEXTRACTVER}"
 function clean_cabextract {
 	clean_source_dir "${CABEXTRACTDIR}" "${WINEBUILDPATH}"
@@ -1489,10 +1489,10 @@ function install_cabextract {
 #
 # git
 #
-GITVERSION="1.7.1.1"
+GITVERSION="1.7.2"
 GITFILE="git-${GITVERSION}.tar.bz2"
 GITURL="http://kernel.org/pub/software/scm/git/${GITFILE}"
-GITSHA1SUM="466b802272804cfcbe86a08879c6edb10b7a5a30"
+GITSHA1SUM="4dc232d018d769dd16774d3a12c237ac11b9d227"
 GITDIR="git-${GITVERSION}"
 function clean_git {
 	clean_source_dir "${GITDIR}" "${WINEBUILDPATH}"
