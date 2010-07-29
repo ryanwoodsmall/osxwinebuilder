@@ -155,7 +155,7 @@ export X11DIR="${DEFAULTX11DIR}"
 # check for XQuartz in /opt/X11 on 10.6+
 if [ ${DARWINMAJ} -ge 10 ] ; then
 	# check for the XQuartz launchd entry
-	launchctl list | grep -i startx | grep -v ^\\- | grep -i xquartz >/dev/null 2>&1
+	launchctl list | grep -i startx | grep -i xquartz >/dev/null 2>&1
 	if [ $? -eq 0 ] ; then
 		echo "XQuartz launchd startup found, checking for installation"
 		# check that directory /opt/X11 exists and use it
