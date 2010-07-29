@@ -1470,7 +1470,13 @@ function configure_sanebackends {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --with-gphoto2 --enable-libusb_1_0" "${WINEBUILDPATH}/${SANEBACKENDSDIR}"
 }
 function build_sanebackends {
-	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${SANEBACKENDSDIR}"
+	# XXX - 'make -j#' fails for #>1 on OS X <10.6/sane-backends 1.0.21.
+	# XXX - work around by running a single job for now. dirty, ugh.
+	if [ ${DARWINMAJ} -lt 10 ] ; then
+		build_package "${MAKE}" "${WINEBUILDPATH}/${SANEBACKENDSDIR}"
+	else
+		build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${SANEBACKENDSDIR}"
+	fi
 }
 function install_sanebackends {
 	clean_sanebackends
