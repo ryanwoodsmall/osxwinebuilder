@@ -29,15 +29,24 @@ function fail_and_exit {
 # usage
 #   defined early; may be called if "--help" or a bunk option is passed
 function usage {
-	echo "usage: $(basename ${0}) [--help] [--no-clean-prefix] [--no-clean-source] [--no-rebuild] [--no-reconfigure]"
+	echo "usage: $(basename ${0}) [--help] [--stable] [--devel] [--no-clean-prefix] [--no-clean-source] [--no-rebuild] [--no-reconfigure]"
 	echo "    --help: display this help message"
+	echo "    --stable: build the stable version of Wine (default)"
+	echo "    --devel: build the development version of Wine"
 	echo "    --no-clean-prefix: do not move and create a new prefix if one already exists"
 	echo "    --no-clean-source: do not remove/extract source if already done"
 	echo "    --no-rebuild: do not rebuild packages, just reinstall"
 	echo "    --no-reconfigure: do not re-run 'configure' for any packages"
+	echo ""
+	echo "    Note:"
+	echo "      --stable and --devel are mutually exclusive"
+	echo "      if both (or neither) are specificed, --stable will be chosen"
 }
 
 # options
+#   set devel/stable swtiches both to zero, handle below
+BUILDSTABLE=0
+BUILDDEVEL=0
 #   we remove and rebuild everything in a new prefix by default
 NOCLEANPREFIX=0
 NOCLEANSOURCE=0
@@ -47,6 +56,12 @@ NORECONFIGURE=0
 if [ ${#} -gt 0 ] ; then
 	until [ -z ${1} ] ; do
 		case ${1} in
+			--devel)
+				BUILDDEVEL=1
+				echo "found --devel option, will build Wine devel version" ; shift ;;
+			--stable)
+				BUILDSTABLE=1
+				echo "found --stable option, will build Wine stable version" ; shift ;;
 			--no-clean-prefix)
 				NOCLEANPREFIX=1
 				echo "found --no-clean-prefix option, will install to existing prefix if it exists" ; shift ;;
@@ -68,8 +83,31 @@ if [ ${#} -gt 0 ] ; then
 fi
 
 # wine version
-#   wine-X.Y.Z
-export WINEVERSION="1.2"
+#   stable
+export WINESTABLEVERSION="1.2"
+export WINESTABLESHA1SUM="dc37a32edb274167990ca7820f92c2d85962e37d"
+#   devel
+export WINEDEVELVERSION="1.3.0"
+export WINEDEVELSHA1SUM="955c8cbf6fe85de179e9b6c8bea9940363166e51"
+#   always build stable by default
+if [ ${BUILDSTABLE} -eq 0 ] && [ ${BUILDDEVEL} -eq 0 ] ; then
+	BUILDSTABLE=1
+fi
+#   --devel and --stable are mutually exclusive, default to stable if both are specficied
+if [ ${BUILDSTABLE} -eq 1 ] && [ ${BUILDDEVEL} -eq 1 ] ; then
+	echo "--devel and --stable options both specified, defaulting to stable"
+	BUILDSTABLE=1
+	BUILDDEVEL=0
+fi
+#   set versions and SHA1 sums correctly
+if [ ${BUILDSTABLE} -eq 1 ] ; then
+	export WINEVERSION="${WINESTABLEVERSION}"
+	export WINESHA1SUM="${WINESTABLESHA1SUM}"
+elif [ ${BUILDDEVEL} -eq 1 ] ; then
+	export WINEVERSION="${WINEDEVELVERSION}"
+	export WINESHA1SUM="${WINEDEVELSHA1SUM}"
+fi
+echo "building Wine verison ${WINEVERSION}"
 
 # timestamp
 export TIMESTAMP=$(date '+%Y%m%d%H%M%S')
@@ -1523,10 +1561,10 @@ function install_cabextract {
 #
 # git
 #
-GITVERSION="1.7.2"
+GITVERSION="1.7.2.1"
 GITFILE="git-${GITVERSION}.tar.bz2"
 GITURL="http://kernel.org/pub/software/scm/git/${GITFILE}"
-GITSHA1SUM="4dc232d018d769dd16774d3a12c237ac11b9d227"
+GITSHA1SUM="f177bb1b48b8de73063a722025285599fa361fc7"
 GITDIR="git-${GITVERSION}"
 function clean_git {
 	clean_source_dir "${GITDIR}" "${WINEBUILDPATH}"
@@ -1635,7 +1673,6 @@ function install_wisotool {
 WINEVER=${WINEVERSION}
 WINEFILE="wine-${WINEVER}.tar.bz2"
 WINEURL="http://downloads.sourceforge.net/wine/${WINEFILE}"
-WINESHA1SUM="dc37a32edb274167990ca7820f92c2d85962e37d"
 WINEDIR="wine-${WINEVER}"
 function clean_wine {
 	clean_source_dir "${WINEDIR}" "${WINEBUILDPATH}"
