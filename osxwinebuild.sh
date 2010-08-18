@@ -1449,10 +1449,10 @@ function install_gd {
 #
 # libgphoto2
 #
-LIBGPHOTO2VER="2.4.9.1"
+LIBGPHOTO2VER="2.4.10"
 LIBGPHOTO2FILE="libgphoto2-${LIBGPHOTO2VER}.tar.bz2"
 LIBGPHOTO2URL="http://downloads.sourceforge.net/gphoto/libgphoto/${LIBGPHOTO2FILE}"
-LIBGPHOTO2SHA1SUM="7a5fb35b9c050bae3ceac096245071ab1e699af5"
+LIBGPHOTO2SHA1SUM="0fbbcfdfe13c3cf128505e3079faf55407b647c5"
 LIBGPHOTO2DIR="libgphoto2-${LIBGPHOTO2VER}"
 function clean_libgphoto2 {
 	clean_source_dir "${LIBGPHOTO2DIR}" "${WINEBUILDPATH}"
