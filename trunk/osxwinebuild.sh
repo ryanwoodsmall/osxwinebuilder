@@ -87,8 +87,8 @@ fi
 export WINESTABLEVERSION="1.2"
 export WINESTABLESHA1SUM="dc37a32edb274167990ca7820f92c2d85962e37d"
 #   devel
-export WINEDEVELVERSION="1.3.0"
-export WINEDEVELSHA1SUM="955c8cbf6fe85de179e9b6c8bea9940363166e51"
+export WINEDEVELVERSION="1.3.1"
+export WINEDEVELSHA1SUM="f2e88dd990c553a434b9156c8bfd90583d27c0b8"
 #   always build stable by default
 if [ ${BUILDSTABLE} -eq 0 ] && [ ${BUILDDEVEL} -eq 0 ] ; then
 	BUILDSTABLE=1
@@ -1557,10 +1557,10 @@ function install_cabextract {
 #
 # git
 #
-GITVERSION="1.7.2.1"
+GITVERSION="1.7.2.2"
 GITFILE="git-${GITVERSION}.tar.bz2"
 GITURL="http://kernel.org/pub/software/scm/git/${GITFILE}"
-GITSHA1SUM="f177bb1b48b8de73063a722025285599fa361fc7"
+GITSHA1SUM="0cc1caba421a2af5f8e3b9648a6230ea07c60bee"
 GITDIR="git-${GITVERSION}"
 function clean_git {
 	clean_source_dir "${GITDIR}" "${WINEBUILDPATH}"
