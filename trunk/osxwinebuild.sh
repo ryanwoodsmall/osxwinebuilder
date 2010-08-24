@@ -822,13 +822,9 @@ function install_tiff {
 # libpng
 #
 LIBPNGVER="1.4.3"
-#LIBPNGVER="1.2.44"
 LIBPNGFILE="libpng-${LIBPNGVER}.tar.gz"
 LIBPNGURL="http://downloads.sourceforge.net/libpng/${LIBPNGFILE}"
-# 1.4.x SHA1 sum
 LIBPNGSHA1SUM="dd56c9ecef2d41aa991740a3da6f136412e3b077"
-# 1.2.x SHA1 sum
-#LIBPNGSHA1SUM="776bb8e42d86bd71ae58e0d96f85472c1d63beeb"
 LIBPNGDIR="libpng-${LIBPNGVER}"
 function clean_libpng {
 	clean_source_dir "${LIBPNGDIR}" "${WINEBUILDPATH}"
@@ -927,8 +923,6 @@ function install_libxslt {
 #
 # mpg123
 #
-# XXX - CFLAGS is *broken* - have to set everything in CC
-# XXX - CFLAGS may be fixed in 1.10/1.11 series - test
 MPG123VER="1.12.3"
 MPG123FILE="mpg123-${MPG123VER}.tar.bz2"
 MPG123URL="http://downloads.sourceforge.net/mpg123/${MPG123FILE}"
@@ -966,7 +960,6 @@ function install_mpg123 {
 #
 # gsm
 #
-# XXX - GSM is a HUGE HACK on OS X... and it may or may not work.
 GSMVER="1.0"
 GSMMAJOR=$(echo ${GSMVER} | awk -F\. '{print $1}')
 GSMPL="13"
@@ -1038,7 +1031,6 @@ function install_gsm {
 #
 # freetype
 #
-# XXX - CFLAGS issues with GCC 4.2+...
 FREETYPEVER="2.4.2"
 FREETYPEFILE="freetype-${FREETYPEVER}.tar.bz2"
 FREETYPEURL="http://downloads.sourceforge.net/freetype/freetype2/${FREETYPEFILE}"
@@ -1063,13 +1055,6 @@ function configure_freetype {
 	echo "attempting to enable FreeType's subpixel rendering and bytecode interpretter in ${WINEBUILDPATH}/${FREETYPEDIR}"
 	pushd . >/dev/null 2>&1
 	cd ${WINEBUILDPATH}/${FREETYPEDIR} || fail_and_exit "could not cd to ${FREETYPEDIR} for patching"
-	# turn on nice but patented hinting
-	# XXX - not necessary with 2.4+
-	#if [ ! -f include/freetype/config/ftoption.h.unpatented_hinting ] ; then
-	#	sed -i.unpatented_hinting \
-	#		's#\#define TT_CONFIG_OPTION_UNPATENTED_HINTING#/\* \#define TT_CONFIG_OPTION_UNPATENTED_HINTING \*/#g' \
-	#		include/freetype/config/ftoption.h || fail_and_exit "cound not unconfigure TT_CONFIG_OPTION_UNPATENTED_HINTING for freetype"
-	#fi
 	if [ ! -f include/freetype/config/ftoption.h.bytecode_interpreter ] ; then
 		sed -i.bytecode_interpreter \
 			's#/\* \#define TT_CONFIG_OPTION_BYTECODE_INTERPRETER \*/#\#define TT_CONFIG_OPTION_BYTECODE_INTERPRETER#g' \
@@ -1166,49 +1151,8 @@ function install_lcms {
 }
 
 #
-# lcms2
-#
-LCMS2VER="2.0"
-LCMS2FILE="lcms2-${LCMS2VER}.tar.gz"
-LCMS2URL="http://downloads.sourceforge.net/lcms/${LCMS2FILE}"
-LCMS2SHA1SUM="c204158d0b4b15d918664750fcd5579f1347a38d"
-LCMS2DIR="lcms-${LCMS2VER}"
-function clean_lcms2 {
-	clean_source_dir "${LCMS2DIR}" "${WINEBUILDPATH}"
-}
-function get_lcms2 {
-	get_file "${LCMS2FILE}" "${WINESOURCEPATH}" "${LCMS2URL}"
-}
-function check_lcms2 {
-	check_sha1sum "${WINESOURCEPATH}/${LCMS2FILE}" "${LCMS2SHA1SUM}"
-}
-function extract_lcms2 {
-	extract_file "${TARGZ}" "${WINESOURCEPATH}/${LCMS2FILE}" "${WINEBUILDPATH}" "${LCMS2DIR}"
-}
-function configure_lcms2 {
-	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --with-jpeg --with-tiff --with-zlib" "${WINEBUILDPATH}/${LCMS2DIR}"
-}
-function build_lcms2 {
-	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${LCMS2DIR}"
-}
-function install_lcms2 {
-	clean_lcms2
-	extract_lcms2
-	configure_lcms2
-	build_lcms2
-	# lcms2 v2.0 install-sh is not executable
-	pushd . >/dev/null 2>&1
-	cd ${WINEBUILDPATH}/${LCMS2DIR} || fail_and_exit "could not cd to ${WINEBUILDPATH}/${LCMS2DIR}"
-	chmod 755 install-sh || fail_and_exit "could not set exec permissions on 'install-sh' for LCMS2"
-	popd >/dev/null 2>&1
-	install_package "${MAKE} install" "${WINEBUILDPATH}/${LCMS2DIR}"
-}
-
-
-#
 # lzo
 #
-# XXX - broken CFLAGS, bundle w/CC
 LZOVER="2.03"
 LZOFILE="lzo-${LZOVER}.tar.gz"
 LZOURL="http://www.oberhumer.com/opensource/lzo/download/${LZOFILE}"
@@ -1573,8 +1517,7 @@ function configure_sanebackends {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --with-gphoto2 --enable-libusb_1_0" "${WINEBUILDPATH}/${SANEBACKENDSDIR}"
 }
 function build_sanebackends {
-	# XXX - 'make -j#' fails for #>1 on OS X <10.6/sane-backends 1.0.21.
-	# XXX - work around by running a single job for now. dirty, ugh.
+	# 'make -j#' fails for #>1 on OS X <10.6/sane-backends 1.0.21.
 	if [ ${DARWINMAJ} -lt 10 ] ; then
 		build_package "${MAKE}" "${WINEBUILDPATH}/${SANEBACKENDSDIR}"
 	else
@@ -1839,7 +1782,6 @@ function get_sources {
 	get_freetype
 	get_fontconfig
 	get_lcms
-	#get_lcms2
 	get_lzo
 	get_libgpgerror
 	get_libgcrypt
@@ -1877,7 +1819,6 @@ function check_sources {
 	check_freetype
 	check_fontconfig
 	check_lcms
-	#check_lcms2
 	check_lzo
 	check_libgpgerror
 	check_libgcrypt
@@ -1913,7 +1854,6 @@ function install_prereqs {
 	install_freetype
 	install_fontconfig
 	install_lcms
-	#install_lcms2
 	install_lzo
 	install_libgpgerror
 	install_libgcrypt
