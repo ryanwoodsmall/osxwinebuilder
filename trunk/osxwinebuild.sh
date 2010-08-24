@@ -22,8 +22,8 @@
 # fail_and_exit
 #   first function defined since it will be called if there are failures
 function fail_and_exit {
-        echo "${@} - exiting"
-        exit 1
+	echo "${@} - exiting"
+	exit 1
 }
 
 # usage
@@ -765,6 +765,7 @@ function install_jbigkit {
 	cd ${WINEBUILDPATH}/${JBIGKITDIR}/libjbig || fail_and_exit "could not cd to the JBIG source directory"
 	echo "installing libjbig shared library and symbolic links"
 	install -m 755 libjbig.${JBIGKITVER}.dylib ${WINELIBPATH}/libjbig.${JBIGKITVER}.dylib || fail_and_exit "could not install libjbig dynamic library"
+	# XXX - remove manual cleanup? 'ln -Ffs' should manage this for us
 	if [ ${NOCLEANPREFIX} -eq 1 ] ; then
 		echo "--no-clean-prefix, manually removing libjbig symlinks"
 		if [ -L ${WINELIBPATH}/libjbig.${JBIGKITMAJOR}.dylib ] ; then
@@ -774,8 +775,8 @@ function install_jbigkit {
 			unlink ${WINELIBPATH}/libjbig.dylib || fail_and_exit "could not remove existing libjbig symbolic link"
 		fi
 	fi
-	ln -s libjbig.${JBIGKITVER}.dylib ${WINELIBPATH}/libjbig.${JBIGKITMAJOR}.dylib || fail_and_exit "could not create libjbig symlink"
-	ln -s libjbig.${JBIGKITVER}.dylib ${WINELIBPATH}/libjbig.dylib || fail_and_exit "could not create libjbig symlink"
+	ln -Ffs libjbig.${JBIGKITVER}.dylib ${WINELIBPATH}/libjbig.${JBIGKITMAJOR}.dylib || fail_and_exit "could not create libjbig symlink"
+	ln -Ffs libjbig.${JBIGKITVER}.dylib ${WINELIBPATH}/libjbig.dylib || fail_and_exit "could not create libjbig symlink"
 	echo "installing libjbig header files"
 	for JBIGKITHDR in jbig.h jbig_ar.h ; do
 		install -m 644 ${JBIGKITHDR} ${WINEINCLUDEPATH}/${JBIGKITHDR} || fail_and_exit "could not install JBIG header ${JBIGKITHDR}"
@@ -1017,6 +1018,7 @@ function install_gsm {
 	cd ${WINEBUILDPATH}/${GSMDIR} || fail_and_exit "could not cd to the GSM source directory"
 	echo "installing libgsm shared library and symbolic links"
 	install -m 755 lib/libgsm.${GSMVER}.${GSMPL}.dylib ${WINELIBPATH}/libgsm.${GSMVER}.${GSMPL}.dylib || fail_and_exit "could not install the libgsm dynamic library"
+	# XXX - remove manual cleanup? 'ln -Ffs' should manage this for us
 	if [ ${NOCLEANPREFIX} -eq 1 ] ; then
 		echo "--no-clean-prefix, manually removing libgsm symlinks"
 		if [ -L ${WINELIBPATH}/libgsm.${GSMMAJOR}.dylib ] ; then
@@ -1026,8 +1028,8 @@ function install_gsm {
 			unlink ${WINELIBPATH}/libgsm.dylib || fail_and_exit "could not remove existing libgsm symbolic link"
 		fi
 	fi
-	ln -s libgsm.${GSMVER}.${GSMPL}.dylib ${WINELIBPATH}/libgsm.${GSMMAJOR}.dylib || fail_and_exit "could not create a libgsm symbolic link"
-	ln -s libgsm.${GSMVER}.${GSMPL}.dylib ${WINELIBPATH}/libgsm.dylib || fail_and_exit "could not create a libgsm symbolic link"
+	ln -Ffs libgsm.${GSMVER}.${GSMPL}.dylib ${WINELIBPATH}/libgsm.${GSMMAJOR}.dylib || fail_and_exit "could not create a libgsm symbolic link"
+	ln -Ffs libgsm.${GSMVER}.${GSMPL}.dylib ${WINELIBPATH}/libgsm.dylib || fail_and_exit "could not create a libgsm symbolic link"
 	echo "installing libgsm header file"
 	install -m 644 inc/gsm.h ${WINEINCLUDEPATH}/gsm.h || fail_and_exit "could not install the GSM gsm.h header file"
 	popd >/dev/null 2>&1
@@ -1172,34 +1174,34 @@ LCMS2URL="http://downloads.sourceforge.net/lcms/${LCMS2FILE}"
 LCMS2SHA1SUM="c204158d0b4b15d918664750fcd5579f1347a38d"
 LCMS2DIR="lcms-${LCMS2VER}"
 function clean_lcms2 {
-        clean_source_dir "${LCMS2DIR}" "${WINEBUILDPATH}"
+	clean_source_dir "${LCMS2DIR}" "${WINEBUILDPATH}"
 }
 function get_lcms2 {
-        get_file "${LCMS2FILE}" "${WINESOURCEPATH}" "${LCMS2URL}"
+	get_file "${LCMS2FILE}" "${WINESOURCEPATH}" "${LCMS2URL}"
 }
 function check_lcms2 {
-        check_sha1sum "${WINESOURCEPATH}/${LCMS2FILE}" "${LCMS2SHA1SUM}"
+	check_sha1sum "${WINESOURCEPATH}/${LCMS2FILE}" "${LCMS2SHA1SUM}"
 }
 function extract_lcms2 {
-        extract_file "${TARGZ}" "${WINESOURCEPATH}/${LCMS2FILE}" "${WINEBUILDPATH}" "${LCMS2DIR}"
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${LCMS2FILE}" "${WINEBUILDPATH}" "${LCMS2DIR}"
 }
 function configure_lcms2 {
-        configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --with-jpeg --with-tiff --with-zlib" "${WINEBUILDPATH}/${LCMS2DIR}"
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --with-jpeg --with-tiff --with-zlib" "${WINEBUILDPATH}/${LCMS2DIR}"
 }
 function build_lcms2 {
-        build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${LCMS2DIR}"
+	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${LCMS2DIR}"
 }
 function install_lcms2 {
-        clean_lcms2
-        extract_lcms2
-        configure_lcms2
-        build_lcms2
-        # lcms2 v2.0 install-sh is not executable
-        pushd . >/dev/null 2>&1
-        cd ${WINEBUILDPATH}/${LCMS2DIR} || fail_and_exit "could not cd to ${WINEBUILDPATH}/${LCMS2DIR}"
-        chmod 755 install-sh || fail_and_exit "could not set exec permissions on 'install-sh' for LCMS2"
-        popd >/dev/null 2>&1
-        install_package "${MAKE} install" "${WINEBUILDPATH}/${LCMS2DIR}"
+	clean_lcms2
+	extract_lcms2
+	configure_lcms2
+	build_lcms2
+	# lcms2 v2.0 install-sh is not executable
+	pushd . >/dev/null 2>&1
+	cd ${WINEBUILDPATH}/${LCMS2DIR} || fail_and_exit "could not cd to ${WINEBUILDPATH}/${LCMS2DIR}"
+	chmod 755 install-sh || fail_and_exit "could not set exec permissions on 'install-sh' for LCMS2"
+	popd >/dev/null 2>&1
+	install_package "${MAKE} install" "${WINEBUILDPATH}/${LCMS2DIR}"
 }
 
 
@@ -1935,7 +1937,7 @@ function install_prereqs {
 #   print out a nice informational message when done
 #
 function build_complete {
-    cat << EOF
+	cat << EOF
 
 Successfully built and installed ${WINETAG}!
 
