@@ -44,9 +44,11 @@ function usage {
 }
 
 # options
-#   set devel/stable swtiches both to zero, handle below
+#   set Wine build type swtiches both to zero, handle below using flags
 BUILDSTABLE=0
 BUILDDEVEL=0
+#   use this flag to track which Wine we're building
+BUILDFLAG=0
 #   we remove and rebuild everything in a new prefix by default
 NOCLEANPREFIX=0
 NOCLEANSOURCE=0
@@ -56,12 +58,12 @@ NORECONFIGURE=0
 if [ ${#} -gt 0 ] ; then
 	until [ -z ${1} ] ; do
 		case ${1} in
-			--devel)
-				BUILDDEVEL=1
-				echo "found --devel option, will build Wine devel version" ; shift ;;
 			--stable)
-				BUILDSTABLE=1
-				echo "found --stable option, will build Wine stable version" ; shift ;;
+				BUILDFLAG=$((${BUILDFLAG}+1))
+				shift ;;
+			--devel)
+				BUILDFLAG=$((${BUILDFLAG}+10))
+				shift ;;
 			--no-clean-prefix)
 				NOCLEANPREFIX=1
 				echo "found --no-clean-prefix option, will install to existing prefix if it exists" ; shift ;;
@@ -89,24 +91,26 @@ export WINESTABLESHA1SUM="dc37a32edb274167990ca7820f92c2d85962e37d"
 #   devel
 export WINEDEVELVERSION="1.3.1"
 export WINEDEVELSHA1SUM="f2e88dd990c553a434b9156c8bfd90583d27c0b8"
-#   always build stable by default
-if [ ${BUILDSTABLE} -eq 0 ] && [ ${BUILDDEVEL} -eq 0 ] ; then
+
+# check our build flag and pick the right version
+if [ ${BUILDFLAG} -eq 1 ] || [ ${BUILDFLAG} -eq 0 ] ; then
 	BUILDSTABLE=1
-fi
-#   --devel and --stable are mutually exclusive, default to stable if both are specficied
-if [ ${BUILDSTABLE} -eq 1 ] && [ ${BUILDDEVEL} -eq 1 ] ; then
-	echo "--devel and --stable options both specified, defaulting to stable"
-	BUILDSTABLE=1
-	BUILDDEVEL=0
-fi
-#   set versions and SHA1 sums correctly
-if [ ${BUILDSTABLE} -eq 1 ] ; then
 	export WINEVERSION="${WINESTABLEVERSION}"
 	export WINESHA1SUM="${WINESTABLESHA1SUM}"
-elif [ ${BUILDDEVEL} -eq 1 ] ; then
+	echo "found --stable option or no option specified, will build Wine stable version"
+elif [ ${BUILDFLAG} -eq 10 ] ; then
+	BUILDDEVEL=1
 	export WINEVERSION="${WINEDEVELVERSION}"
 	export WINESHA1SUM="${WINEDEVELSHA1SUM}"
+	echo "found --devel option, will build Wine devel version"
+else
+	echo "found multiple build types, defaulting to Wine stable"
+	BUILDSTABLE=1
+	BUILDDEVEL=0
+	export WINEVERSION="${WINESTABLEVERSION}"
+	export WINESHA1SUM="${WINESTABLESHA1SUM}"
 fi
+
 echo "building Wine verison ${WINEVERSION}"
 
 # timestamp
