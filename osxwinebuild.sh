@@ -29,24 +29,31 @@ function fail_and_exit {
 # usage
 #   defined early; may be called if "--help" or a bunk option is passed
 function usage {
-	echo "usage: $(basename ${0}) [--help] [--stable] [--devel] [--no-clean-prefix] [--no-clean-source] [--no-rebuild] [--no-reconfigure]"
+	echo "usage: $(basename ${0}) [--help] [--stable] [--devel] [--crossover] [--cxgames] [--no-clean-prefix] [--no-clean-source] [--no-rebuild] [--no-reconfigure]"
+	echo ""
+	echo "  Informational option(s):"
 	echo "    --help: display this help message"
+	echo ""
+	echo "  Build type options (mutually exclusive):"
 	echo "    --stable: build the stable version of Wine (default)"
 	echo "    --devel: build the development version of Wine"
+	echo "    --crossover: build Wine using CrossOver sources"
+	echo "    --cxgames: build Wine using CrossOver Games sources"
+	echo ""
+	echo "  Common build options:"
 	echo "    --no-clean-prefix: do not move and create a new prefix if one already exists"
 	echo "    --no-clean-source: do not remove/extract source if already done"
 	echo "    --no-rebuild: do not rebuild packages, just reinstall"
 	echo "    --no-reconfigure: do not re-run 'configure' for any packages"
 	echo ""
-	echo "    Note:"
-	echo "      --stable and --devel are mutually exclusive"
-	echo "      if both (or neither) are specificed, --stable will be chosen"
 }
 
 # options
-#   set Wine build type swtiches both to zero, handle below using flags
+#   set Wine build type to zero, handle below using flags
 BUILDSTABLE=0
 BUILDDEVEL=0
+BUILDCROSSOVER=0
+BUILDCXGAMES=0
 #   use this flag to track which Wine we're building
 BUILDFLAG=0
 #   we remove and rebuild everything in a new prefix by default
@@ -63,6 +70,12 @@ if [ ${#} -gt 0 ] ; then
 				shift ;;
 			--devel)
 				BUILDFLAG=$((${BUILDFLAG}+10))
+				shift ;;
+			--crossover)
+				BUILDFLAG=$((${BUILDFLAG}+100))
+				shift ;;
+			--cxgames)
+				BUILDFLAG=$((${BUILDFLAG}+1000))
 				shift ;;
 			--no-clean-prefix)
 				NOCLEANPREFIX=1
@@ -85,33 +98,74 @@ if [ ${#} -gt 0 ] ; then
 fi
 
 # wine version
+#   a tag we'll use later
+WINETAG=""
 #   stable
-export WINESTABLEVERSION="1.2"
-export WINESTABLESHA1SUM="dc37a32edb274167990ca7820f92c2d85962e37d"
+WINESTABLEVERSION="1.2"
+WINESTABLESHA1SUM="dc37a32edb274167990ca7820f92c2d85962e37d"
 #   devel
-export WINEDEVELVERSION="1.3.1"
-export WINEDEVELSHA1SUM="f2e88dd990c553a434b9156c8bfd90583d27c0b8"
+WINEDEVELVERSION="1.3.1"
+WINEDEVELSHA1SUM="f2e88dd990c553a434b9156c8bfd90583d27c0b8"
+#   CrossOver Wine
+CROSSOVERVERSION="9.1.0"
+CROSSOVERSHA1SUM="663217c6c0dfa1f0c3140dfff43fab916ab49dfb"
+#   CrossOver Games Wine
+CXGAMESVERSION="9.1.0"
+CXGAMESSHA1SUM="7b2147ddc5fb8f29f113a9e7109c128e3da02da3"
 
 # check our build flag and pick the right version
 if [ ${BUILDFLAG} -eq 1 ] || [ ${BUILDFLAG} -eq 0 ] ; then
 	BUILDSTABLE=1
-	export WINEVERSION="${WINESTABLEVERSION}"
-	export WINESHA1SUM="${WINESTABLESHA1SUM}"
+	WINEVERSION="${WINESTABLEVERSION}"
+	WINESHA1SUM="${WINESTABLESHA1SUM}"
+	WINETAG="Wine ${WINEVERSION}"
 	echo "found --stable option or no option specified, will build Wine stable version"
 elif [ ${BUILDFLAG} -eq 10 ] ; then
 	BUILDDEVEL=1
-	export WINEVERSION="${WINEDEVELVERSION}"
-	export WINESHA1SUM="${WINEDEVELSHA1SUM}"
+	WINEVERSION="${WINEDEVELVERSION}"
+	WINESHA1SUM="${WINEDEVELSHA1SUM}"
+	WINETAG="Wine ${WINEVERSION}"
 	echo "found --devel option, will build Wine devel version"
+elif [ ${BUILDFLAG} -eq 100 ] ; then
+	BUILDCROSSOVER=1
+	WINEVERSION="${CROSSOVERVERSION}"
+	WINESHA1SUM="${CROSSOVERSHA1SUM}"
+	WINETAG="CrossOver Wine ${WINEVERSION}"
+	echo "found --crossover option, will build Wine from CrossOver sources"
+elif [ ${BUILDFLAG} -eq 1000 ] ; then
+	BUILDCXGAMES=1
+	WINEVERSION="${CXGAMESVERSION}"
+	WINESHA1SUM="${CXGAMESSHA1SUM}"
+	WINETAG="CrossOver Games Wine ${WINEVERSION}"
+	echo "found --cxgames option, will build Wine from CrossOver Games sources"
 else
-	echo "found multiple build types, defaulting to Wine stable"
 	BUILDSTABLE=1
 	BUILDDEVEL=0
-	export WINEVERSION="${WINESTABLEVERSION}"
-	export WINESHA1SUM="${WINESTABLESHA1SUM}"
+	BUILDCROSSOVER=0
+	BUILDCXGAMES=0
+	WINEVERSION="${WINESTABLEVERSION}"
+	WINESHA1SUM="${WINESTABLESHA1SUM}"
+	WINETAG="Wine ${WINEVERSION}"
+	echo "found multiple build types, defaulting to Wine stable"
 fi
 
-echo "building Wine verison ${WINEVERSION}"
+# what are we building?
+echo "building ${WINETAG}"
+
+# set our file name, Wine source directory name and URL correctly
+if [ ${BUILDSTABLE} -eq 1 ] || [ ${BUILDDEVEL} -eq 1 ] ; then
+	WINEFILE="wine-${WINEVERSION}.tar.bz2"
+	WINEURL="http://downloads.sourceforge.net/wine/${WINEFILE}"
+	WINEDIR="wine-${WINEVERSION}"
+elif [ ${BUILDCROSSOVER} -eq 1 ] || [ ${BUILDCXGAMES} -eq 1 ] ; then
+	if [ ${BUILDCROSSOVER} -eq 1 ] ; then
+		WINEFILE="crossover-sources-${WINEVERSION}.tar.gz"
+	elif [ ${BUILDCXGAMES} -eq 1 ] ; then
+		WINEFILE="crossover-games-sources-${WINEVERSION}.tar.gz"
+	fi
+	WINEURL="http://media.codeweavers.com/pub/crossover/source/${WINEFILE}"
+	WINEDIR="wine"
+fi
 
 # timestamp
 export TIMESTAMP=$(date '+%Y%m%d%H%M%S')
@@ -125,8 +179,17 @@ if [ ! -d ${WINEBASEDIR} ] ; then
 fi
 
 # installation path
-#   ~/wine/wine-X.Y.Z
-export WINEINSTALLPATH="${WINEBASEDIR}/wine-${WINEVERSION}"
+#   ~/wine/wine-X.Y.Z for standard Wine
+#   if we're doing a CrossOver build, set the proper directory name
+WINEINSTALLDIRPREPEND=""
+if [ ${BUILDCROSSOVER} -eq 1 ] ; then
+	WINEINSTALLDIRPREPEND="crossover-"
+elif [ ${BUILDCXGAMES} -eq 1 ] ; then
+	WINEINSTALLDIRPREPEND="crossover-games-"
+fi
+export WINEINSTALLPATH="${WINEBASEDIR}/${WINEINSTALLDIRPREPEND+${WINEINSTALLDIRPREPEND}}wine-${WINEVERSION}"
+
+echo "${WINETAG} will be installed into ${WINEINSTALLPATH}"
 
 # wine source path
 #   ~/wine/source
@@ -430,7 +493,7 @@ function clean_source_dir {
 	fi
 	if [ -d ${BASEDIR}/${SOURCEDIR} ] ; then
 		pushd . >/dev/null 2>&1
-		echo "cleanning up ${BASEDIR}/${SOURCEDIR} for fresh compile"
+		echo "cleaning up ${BASEDIR}/${SOURCEDIR} for fresh compile"
 		cd ${BASEDIR} || fail_and_exit "could not cd into ${BASEDIR}"
 		rm -rf ${SOURCEDIR} || fail_and_exit "could not clean up ${BASEDIR}/${SOURCEDIR}"
 		popd >/dev/null 2>&1
@@ -1670,10 +1733,6 @@ function install_wisotool {
 #
 # build wine, finally
 #
-WINEVER=${WINEVERSION}
-WINEFILE="wine-${WINEVER}.tar.bz2"
-WINEURL="http://downloads.sourceforge.net/wine/${WINEFILE}"
-WINEDIR="wine-${WINEVER}"
 function clean_wine {
 	clean_source_dir "${WINEDIR}" "${WINEBUILDPATH}"
 }
@@ -1684,9 +1743,26 @@ function check_wine {
 	check_sha1sum "${WINESOURCEPATH}/${WINEFILE}" "${WINESHA1SUM}"
 }
 function extract_wine {
-	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${WINEFILE}" "${WINEBUILDPATH}" "${WINEDIR}"
+	if [ ${BUILDSTABLE} -eq 1 ] || [ ${BUILDDEVEL} -eq 1 ] ; then
+		extract_file "${TARBZ2}" "${WINESOURCEPATH}/${WINEFILE}" "${WINEBUILDPATH}" "${WINEDIR}"
+	elif [ ${BUILDCROSSOVER} -eq 1 ] || [ ${BUILDCXGAMES} -eq 1 ] ; then
+		extract_file "${TARGZ}" "${WINESOURCEPATH}/${WINEFILE}" "${WINEBUILDPATH}" "${WINEDIR}"
+		# kill the extra source directories
+		for CXGAMESEXTRADIR in cxgui freetype loki samba ; do
+			if [ -d ${WINEBUILDPATH}/${CXGAMESEXTRADIR} ] ; then
+				pushd . >/dev/null 2>&1
+				cd ${WINEBUILDPATH}
+				rm -rf ${CXGAMESEXTRADIR} || fail_and_exit "could not remove ${WINETAG} extra directory ${WINEBUILDPATH}/${CXGAMESEXTRADIR}"
+				popd >/dev/null 2>&1
+			fi
+		done
+	fi
 }
 function configure_wine {
+	EXTRAXMLOPTS=""
+	if [ ${BUILDCROSSOVER} -eq 1 ] || [ ${BUILDCXGAMES} -eq 1 ] ; then
+		EXTRAXMLOPTS="=native"
+	fi
 	WINECONFIGUREOPTS=""
 	WINECONFIGUREOPTS+="--verbose "
 	WINECONFIGUREOPTS+="--${WIN16FLAG}-win16 "
@@ -1713,7 +1789,7 @@ function configure_wine {
 	WINECONFIGUREOPTS+="--with-png "
 	WINECONFIGUREOPTS+="--with-pthread "
 	WINECONFIGUREOPTS+="--with-sane "
-	WINECONFIGUREOPTS+="--with-xml "
+	WINECONFIGUREOPTS+="--with-xml${EXTRAXMLOPTS+${EXTRAXMLOPTS}} "
 	WINECONFIGUREOPTS+="--with-xslt "
 	WINECONFIGUREOPTS+="--with-x "
 	WINECONFIGUREOPTS+="--x-includes=${X11INC} "
@@ -1724,7 +1800,12 @@ function depend_wine {
 	build_package "${MAKE} depend" "${WINEBUILDPATH}/${WINEDIR}"
 }
 function build_wine {
-	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${WINEDIR}"
+	# CrossOver has some issues building with concurrent make processes for some reason
+	if [ ${BUILDSTABLE} -eq 1 ] || [ ${BUILDDEVEL} -eq 1 ] ; then
+		build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${WINEDIR}"
+	elif [ ${BUILDCROSSOVER} -eq 1 ] || [ ${BUILDCXGAMES} -eq 1 ] ; then
+		build_package "${MAKE}" "${WINEBUILDPATH}/${WINEDIR}"
+	fi
 }
 function install_wine {
 	clean_wine
@@ -1733,6 +1814,9 @@ function install_wine {
 	#depend_wine
 	build_wine
 	install_package "${MAKE} install" "${WINEBUILDPATH}/${WINEDIR}"
+	if [ ${BUILDCROSSOVER} -eq 1 ] || [ ${BUILDCXGAMES} -eq 1 ] ; then
+		ln -Ffs wineloader ${WINEINSTALLPATH}/bin/wine
+	fi
 }
 
 #
@@ -1853,7 +1937,7 @@ function install_prereqs {
 function build_complete {
     cat << EOF
 
-Successfully built and installed Wine version ${WINEVERSION}!
+Successfully built and installed ${WINETAG}!
 
 The installation base directory is:
 
