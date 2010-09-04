@@ -389,6 +389,10 @@ export SHA1SUM="openssl dgst -sha1"
 #   curl's avail everywhere!
 export CURL="curl"
 export CURLOPTS="-kL"
+# XXX - user-agent workarounds for sites that don't like cURL, do NOT work with sourceforge...
+#CURLOPTS+=" -H 'USER-AGENT:Mozilla/5.0'"
+#CURLOPTS+=" -A 'Mozilla/5.0'"
+echo "base downloader command: ${CURL} ${CURLOPTS}"
 
 # extract commands
 #   currently we only have gzip/bzip2 tar files
@@ -1545,7 +1549,11 @@ function clean_cabextract {
 	clean_source_dir "${CABEXTRACTDIR}" "${WINEBUILDPATH}"
 }
 function get_cabextract {
+	# XXX - cURL downloads broken :\
+	export PRECURLOPTS=${CURLOPTS}
+	export CURLOPTS="${CURLOPTS} -A 'Mozilla/5.0'"
 	get_file "${CABEXTRACTFILE}" "${WINESOURCEPATH}" "${CABEXTRACTURL}"
+	export CURLOPTS=${PRECURLOPTS}
 }
 function check_cabextract {
 	check_sha1sum "${WINESOURCEPATH}/${CABEXTRACTFILE}" "${CABEXTRACTSHA1SUM}"
