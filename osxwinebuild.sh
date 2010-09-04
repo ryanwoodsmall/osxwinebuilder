@@ -66,16 +66,24 @@ if [ ${#} -gt 0 ] ; then
 	until [ -z ${1} ] ; do
 		case ${1} in
 			--stable)
-				BUILDFLAG=$((${BUILDFLAG}+1))
+				if [ ${BUILDFLAG} -ne 1 ] ; then
+					BUILDFLAG=$((${BUILDFLAG}+1))
+				fi
 				shift ;;
 			--devel)
-				BUILDFLAG=$((${BUILDFLAG}+10))
+				if [ ${BUILDFLAG} -ne 10 ] ; then
+					BUILDFLAG=$((${BUILDFLAG}+10))
+				fi
 				shift ;;
 			--crossover)
-				BUILDFLAG=$((${BUILDFLAG}+100))
+				if [ ${BUILDFLAG} -ne 100 ] ; then
+					BUILDFLAG=$((${BUILDFLAG}+100))
+				fi
 				shift ;;
 			--cxgames)
-				BUILDFLAG=$((${BUILDFLAG}+1000))
+				if [ ${BUILDFLAG} -ne 1000 ] ; then
+					BUILDFLAG=$((${BUILDFLAG}+1000))
+				fi
 				shift ;;
 			--no-clean-prefix)
 				NOCLEANPREFIX=1
@@ -104,8 +112,8 @@ WINETAG=""
 WINESTABLEVERSION="1.2"
 WINESTABLESHA1SUM="dc37a32edb274167990ca7820f92c2d85962e37d"
 #   devel
-WINEDEVELVERSION="1.3.1"
-WINEDEVELSHA1SUM="f2e88dd990c553a434b9156c8bfd90583d27c0b8"
+WINEDEVELVERSION="1.3.2"
+WINEDEVELSHA1SUM="876043a93aa834f926a26235b34e72364bc9876e"
 #   CrossOver Wine
 CROSSOVERVERSION="9.1.0"
 CROSSOVERSHA1SUM="663217c6c0dfa1f0c3140dfff43fab916ab49dfb"
@@ -165,6 +173,15 @@ elif [ ${BUILDCROSSOVER} -eq 1 ] || [ ${BUILDCXGAMES} -eq 1 ] ; then
 	fi
 	WINEURL="http://media.codeweavers.com/pub/crossover/source/${WINEFILE}"
 	WINEDIR="wine"
+fi
+
+# set gecko version from build type
+if [ ${BUILDDEVEL} -eq 1 ] ; then
+	GECKOVERSION="1.1.0"
+	GECKOSHA1SUM="1b6c637207b6f032ae8a52841db9659433482714"
+else
+	GECKOVERSION="1.0.0"
+	GECKOSHA1SUM="afa22c52bca4ca77dcb9edb3c9936eb23793de01"
 fi
 
 # timestamp
@@ -253,7 +270,6 @@ fi
 
 # x11
 #   these need to be changed for Xquartz and the like...
-#   XXX - super paranoid checks below!
 #   default is to use OS-provided /usr/X11
 export DEFAULTX11DIR="/usr/X11"
 export X11DIR="${DEFAULTX11DIR}"
@@ -283,22 +299,6 @@ export X11LIB="${X11DIR}/lib"
 #   default - set to GCC
 : ${CC:="gcc"}
 : ${CXX:="g++"}
-#   GCC 4.0
-#: ${CC:="gcc-4.0"}
-#: ${CXX:="g++-4.0"}
-#   GCC 4.2
-#: ${CC:="gcc-4.2"}
-#: ${CXX:="g++-4.2"}
-#   CLANG/LLVM
-#: ${CC:="clang"}
-#: ${CC:="llvm-gcc-4.2"}
-#: ${CXX:="llvm-g++-4.2"}
-#   distcc
-#: ${CC:="distcc gcc"}
-#: ${CXX:="distcc g++"}
-#   ccache
-#: ${CC:="ccache gcc"}
-#: ${CXX:="ccache g++"}
 export CC
 export CXX
 echo "C compiler set to: \$CC = \"${CC}\""
@@ -309,6 +309,7 @@ export CPPFLAGS="-I${WINEINCLUDEPATH} ${OSXSDK+-isysroot $OSXSDK} -I${X11INC}"
 # some extra flags based on CPU features
 export CPUFLAGS=""
 # XXX - no distcc,clang,llvm support yet!
+# XXX - this is way complicated.  I might just do MMX+SSE+common SSEx stuff
 # some gcc-specific flags
 # a note:
 #   all versions of GCC running on Darwin x86/x86_64 10.4+ require GCC 4.0+
@@ -1462,10 +1463,10 @@ function install_gd {
 #
 # libgphoto2
 #
-LIBGPHOTO2VER="2.4.10"
+LIBGPHOTO2VER="2.4.10.1"
 LIBGPHOTO2FILE="libgphoto2-${LIBGPHOTO2VER}.tar.bz2"
 LIBGPHOTO2URL="http://downloads.sourceforge.net/gphoto/libgphoto/${LIBGPHOTO2FILE}"
-LIBGPHOTO2SHA1SUM="0fbbcfdfe13c3cf128505e3079faf55407b647c5"
+LIBGPHOTO2SHA1SUM="2806b147d3cf2c3cfdcb5cb8db8b82c1180d5f36"
 LIBGPHOTO2DIR="libgphoto2-${LIBGPHOTO2VER}"
 function clean_libgphoto2 {
 	clean_source_dir "${LIBGPHOTO2DIR}" "${WINEBUILDPATH}"
@@ -1569,10 +1570,10 @@ function install_cabextract {
 #
 # git
 #
-GITVERSION="1.7.2.2"
+GITVERSION="1.7.2.3"
 GITFILE="git-${GITVERSION}.tar.bz2"
 GITURL="http://kernel.org/pub/software/scm/git/${GITFILE}"
-GITSHA1SUM="0cc1caba421a2af5f8e3b9648a6230ea07c60bee"
+GITSHA1SUM="d9fe7bab2f40731d94002c614304b1c3fea23bb9"
 GITDIR="git-${GITVERSION}"
 function clean_git {
 	clean_source_dir "${GITDIR}" "${WINEBUILDPATH}"
@@ -1603,10 +1604,8 @@ function install_git {
 #
 # gecko
 #
-GECKOVERSION="1.0.0"
 GECKOFILE="wine_gecko-${GECKOVERSION}-x86.cab"
 GECKOURL="http://downloads.sourceforge.net/wine/${GECKOFILE}"
-GECKOSHA1SUM="afa22c52bca4ca77dcb9edb3c9936eb23793de01"
 function get_gecko {
 	get_file "${GECKOFILE}" "${WINESOURCEPATH}" "${GECKOURL}"
 }
