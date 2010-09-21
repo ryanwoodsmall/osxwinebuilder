@@ -32,12 +32,12 @@ I will attempt to keep this page updated with every Subversion check in, but svn
 || libusb || 1.0.8 || [http://www.libusb.org/] || LGPL || used by sane-backends ||
 || libusb-compat || 0.1.3 || [http://www.libusb.org/] || LGPL || used by libgphoto2 ||
 || lzo || 2.03 || [http://www.oberhumer.com/opensource/lzo/] || GPL || used by GnuTLS ||
-|| mpg123 || 1.12.3 || [http://www.mpg123.de/] || LGPL || used for MP3/audio support in Wine ||
+|| mpg123 || 1.12.4 || [http://www.mpg123.de/] || LGPL || used for MP3/audio support in Wine ||
 || pkg-config || 0.25 || [http://pkg-config.freedesktop.org/wiki/] || GPL || used by multiple packages ||
 || SANE Backends || 1.0.21 || [http://www.sane-project.org/] || GPL || scanner/imaging access in Wine ||
 || toast (GSM) || 1.0.13 || [http://www.quut.com/gsm/] || see [http://osxwinebuilder.googlecode.com/files/gsm-COPYRIGHT] || used by Wine for audio encode/decode ||
 || unixODBC || 2.3.0 || [http://www.unixodbc.org/] || LGPL || used for native ODBC bridge to Wine ||
 || winetricks || varies || [http://wiki.winehq.org/winetricks], [http://code.google.com/p/winezeug/] || LGPL || quick install script for some Windows programs ||
 || wisotool || varies || [http://wiki.winehq.org/wisotool], [http://winezeug.googlecode.com/svn/trunk/wisotool] || LGPL || quick install/building blocks for common games/demos/etc. ||
-|| Wine || 1.2 (stable), 1.3.2 (development) || [http://www.winehq.org/] || LGPL || Wine is used for Wine, right? ||
+|| Wine || 1.2 (stable), 1.3.3 (development) || [http://www.winehq.org/] || LGPL || Wine is used for Wine, right? ||
 || !CodeWeavers !CrossOver Wine sources || 9.1.0 (Games and standard) || [http://www.codeweavers.com/products/source] || LGPL || !CodeWeavers builds custom Wine versions for stability and performance purposes ||
