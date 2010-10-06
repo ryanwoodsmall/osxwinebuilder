@@ -112,8 +112,8 @@ WINETAG=""
 WINESTABLEVERSION="1.2"
 WINESTABLESHA1SUM="dc37a32edb274167990ca7820f92c2d85962e37d"
 #   devel
-WINEDEVELVERSION="1.3.3"
-WINEDEVELSHA1SUM="b19455987f0a71adf691046898a1ca6b3ed7d155"
+WINEDEVELVERSION="1.3.4"
+WINEDEVELSHA1SUM="7dbb1716cf83b61232f64bcc25e7e2d109321e49"
 #   CrossOver Wine
 CROSSOVERVERSION="9.1.0"
 CROSSOVERSHA1SUM="663217c6c0dfa1f0c3140dfff43fab916ab49dfb"
@@ -826,10 +826,10 @@ function install_tiff {
 #
 # libpng
 #
-LIBPNGVER="1.4.3"
+LIBPNGVER="1.4.4"
 LIBPNGFILE="libpng-${LIBPNGVER}.tar.gz"
 LIBPNGURL="http://downloads.sourceforge.net/libpng/${LIBPNGFILE}"
-LIBPNGSHA1SUM="dd56c9ecef2d41aa991740a3da6f136412e3b077"
+LIBPNGSHA1SUM="245490b22086a6aff8964b7d32383a17814d8ebf"
 LIBPNGDIR="libpng-${LIBPNGVER}"
 function clean_libpng {
 	clean_source_dir "${LIBPNGDIR}" "${WINEBUILDPATH}"
@@ -1036,10 +1036,10 @@ function install_gsm {
 #
 # freetype
 #
-FREETYPEVER="2.4.2"
+FREETYPEVER="2.4.3"
 FREETYPEFILE="freetype-${FREETYPEVER}.tar.bz2"
 FREETYPEURL="http://downloads.sourceforge.net/freetype/freetype2/${FREETYPEFILE}"
-FREETYPESHA1SUM="cc257ceda2950b8c80950d780ccf3ce665a815d1"
+FREETYPESHA1SUM="16e5ba0ff23b2de372149a790b7245a762022912"
 FREETYPEDIR="freetype-${FREETYPEVER}"
 function clean_freetype {
 	clean_source_dir "${FREETYPEDIR}" "${WINEBUILDPATH}"
@@ -1263,10 +1263,10 @@ function install_libgcrypt {
 #
 # gnutls
 #
-GNUTLSVER="2.10.1"
+GNUTLSVER="2.10.2"
 GNUTLSFILE="gnutls-${GNUTLSVER}.tar.bz2"
 GNUTLSURL="ftp://ftp.gnu.org/pub/gnu/gnutls/${GNUTLSFILE}"
-GNUTLSSHA1SUM="507ff8ad7c1e042f8ecaa4314f32777e74caf0d3"
+GNUTLSSHA1SUM="2704b7b86fc5e3444afcf20feb7bc9ff117d4816"
 GNUTLSDIR="gnutls-${GNUTLSVER}"
 function clean_gnutls {
 	clean_source_dir "${GNUTLSDIR}" "${WINEBUILDPATH}"
@@ -1578,10 +1578,10 @@ function install_cabextract {
 #
 # git
 #
-GITVERSION="1.7.2.3"
+GITVERSION="1.7.3.1"
 GITFILE="git-${GITVERSION}.tar.bz2"
 GITURL="http://kernel.org/pub/software/scm/git/${GITFILE}"
-GITSHA1SUM="d9fe7bab2f40731d94002c614304b1c3fea23bb9"
+GITSHA1SUM="372db7c9bb93bb133a92c16e0f4cd5b553c05ed7"
 GITDIR="git-${GITVERSION}"
 function clean_git {
 	clean_source_dir "${GITDIR}" "${WINEBUILDPATH}"
