@@ -824,37 +824,71 @@ function install_tiff {
 }
 
 #
-# libpng
+# libpng12
 #
-LIBPNGVER="1.4.4"
-LIBPNGFILE="libpng-${LIBPNGVER}.tar.gz"
-LIBPNGURL="http://downloads.sourceforge.net/libpng/${LIBPNGFILE}"
-LIBPNGSHA1SUM="245490b22086a6aff8964b7d32383a17814d8ebf"
-LIBPNGDIR="libpng-${LIBPNGVER}"
-function clean_libpng {
-	clean_source_dir "${LIBPNGDIR}" "${WINEBUILDPATH}"
+LIBPNG12VER="1.2.44"
+LIBPNG12SHA1SUM="776bb8e42d86bd71ae58e0d96f85472c1d63beeb"
+LIBPNG12FILE="libpng-${LIBPNG12VER}.tar.gz"
+LIBPNG12URL="http://downloads.sourceforge.net/libpng12/${LIBPNG12FILE}"
+LIBPNG12DIR="libpng-${LIBPNG12VER}"
+function clean_libpng12 {
+	clean_source_dir "${LIBPNG12DIR}" "${WINEBUILDPATH}"
 }
-function get_libpng {
-	get_file "${LIBPNGFILE}" "${WINESOURCEPATH}" "${LIBPNGURL}"
+function get_libpng12 {
+	get_file "${LIBPNG12FILE}" "${WINESOURCEPATH}" "${LIBPNG12URL}"
 }
-function check_libpng {
-	check_sha1sum "${WINESOURCEPATH}/${LIBPNGFILE}" "${LIBPNGSHA1SUM}"
+function check_libpng12 {
+	check_sha1sum "${WINESOURCEPATH}/${LIBPNG12FILE}" "${LIBPNG12SHA1SUM}"
 }
-function extract_libpng {
-	extract_file "${TARGZ}" "${WINESOURCEPATH}/${LIBPNGFILE}" "${WINEBUILDPATH}" "${LIBPNGDIR}"
+function extract_libpng12 {
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${LIBPNG12FILE}" "${WINEBUILDPATH}" "${LIBPNG12DIR}"
 }
-function configure_libpng {
-	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${LIBPNGDIR}"
+function configure_libpng12 {
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${LIBPNG12DIR}"
 }
-function build_libpng {
-	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${LIBPNGDIR}"
+function build_libpng12 {
+	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${LIBPNG12DIR}"
 }
-function install_libpng {
-	clean_libpng
-	extract_libpng
-	configure_libpng
-	build_libpng
-	install_package "${MAKE} install" "${WINEBUILDPATH}/${LIBPNGDIR}"
+function install_libpng12 {
+	clean_libpng12
+	extract_libpng12
+	configure_libpng12
+	build_libpng12
+	install_package "${MAKE} install" "${WINEBUILDPATH}/${LIBPNG12DIR}"
+}
+
+#
+# libpng14
+#
+LIBPNG14VER="1.4.4"
+LIBPNG14SHA1SUM="245490b22086a6aff8964b7d32383a17814d8ebf"
+LIBPNG14FILE="libpng-${LIBPNG14VER}.tar.gz"
+LIBPNG14URL="http://downloads.sourceforge.net/libpng14/${LIBPNG14FILE}"
+LIBPNG14DIR="libpng-${LIBPNG14VER}"
+function clean_libpng14 {
+	clean_source_dir "${LIBPNG14DIR}" "${WINEBUILDPATH}"
+}
+function get_libpng14 {
+	get_file "${LIBPNG14FILE}" "${WINESOURCEPATH}" "${LIBPNG14URL}"
+}
+function check_libpng14 {
+	check_sha1sum "${WINESOURCEPATH}/${LIBPNG14FILE}" "${LIBPNG14SHA1SUM}"
+}
+function extract_libpng14 {
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${LIBPNG14FILE}" "${WINEBUILDPATH}" "${LIBPNG14DIR}"
+}
+function configure_libpng14 {
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${LIBPNG14DIR}"
+}
+function build_libpng14 {
+	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${LIBPNG14DIR}"
+}
+function install_libpng14 {
+	clean_libpng14
+	extract_libpng14
+	configure_libpng14
+	build_libpng14
+	install_package "${MAKE} install" "${WINEBUILDPATH}/${LIBPNG14DIR}"
 }
 
 #
@@ -924,6 +958,42 @@ function install_libxslt {
 	build_libxslt
 	install_package "${MAKE} install" "${WINEBUILDPATH}/${LIBXSLTDIR}"
 }
+
+#
+# glib
+#
+GLIBBASEVER="2.26"
+GLIBVER="${GLIBBASEVER}.0"
+GLIBFILE="glib-${GLIBVER}.tar.bz2"
+GLIBURL="ftp://ftp.gtk.org/pub/glib/${GLIBBASEVER}/${GLIBFILE}"
+GLIBSHA1SUM="9d7e9dce2add3fadc35079ad291a94f45ebcf706"
+GLIBDIR="glib-${GLIBVER}"
+function clean_glib {
+	clean_source_dir "${GLIBDIR}" "${WINEBUILDPATH}"
+}
+function get_glib {
+	get_file "${GLIBFILE}" "${WINESOURCEPATH}" "${GLIBURL}"
+}
+function check_glib {
+	check_sha1sum "${WINESOURCEPATH}/${GLIBFILE}" "${GLIBSHA1SUM}"
+}
+function extract_glib {
+	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${GLIBFILE}" "${WINEBUILDPATH}" "${GLIBDIR}"
+}
+function configure_glib {
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${GLIBDIR}"
+}
+function build_glib {
+	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${GLIBDIR}"
+}
+function install_glib {
+	clean_glib
+	extract_glib
+	configure_glib
+	build_glib
+	install_package "${MAKE} install" "${WINEBUILDPATH}/${GLIBDIR}"
+}
+
 
 #
 # mpg123
@@ -1158,10 +1228,10 @@ function install_lcms {
 #
 # lzo
 #
-LZOVER="2.03"
+LZOVER="2.04"
 LZOFILE="lzo-${LZOVER}.tar.gz"
 LZOURL="http://www.oberhumer.com/opensource/lzo/download/${LZOFILE}"
-LZOSHA1SUM="135a50699296e853362a3d11b9f872c74c8b8c5a"
+LZOSHA1SUM="f5bf5c7ae4116e60513e5788d156ef78946677e7"
 LZODIR="lzo-${LZOVER}"
 function clean_lzo {
 	clean_source_dir "${LZODIR}" "${WINEBUILDPATH}"
@@ -1195,10 +1265,10 @@ function install_lzo {
 #
 # libgpg-error
 #
-LIBGPGERRORVER="1.9"
+LIBGPGERRORVER="1.10"
 LIBGPGERRORFILE="libgpg-error-${LIBGPGERRORVER}.tar.bz2"
 LIBGPGERRORURL="ftp://ftp.gnupg.org/gcrypt/libgpg-error/${LIBGPGERRORFILE}"
-LIBGPGERRORSHA1SUM="6836579e42320b057a2372bbcd0325130fe2561e"
+LIBGPGERRORSHA1SUM="95b324359627fbcb762487ab6091afbe59823b29"
 LIBGPGERRORDIR="libgpg-error-${LIBGPGERRORVER}"
 function clean_libgpgerror {
 	clean_source_dir "${LIBGPGERRORDIR}" "${WINEBUILDPATH}"
@@ -1538,6 +1608,264 @@ function install_sanebackends {
 }
 
 #
+# libicns
+#
+# XXX - jasper
+# XXX - lopenjpeg2
+LIBICNSVER="0.7.1"
+LIBICNSFILE="libicns-${LIBICNSVER}.tar.gz"
+LIBICNSURL="http://downloads.sourceforge.net/icns/${LIBICNSFILE}"
+LIBICNSSHA1SUM="e12a6ca21988929d56320ac1b96a1a059af0fd43"
+LIBICNSDIR="libicns-${LIBICNSVER}"
+function clean_libicns {
+	clean_source_dir "${LIBICNSDIR}" "${WINEBUILDPATH}"
+}
+function get_libicns {
+	get_file "${LIBICNSFILE}" "${WINESOURCEPATH}" "${LIBICNSURL}"
+}
+function check_libicns {
+	check_sha1sum "${WINESOURCEPATH}/${LIBICNSFILE}" "${LIBICNSSHA1SUM}"
+}
+function extract_libicns {
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${LIBICNSFILE}" "${WINEBUILDPATH}" "${LIBICNSDIR}"
+}
+function configure_libicns {
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${LIBICNSDIR}"
+}
+function build_libicns {
+	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${LIBICNSDIR}"
+}
+function install_libicns {
+	clean_libicns
+	extract_libicns
+	configure_libicns
+	build_libicns
+	install_package "${MAKE} install" "${WINEBUILDPATH}/${LIBICNSDIR}"
+}
+
+#
+# orc
+#
+ORCVER="0.4.11"
+ORCFILE="orc-${ORCVER}.tar.gz"
+ORCURL="http://code.entropywave.com/download/orc/${ORCFILE}"
+ORCSHA1SUM="e99f684fc551c2bb3a5cdefe6fa5165174508a5f"
+ORCDIR="orc-${ORCVER}"
+function clean_orc {
+	clean_source_dir "${ORCDIR}" "${WINEBUILDPATH}"
+}
+function get_orc {
+	get_file "${ORCFILE}" "${WINESOURCEPATH}" "${ORCURL}"
+}
+function check_orc {
+	check_sha1sum "${WINESOURCEPATH}/${ORCFILE}" "${ORCSHA1SUM}"
+}
+function extract_orc {
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${ORCFILE}" "${WINEBUILDPATH}" "${ORCDIR}"
+}
+function configure_orc {
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${ORCDIR}"
+}
+function build_orc {
+	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${ORCDIR}"
+}
+function install_orc {
+	# XXX - -O2 opt breaks compile
+	PRECFLAGS=${CFLAGS}
+	export CFLAGS=$(echo ${CFLAGS} | sed s#-O2##g)
+	clean_orc
+	extract_orc
+	configure_orc
+	build_orc
+	install_package "${MAKE} install" "${WINEBUILDPATH}/${ORCDIR}"
+	export CFLAGS=${PRECFLAGS}
+}
+
+#
+# libogg
+#
+LIBOGGVER="1.2.0"
+LIBOGGFILE="libogg-${LIBOGGVER}.tar.gz"
+LIBOGGURL="http://downloads.xiph.org/releases/ogg/${LIBOGGFILE}"
+LIBOGGSHA1SUM="135fb812282e08833295c91e005bd0258fff9098"
+LIBOGGDIR="libogg-${LIBOGGVER}"
+function clean_libogg {
+	clean_source_dir "${LIBOGGDIR}" "${WINEBUILDPATH}"
+}
+function get_libogg {
+	get_file "${LIBOGGFILE}" "${WINESOURCEPATH}" "${LIBOGGURL}"
+}
+function check_libogg {
+	check_sha1sum "${WINESOURCEPATH}/${LIBOGGFILE}" "${LIBOGGSHA1SUM}"
+}
+function extract_libogg {
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${LIBOGGFILE}" "${WINEBUILDPATH}" "${LIBOGGDIR}"
+}
+function configure_libogg {
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${LIBOGGDIR}"
+}
+function build_libogg {
+	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${LIBOGGDIR}"
+}
+function install_libogg {
+	clean_libogg
+	extract_libogg
+	configure_libogg
+	build_libogg
+	install_package "${MAKE} install" "${WINEBUILDPATH}/${LIBOGGDIR}"
+}
+
+#
+# libvorbis
+#
+LIBVORBISVER="1.3.2"
+LIBVORBISFILE="libvorbis-${LIBVORBISVER}.tar.bz2"
+LIBVORBISURL="http://downloads.xiph.org/releases/vorbis/${LIBVORBISFILE}"
+LIBVORBISSHA1SUM="4c44da8215d1fc56676fccc1af8dd6b422d9e676"
+LIBVORBISDIR="libvorbis-${LIBVORBISVER}"
+function clean_libvorbis {
+	clean_source_dir "${LIBVORBISDIR}" "${WINEBUILDPATH}"
+}
+function get_libvorbis {
+	get_file "${LIBVORBISFILE}" "${WINESOURCEPATH}" "${LIBVORBISURL}"
+}
+function check_libvorbis {
+	check_sha1sum "${WINESOURCEPATH}/${LIBVORBISFILE}" "${LIBVORBISSHA1SUM}"
+}
+function extract_libvorbis {
+	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${LIBVORBISFILE}" "${WINEBUILDPATH}" "${LIBVORBISDIR}"
+}
+function configure_libvorbis {
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${LIBVORBISDIR}"
+}
+function build_libvorbis {
+	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${LIBVORBISDIR}"
+}
+function install_libvorbis {
+	clean_libvorbis
+	extract_libvorbis
+	configure_libvorbis
+	build_libvorbis
+	install_package "${MAKE} install" "${WINEBUILDPATH}/${LIBVORBISDIR}"
+}
+
+#
+# libtheora
+#
+LIBTHEORAVER="1.1.1"
+LIBTHEORAFILE="libtheora-${LIBTHEORAVER}.tar.bz2"
+LIBTHEORAURL="http://downloads.xiph.org/releases/theora/${LIBTHEORAFILE}"
+LIBTHEORASHA1SUM="8dcaa8e61cd86eb1244467c0b64b9ddac04ae262"
+LIBTHEORADIR="libtheora-${LIBTHEORAVER}"
+function clean_libtheora {
+	clean_source_dir "${LIBTHEORADIR}" "${WINEBUILDPATH}"
+}
+function get_libtheora {
+	get_file "${LIBTHEORAFILE}" "${WINESOURCEPATH}" "${LIBTHEORAURL}"
+}
+function check_libtheora {
+	check_sha1sum "${WINESOURCEPATH}/${LIBTHEORAFILE}" "${LIBTHEORASHA1SUM}"
+}
+function extract_libtheora {
+	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${LIBTHEORAFILE}" "${WINEBUILDPATH}" "${LIBTHEORADIR}"
+}
+function configure_libtheora {
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --disable-examples" "${WINEBUILDPATH}/${LIBTHEORADIR}"
+}
+function build_libtheora {
+	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${LIBTHEORADIR}"
+}
+function install_libtheora {
+	clean_libtheora
+	extract_libtheora
+	configure_libtheora
+	build_libtheora
+	install_package "${MAKE} install" "${WINEBUILDPATH}/${LIBTHEORADIR}"
+}
+
+#
+# gstreamer
+#
+GSTREAMERBASEVER="0.10"
+GSTREAMERVER="${GSTREAMERBASEVER}.30"
+GSTREAMERFILE="gstreamer-${GSTREAMERVER}.tar.bz2"
+GSTREAMERURL="http://gstreamer.freedesktop.org/src/gstreamer/${GSTREAMERFILE}"
+GSTREAMERSHA1SUM="23e3698dbefd5cfdfe3b40a8cc004cbc09e01e69"
+GSTREAMERDIR="gstreamer-${GSTREAMERVER}"
+function clean_gstreamer {
+	clean_source_dir "${GSTREAMERDIR}" "${WINEBUILDPATH}"
+}
+function get_gstreamer {
+	get_file "${GSTREAMERFILE}" "${WINESOURCEPATH}" "${GSTREAMERURL}"
+}
+function check_gstreamer {
+	check_sha1sum "${WINESOURCEPATH}/${GSTREAMERFILE}" "${GSTREAMERSHA1SUM}"
+}
+function extract_gstreamer {
+	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${GSTREAMERFILE}" "${WINEBUILDPATH}" "${GSTREAMERDIR}"
+}
+function configure_gstreamer {
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${GSTREAMERDIR}"
+}
+function build_gstreamer {
+	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${GSTREAMERDIR}"
+}
+function install_gstreamer {
+	clean_gstreamer
+	extract_gstreamer
+	configure_gstreamer
+	build_gstreamer
+	install_package "${MAKE} install" "${WINEBUILDPATH}/${GSTREAMERDIR}"
+	pushd . >/dev/null 2>&1
+	cd ${WINEINCLUDEPATH} || fail_and_exit "could not change into ${WINEINCLUDEPATH}"
+	ln -Ffs gstreamer-${GSTREAMERBASEVER}/gst . || fail_and_exit "could not symlink gstreamer-${GSTREAMERBASEVER}/gst to ${WINEINCLUDEPATH}/gst"
+	popd
+}
+
+#
+# gstpluginsbase
+#
+GSTPLUGINSBASEVER="0.10.30"
+GSTPLUGINSBASEFILE="gst-plugins-base-${GSTPLUGINSBASEVER}.tar.bz2"
+GSTPLUGINSBASEURL="http://gstreamer.freedesktop.org/src/gst-plugins-base/${GSTPLUGINSBASEFILE}"
+GSTPLUGINSBASESHA1SUM="17170bb23278c87bb3f4b299a3e7eaeed178bd31"
+GSTPLUGINSBASEDIR="gst-plugins-base-${GSTPLUGINSBASEVER}"
+function clean_gstpluginsbase {
+	clean_source_dir "${GSTPLUGINSBASEDIR}" "${WINEBUILDPATH}"
+}
+function get_gstpluginsbase {
+	get_file "${GSTPLUGINSBASEFILE}" "${WINESOURCEPATH}" "${GSTPLUGINSBASEURL}"
+}
+function check_gstpluginsbase {
+	check_sha1sum "${WINESOURCEPATH}/${GSTPLUGINSBASEFILE}" "${GSTPLUGINSBASESHA1SUM}"
+}
+function extract_gstpluginsbase {
+	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${GSTPLUGINSBASEFILE}" "${WINEBUILDPATH}" "${GSTPLUGINSBASEDIR}"
+}
+function configure_gstpluginsbase {
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --disable-examples --enable-experimental" "${WINEBUILDPATH}/${GSTPLUGINSBASEDIR}"
+}
+function build_gstpluginsbase {
+	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${GSTPLUGINSBASEDIR}"
+}
+function install_gstpluginsbase {
+	clean_gstpluginsbase
+	extract_gstpluginsbase
+	configure_gstpluginsbase
+	build_gstpluginsbase
+	install_package "${MAKE} install" "${WINEBUILDPATH}/${GSTPLUGINSBASEDIR}"
+}
+
+# 
+# XXX - GStreamer support
+#   gst-plugins-good - gst-plugins-base, orc, others?
+#   gst-plugins-ugly - gst-plugins-base, orc, others?
+#   gst-plugins-bad - gst-plugins-base, orc, others?
+#   ffmpeg - reqs?
+#   gst-ffmpeg - gst-plugins-base, orc, ffmpeg, others?
+#
+
+#
 # cabextract
 #
 CABEXTRACTVER="1.3"
@@ -1578,10 +1906,10 @@ function install_cabextract {
 #
 # git
 #
-GITVERSION="1.7.3.1"
+GITVERSION="1.7.3.2"
 GITFILE="git-${GITVERSION}.tar.bz2"
 GITURL="http://kernel.org/pub/software/scm/git/${GITFILE}"
-GITSHA1SUM="372db7c9bb93bb133a92c16e0f4cd5b553c05ed7"
+GITSHA1SUM="cd8d806752aa6f5716cf193585024a002e098bf4"
 GITDIR="git-${GITVERSION}"
 function clean_git {
 	clean_source_dir "${GITDIR}" "${WINEBUILDPATH}"
@@ -1781,9 +2109,11 @@ function get_sources {
 	get_jpeg
 	get_jbigkit
 	get_tiff
-	get_libpng
+	get_libpng12
+	get_libpng14
 	get_libxml2
 	get_libxslt
+	get_glib
 	get_mpg123
 	get_gsm
 	get_freetype
@@ -1800,6 +2130,13 @@ function get_sources {
 	get_gd
 	get_libgphoto2
 	get_sanebackends
+	get_libicns
+	get_orc
+	get_libogg
+	get_libvorbis
+	get_libtheora
+	get_gstreamer
+	get_gstpluginsbase
 	get_cabextract
 	get_git
 	get_gecko
@@ -1818,9 +2155,11 @@ function check_sources {
 	check_jpeg
 	check_jbigkit
 	check_tiff
-	check_libpng
+	check_libpng12
+	check_libpng14
 	check_libxml2
 	check_libxslt
+	check_glib
 	check_mpg123
 	check_gsm
 	check_freetype
@@ -1837,6 +2176,13 @@ function check_sources {
 	check_gd
 	check_libgphoto2
 	check_sanebackends
+	check_libicns
+	check_orc
+	check_libogg
+	check_libvorbis
+	check_libtheora
+	check_gstreamer
+	check_gstpluginsbase
 	check_cabextract
 	check_git
 	check_gecko
@@ -1853,9 +2199,11 @@ function install_prereqs {
 	install_jpeg
 	install_jbigkit
 	install_tiff
-	install_libpng
+	install_libpng12
+	#install_libpng14
 	install_libxml2
 	install_libxslt
+	install_glib
 	install_mpg123
 	install_gsm
 	install_freetype
@@ -1871,6 +2219,13 @@ function install_prereqs {
 	install_gd
 	install_libgphoto2
 	install_sanebackends
+	install_libicns
+	install_orc
+	install_libogg
+	install_libvorbis
+	install_libtheora
+	install_gstreamer
+	install_gstpluginsbase
 	install_unixodbc
 	install_cabextract
 	install_git
