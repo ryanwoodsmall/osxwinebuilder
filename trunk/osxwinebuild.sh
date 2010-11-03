@@ -389,9 +389,6 @@ export SHA1SUM="openssl dgst -sha1"
 #   curl's avail everywhere!
 export CURL="curl"
 export CURLOPTS="-kL"
-# XXX - user-agent workarounds for sites that don't like cURL, do NOT work with sourceforge...
-#CURLOPTS+=" -H 'USER-AGENT:Mozilla/5.0'"
-#CURLOPTS+=" -A 'Mozilla/5.0'"
 echo "base downloader command: ${CURL} ${CURLOPTS}"
 
 # extract commands
@@ -1608,10 +1605,42 @@ function install_sanebackends {
 }
 
 #
+# jasper
+#
+JASPERVER="1.900.1"
+JASPERFILE="jasper-${JASPERVER}.zip"
+JASPERURL="http://www.ece.uvic.ca/~mdadams/jasper/software/${JASPERFILE}"
+JASPERSHA1SUM="9c5735f773922e580bf98c7c7dfda9bbed4c5191"
+JASPERDIR="jasper-${JASPERVER}"
+function clean_jasper {
+	clean_source_dir "${JASPERDIR}" "${WINEBUILDPATH}"
+}
+function get_jasper {
+	get_file "${JASPERFILE}" "${WINESOURCEPATH}" "${JASPERURL}"
+}
+function check_jasper {
+	check_sha1sum "${WINESOURCEPATH}/${JASPERFILE}" "${JASPERSHA1SUM}"
+}
+function extract_jasper {
+	extract_file "unzip" "${WINESOURCEPATH}/${JASPERFILE}" "${WINEBUILDPATH}" "${JASPERDIR}"
+}
+function configure_jasper {
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${JASPERDIR}"
+}
+function build_jasper {
+	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${JASPERDIR}"
+}
+function install_jasper {
+	clean_jasper
+	extract_jasper
+	configure_jasper
+	build_jasper
+	install_package "${MAKE} install" "${WINEBUILDPATH}/${JASPERDIR}"
+}
+
+#
 # libicns
 #
-# XXX - jasper
-# XXX - lopenjpeg2
 LIBICNSVER="0.7.1"
 LIBICNSFILE="libicns-${LIBICNSVER}.tar.gz"
 LIBICNSURL="http://downloads.sourceforge.net/icns/${LIBICNSFILE}"
@@ -2130,6 +2159,7 @@ function get_sources {
 	get_gd
 	get_libgphoto2
 	get_sanebackends
+	get_jasper
 	get_libicns
 	get_orc
 	get_libogg
@@ -2176,6 +2206,7 @@ function check_sources {
 	check_gd
 	check_libgphoto2
 	check_sanebackends
+	check_jasper
 	check_libicns
 	check_orc
 	check_libogg
@@ -2219,6 +2250,7 @@ function install_prereqs {
 	install_gd
 	install_libgphoto2
 	install_sanebackends
+	install_jasper
 	install_libicns
 	install_orc
 	install_libogg
