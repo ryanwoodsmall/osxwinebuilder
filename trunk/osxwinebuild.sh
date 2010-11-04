@@ -826,7 +826,7 @@ function install_tiff {
 LIBPNG12VER="1.2.44"
 LIBPNG12SHA1SUM="776bb8e42d86bd71ae58e0d96f85472c1d63beeb"
 LIBPNG12FILE="libpng-${LIBPNG12VER}.tar.gz"
-LIBPNG12URL="http://downloads.sourceforge.net/libpng12/${LIBPNG12FILE}"
+LIBPNG12URL="http://downloads.sourceforge.net/libpng/${LIBPNG12FILE}"
 LIBPNG12DIR="libpng-${LIBPNG12VER}"
 function clean_libpng12 {
 	clean_source_dir "${LIBPNG12DIR}" "${WINEBUILDPATH}"
@@ -860,7 +860,7 @@ function install_libpng12 {
 LIBPNG14VER="1.4.4"
 LIBPNG14SHA1SUM="245490b22086a6aff8964b7d32383a17814d8ebf"
 LIBPNG14FILE="libpng-${LIBPNG14VER}.tar.gz"
-LIBPNG14URL="http://downloads.sourceforge.net/libpng14/${LIBPNG14FILE}"
+LIBPNG14URL="http://downloads.sourceforge.net/libpng/${LIBPNG14FILE}"
 LIBPNG14DIR="libpng-${LIBPNG14VER}"
 function clean_libpng14 {
 	clean_source_dir "${LIBPNG14DIR}" "${WINEBUILDPATH}"
