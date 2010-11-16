@@ -891,10 +891,10 @@ function install_libpng14 {
 #
 # libxml
 #
-LIBXML2VER="2.7.7"
+LIBXML2VER="2.7.8"
 LIBXML2FILE="libxml2-${LIBXML2VER}.tar.gz"
 LIBXML2URL="ftp://xmlsoft.org/libxml2/${LIBXML2FILE}"
-LIBXML2SHA1SUM="8592824a2788574a172cbddcdc72f734ff87abe3"
+LIBXML2SHA1SUM="859dd535edbb851cc15b64740ee06551a7a17d40"
 LIBXML2DIR="libxml2-${LIBXML2VER}"
 function clean_libxml2 {
 	clean_source_dir "${LIBXML2DIR}" "${WINEBUILDPATH}"
@@ -960,10 +960,10 @@ function install_libxslt {
 # glib
 #
 GLIBBASEVER="2.26"
-GLIBVER="${GLIBBASEVER}.0"
+GLIBVER="${GLIBBASEVER}.1"
 GLIBFILE="glib-${GLIBVER}.tar.bz2"
 GLIBURL="ftp://ftp.gtk.org/pub/glib/${GLIBBASEVER}/${GLIBFILE}"
-GLIBSHA1SUM="9d7e9dce2add3fadc35079ad291a94f45ebcf706"
+GLIBSHA1SUM="8d35d5cf41d681dd6480a16be39f7d3cffbd29f0"
 GLIBDIR="glib-${GLIBVER}"
 function clean_glib {
 	clean_source_dir "${GLIBDIR}" "${WINEBUILDPATH}"
