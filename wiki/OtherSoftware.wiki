@@ -18,7 +18,7 @@ I will attempt to keep this page updated with every Subversion check in, but svn
 || gettext || 0.18.1.1 || [http://www.gnu.org/software/gettext/] || LGPL/GPL/GFDL || used for translations ||
 || Git || 1.7.3.2 || [http://git-scm.com/] || GPL || not used (yet) ||
 || GLib || 2.26.1 || [http://www.gtk.org], [http://library.gnome.org/devel/glib/stable/] || LGPL || GStreamer prereq ||
-|| GnuTLS || 2.10.2 || [http://www.gnu.org/software/gnutls/] || LGPL/GPL || used for Wine's secure channel support ||
+|| GnuTLS || 2.10.3 || [http://www.gnu.org/software/gnutls/] || LGPL/GPL || used for Wine's secure channel support ||
 || GStreamer || 0.10.30 || [http://gstreamer.freedesktop.org/] || LGPL || multimedia streaming/pipelining ||
 || gst-plugins-base || 0.10.30 || [http://gstreamer.freedesktop.org/modules/] || LGPL/GPL (plus whatever plugins themselves use) || GStreamer base plugins ||
 || !JasPer || 1.900.1 || [http://www.ece.uvic.ca/~mdadams/jasper/] || !JasPer-2.0 || JPEG-2000 support for libicns ||
