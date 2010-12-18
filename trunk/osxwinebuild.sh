@@ -1158,9 +1158,12 @@ function install_freetype {
 # fontconfig
 #
 FONTCONFIGVER="2.8.0"
-FONTCONFIGFILE="fontconfig-${FONTCONFIGVER}.tar.gz"
-FONTCONFIGURL="http://fontconfig.org/release/${FONTCONFIGFILE}"
-FONTCONFIGSHA1SUM="570fb55eb14f2c92a7b470b941e9d35dbfafa716"
+#FONTCONFIGFILE="fontconfig-${FONTCONFIGVER}.tar.gz"
+#FONTCONFIGURL="http://fontconfig.org/release/${FONTCONFIGFILE}"
+#FONTCONFIGSHA1SUM="570fb55eb14f2c92a7b470b941e9d35dbfafa716"
+FONTCONFIGFILE="fontconfig-${FONTCONFIGVER}.tar.bz2"
+FONTCONFIGURL="http://cgit.freedesktop.org/fontconfig/snapshot/${FONTCONFIGFILE}"
+FONTCONFIGSHA1SUM="63545d4031167dffa998cd0230bc0a03a8f9eea1"
 FONTCONFIGDIR="fontconfig-${FONTCONFIGVER}"
 function clean_fontconfig {
 	clean_source_dir "${FONTCONFIGDIR}" "${WINEBUILDPATH}"
@@ -1172,7 +1175,8 @@ function check_fontconfig {
 	check_sha1sum "${WINESOURCEPATH}/${FONTCONFIGFILE}" "${FONTCONFIGSHA1SUM}"
 }
 function extract_fontconfig {
-	extract_file "${TARGZ}" "${WINESOURCEPATH}/${FONTCONFIGFILE}" "${WINEBUILDPATH}" "${FONTCONFIGDIR}"
+	#extract_file "${TARGZ}" "${WINESOURCEPATH}/${FONTCONFIGFILE}" "${WINEBUILDPATH}" "${FONTCONFIGDIR}"
+	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${FONTCONFIGFILE}" "${WINEBUILDPATH}" "${FONTCONFIGDIR}"
 }
 function configure_fontconfig {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --with-default-fonts=${X11LIB}/X11/fonts --with-confdir=${WINELIBPATH}/fontconfig --with-cache-dir=${X11DIR}/var/cache/fontconfig" "${WINEBUILDPATH}/${FONTCONFIGDIR}"
