@@ -995,10 +995,10 @@ function install_glib {
 #
 # mpg123
 #
-MPG123VER="1.12.5"
+MPG123VER="1.13.1"
 MPG123FILE="mpg123-${MPG123VER}.tar.bz2"
 MPG123URL="http://downloads.sourceforge.net/mpg123/${MPG123FILE}"
-MPG123SHA1SUM="476cb47a9b6570684b5af536beedf2026522e5f8"
+MPG123SHA1SUM="d4d791bec46eef9bd9823d1b1b4e47d1c10b94c6"
 MPG123DIR="mpg123-${MPG123VER}"
 function clean_mpg123 {
 	clean_source_dir "${MPG123DIR}" "${WINEBUILDPATH}"
@@ -1103,10 +1103,10 @@ function install_gsm {
 #
 # freetype
 #
-FREETYPEVER="2.4.3"
+FREETYPEVER="2.4.4"
 FREETYPEFILE="freetype-${FREETYPEVER}.tar.bz2"
 FREETYPEURL="http://downloads.sourceforge.net/freetype/freetype2/${FREETYPEFILE}"
-FREETYPESHA1SUM="16e5ba0ff23b2de372149a790b7245a762022912"
+FREETYPESHA1SUM="1d136cbc51c67b212c91ba04dc5db797f35e64e6"
 FREETYPEDIR="freetype-${FREETYPEVER}"
 function clean_freetype {
 	clean_source_dir "${FREETYPEDIR}" "${WINEBUILDPATH}"
@@ -1158,14 +1158,8 @@ function install_freetype {
 # fontconfig
 #
 FONTCONFIGVER="2.8.0"
-#FONTCONFIGFILE="fontconfig-${FONTCONFIGVER}.tar.gz"
-#FONTCONFIGURL="http://fontconfig.org/release/${FONTCONFIGFILE}"
-#FONTCONFIGSHA1SUM="570fb55eb14f2c92a7b470b941e9d35dbfafa716"
-#FONTCONFIGFILE="fontconfig-${FONTCONFIGVER}.tar.bz2"
-#FONTCONFIGURL="http://cgit.freedesktop.org/fontconfig/snapshot/${FONTCONFIGFILE}"
-#FONTCONFIGSHA1SUM="63545d4031167dffa998cd0230bc0a03a8f9eea1"
 FONTCONFIGFILE="fontconfig-${FONTCONFIGVER}.tar.gz"
-FONTCONFIGURL="http://distfiles.macports.org/fontconfig/${FONTCONFIGFILE}"
+FONTCONFIGURL="http://www.freedesktop.org/software/fontconfig/release/${FONTCONFIGFILE}"
 FONTCONFIGSHA1SUM="570fb55eb14f2c92a7b470b941e9d35dbfafa716"
 FONTCONFIGDIR="fontconfig-${FONTCONFIGVER}"
 function clean_fontconfig {
@@ -1405,10 +1399,10 @@ function install_unixodbc {
 #
 # libexif
 #
-LIBEXIFVER="0.6.19"
+LIBEXIFVER="0.6.20"
 LIBEXIFFILE="libexif-${LIBEXIFVER}.tar.bz2"
 LIBEXIFURL="http://downloads.sourceforge.net/libexif/${LIBEXIFFILE}"
-LIBEXIFSHA1SUM="820f07ff12a8cc720a6597d46277f01498c8aba4"
+LIBEXIFSHA1SUM="d7cce9098169269695852db20d24350c2d3c10fe"
 LIBEXIFDIR="libexif-${LIBEXIFVER}"
 function clean_libexif {
 	clean_source_dir "${LIBEXIFDIR}" "${WINEBUILDPATH}"
@@ -1720,10 +1714,10 @@ function install_orc {
 #
 # libogg
 #
-LIBOGGVER="1.2.0"
+LIBOGGVER="1.2.2"
 LIBOGGFILE="libogg-${LIBOGGVER}.tar.gz"
 LIBOGGURL="http://downloads.xiph.org/releases/ogg/${LIBOGGFILE}"
-LIBOGGSHA1SUM="135fb812282e08833295c91e005bd0258fff9098"
+LIBOGGSHA1SUM="deeb1959f84de9277e74bca17ec66fa20ced9f08"
 LIBOGGDIR="libogg-${LIBOGGVER}"
 function clean_libogg {
 	clean_source_dir "${LIBOGGDIR}" "${WINEBUILDPATH}"
@@ -1942,10 +1936,10 @@ function install_cabextract {
 #
 # git
 #
-GITVERSION="1.7.3.2"
+GITVERSION="1.7.3.5"
 GITFILE="git-${GITVERSION}.tar.bz2"
 GITURL="http://kernel.org/pub/software/scm/git/${GITFILE}"
-GITSHA1SUM="cd8d806752aa6f5716cf193585024a002e098bf4"
+GITSHA1SUM="cf9587ecf7cae04463d05b9f9ce8990913bd925a"
 GITDIR="git-${GITVERSION}"
 function clean_git {
 	clean_source_dir "${GITDIR}" "${WINEBUILDPATH}"
