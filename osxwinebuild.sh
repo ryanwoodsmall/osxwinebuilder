@@ -2,7 +2,7 @@
 #
 # Compile and install Wine and many prerequisites in a self-contained directory.
 #
-# Copyright (C) 2009,2010 Ryan Woodsmall <rwoodsmall@gmail.com>
+# Copyright (C) 2009,2010,2011 Ryan Woodsmall <rwoodsmall@gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -306,58 +306,62 @@ echo "C++ compiler set to: \$CXX = \"${CXX}\""
 #   preprocessor/compiler flags
 export CPPFLAGS="-I${WINEINCLUDEPATH} ${OSXSDK+-isysroot $OSXSDK} -I${X11INC}"
 
+## some extra flags based on CPU features
+## XXX - this is way complicated.  I might just do MMX+SSE+common SSEx stuff
+#export CPUFLAGS=""
+## XXX - no distcc,clang,llvm support yet!
+## some gcc-specific flags
+## a note:
+##   all versions of GCC running on Darwin x86/x86_64 10.4+ require GCC 4.0+
+##   all versions *should* have support for the P4 "nocona" mtune option
+##   all *real* Mac hardware should support SSE3 or better
+##   all of the above are true for the dev kit up to the most recent Macs
+##   that said, don't know how much "optimization" below is going to help
+#export USINGGCC=$(echo ${CC} | egrep "(^|/)gcc" | wc -l | tr -d " ")
+#if [ ${USINGGCC} -eq 1 ] ; then
+#	# gcc versions
+#	export GCCVER=$(${CC} --version | head -1 | awk '{print $3}')
+#	export GCCMAJVER=$(echo ${GCCVER} | cut -d\. -f 1)
+#	export GCCMINVER=$(echo ${GCCVER} | cut -d\. -f 2)
+#	# grab all SSE & MMX flags from the CPU feature set
+#	export CPUFLAGS+=$(sysctl -n machdep.cpu.features | tr "[:upper:]" "[:lower:]" | tr " " "\n" | sed s#^#-m#g | egrep -i "(sse|mmx)" | sort -u | xargs echo)
+#	# this should always be true, but being paranoid never hurt anyone
+#	if echo $CPUFLAGS | grep \\-msse >/dev/null 2>&1
+#	then
+#		export CPUFLAGS+=" -mfpmath=sse"
+#	fi
+#	# set the mtune on GCC based on version
+#	# should never need to check for GCC <4, but why not?
+#	if [ ${GCCMAJVER} -eq 4 ] ; then
+#		# use p4/nocona on GCC 4.0... ugly
+#		if [ ${GCCMINVER} -eq 0 ] ; then
+#			export CPUFLAGS+=" -mtune=nocona"
+#			# no SSE4+ w/4.0
+#			export CPUFLAGS=$(echo ${CPUFLAGS} | tr " " "\n" | sort -u | grep -vi sse4 | xargs echo)
+#			# and no SSSE3 on Xcode 2.5; should be gcc 4.0, builds in the 53xx series
+#			${CC} --version | grep -i "build 53" >/dev/null 2>&1
+#			if [ $? == 0 ] ; then
+#				export CPUFLAGS=$(echo ${CPUFLAGS} | tr " " "\n" | sort -u | grep -vi ssse3 | xargs echo)
+#			fi
+#		fi
+#		# use native on 4.2+
+#		if [ ${GCCMINVER} -ge 2 ] ; then
+#			export CPUFLAGS+=" -mtune=native"
+#		fi
+#	fi
+#fi
 # some extra flags based on CPU features
-export CPUFLAGS=""
-# XXX - no distcc,clang,llvm support yet!
-# XXX - this is way complicated.  I might just do MMX+SSE+common SSEx stuff
-# some gcc-specific flags
-# a note:
-#   all versions of GCC running on Darwin x86/x86_64 10.4+ require GCC 4.0+
-#   all versions *should* have support for the P4 "nocona" mtune option
-#   all *real* Mac hardware should support SSE3 or better
-#   all of the above are true for the dev kit up to the most recent Macs
-#   that said, don't know how much "optimization" below is going to help
-export USINGGCC=$(echo ${CC} | egrep "(^|/)gcc" | wc -l | tr -d " ")
-if [ ${USINGGCC} -eq 1 ] ; then
-	# gcc versions
-	export GCCVER=$(${CC} --version | head -1 | awk '{print $3}')
-	export GCCMAJVER=$(echo ${GCCVER} | cut -d\. -f 1)
-	export GCCMINVER=$(echo ${GCCVER} | cut -d\. -f 2)
-	# grab all SSE & MMX flags from the CPU feature set
-	export CPUFLAGS+=$(sysctl -n machdep.cpu.features | tr "[:upper:]" "[:lower:]" | tr " " "\n" | sed s#^#-m#g | egrep -i "(sse|mmx)" | sort -u | xargs echo)
-	# this should always be true, but being paranoid never hurt anyone
-	if echo $CPUFLAGS | grep \\-msse >/dev/null 2>&1
-	then
-		export CPUFLAGS+=" -mfpmath=sse"
-	fi
-	# set the mtune on GCC based on version
-	# should never need to check for GCC <4, but why not?
-	if [ ${GCCMAJVER} -eq 4 ] ; then
-		# use p4/nocona on GCC 4.0... ugly
-		if [ ${GCCMINVER} -eq 0 ] ; then
-			export CPUFLAGS+=" -mtune=nocona"
-			# no SSE4+ w/4.0
-			export CPUFLAGS=$(echo ${CPUFLAGS} | tr " " "\n" | sort -u | grep -vi sse4 | xargs echo)
-			# and no SSSE3 on Xcode 2.5; should be gcc 4.0, builds in the 53xx series
-			${CC} --version | grep -i "build 53" >/dev/null 2>&1
-			if [ $? == 0 ] ; then
-				export CPUFLAGS=$(echo ${CPUFLAGS} | tr " " "\n" | sort -u | grep -vi ssse3 | xargs echo)
-			fi
-		fi
-		# use native on 4.2+
-		if [ ${GCCMINVER} -ge 2 ] ; then
-			export CPUFLAGS+=" -mtune=native"
-		fi
-	fi
-fi
+export CPUFLAGS="-mmmx -msse -msse2 -msse3 -mfpmath=sse"
 # set our CFLAGS to something useful, and specify we should be using 32-bit
 export CFLAGS="-g -O2 -arch i386 -m32 ${CPUFLAGS} ${OSXSDK+-isysroot $OSXSDK} ${OSXVERSIONMIN+-mmacosx-version-min=$OSXVERSIONMIN} ${CPPFLAGS}"
 export CXXFLAGS=${CFLAGS}
+echo "CFLAGS and CXXFLAGS set to: ${CFLAGS}"
 
 # linker flags
 #   always prefer our Wine install path's lib dir
 #   set the sysroot if need be
 export LDFLAGS="-L${WINELIBPATH} ${OSXSDK+-isysroot $OSXSDK} -L${X11LIB} -framework CoreServices -lz -L${X11LIB} -lGL -lGLU"
+echo "LDFLAGS set to: ${LDFLAGS}"
 
 # pkg-config config
 #   system and stuff we build only
@@ -1817,10 +1821,10 @@ function install_libtheora {
 # gstreamer
 #
 GSTREAMERBASEVER="0.10"
-GSTREAMERVER="${GSTREAMERBASEVER}.30"
+GSTREAMERVER="${GSTREAMERBASEVER}.31"
 GSTREAMERFILE="gstreamer-${GSTREAMERVER}.tar.bz2"
 GSTREAMERURL="http://gstreamer.freedesktop.org/src/gstreamer/${GSTREAMERFILE}"
-GSTREAMERSHA1SUM="23e3698dbefd5cfdfe3b40a8cc004cbc09e01e69"
+GSTREAMERSHA1SUM="b3545d89418083cce9395475ac5935887869b40c"
 GSTREAMERDIR="gstreamer-${GSTREAMERVER}"
 function clean_gstreamer {
 	clean_source_dir "${GSTREAMERDIR}" "${WINEBUILDPATH}"
@@ -1855,10 +1859,10 @@ function install_gstreamer {
 #
 # gstpluginsbase
 #
-GSTPLUGINSBASEVER="0.10.30"
+GSTPLUGINSBASEVER="0.10.31"
 GSTPLUGINSBASEFILE="gst-plugins-base-${GSTPLUGINSBASEVER}.tar.bz2"
 GSTPLUGINSBASEURL="http://gstreamer.freedesktop.org/src/gst-plugins-base/${GSTPLUGINSBASEFILE}"
-GSTPLUGINSBASESHA1SUM="17170bb23278c87bb3f4b299a3e7eaeed178bd31"
+GSTPLUGINSBASESHA1SUM="a22d944adc6f27f8dc629d868fe15d4ce3aa4096"
 GSTPLUGINSBASEDIR="gst-plugins-base-${GSTPLUGINSBASEVER}"
 function clean_gstpluginsbase {
 	clean_source_dir "${GSTPLUGINSBASEDIR}" "${WINEBUILDPATH}"
@@ -1873,17 +1877,24 @@ function extract_gstpluginsbase {
 	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${GSTPLUGINSBASEFILE}" "${WINEBUILDPATH}" "${GSTPLUGINSBASEDIR}"
 }
 function configure_gstpluginsbase {
-	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --disable-examples --enable-experimental" "${WINEBUILDPATH}/${GSTPLUGINSBASEDIR}"
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --disable-examples --enable-experimental --enable-introspection=no" "${WINEBUILDPATH}/${GSTPLUGINSBASEDIR}"
 }
 function build_gstpluginsbase {
 	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${GSTPLUGINSBASEDIR}"
 }
 function install_gstpluginsbase {
+	# XXX - 0.10.31{+?} breaks
+	PRECFLAGS=${CFLAGS}
+	export CFLAGS=$(echo "${CFLAGS} -Xarch_i386 -O1" | sed 's#-O2##g')
+	export CXXFLAGS=${CFLAGS}
+	echo "gst-plugins-base compile options: \$CFLAGS = \"${CFLAGS}\", \$CXXFLAGS = \"${CXXFLAGS}\""
 	clean_gstpluginsbase
 	extract_gstpluginsbase
 	configure_gstpluginsbase
 	build_gstpluginsbase
 	install_package "${MAKE} install" "${WINEBUILDPATH}/${GSTPLUGINSBASEDIR}"
+	export CFLAGS=${PRECFLAGS}
+	export CXXFLAGS=${CFLAGS}
 }
 
 # 
