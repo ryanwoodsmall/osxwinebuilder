@@ -175,15 +175,6 @@ elif [ ${BUILDCROSSOVER} -eq 1 ] || [ ${BUILDCXGAMES} -eq 1 ] ; then
 	WINEDIR="wine"
 fi
 
-# set gecko version from build type
-if [ ${BUILDDEVEL} -eq 1 ] ; then
-	GECKOVERSION="1.1.0"
-	GECKOSHA1SUM="1b6c637207b6f032ae8a52841db9659433482714"
-else
-	GECKOVERSION="1.0.0"
-	GECKOSHA1SUM="afa22c52bca4ca77dcb9edb3c9936eb23793de01"
-fi
-
 # timestamp
 export TIMESTAMP=$(date '+%Y%m%d%H%M%S')
 
@@ -306,50 +297,7 @@ echo "C++ compiler set to: \$CXX = \"${CXX}\""
 #   preprocessor/compiler flags
 export CPPFLAGS="-I${WINEINCLUDEPATH} ${OSXSDK+-isysroot $OSXSDK} -I${X11INC}"
 
-## some extra flags based on CPU features
-## XXX - this is way complicated.  I might just do MMX+SSE+common SSEx stuff
-#export CPUFLAGS=""
-## XXX - no distcc,clang,llvm support yet!
-## some gcc-specific flags
-## a note:
-##   all versions of GCC running on Darwin x86/x86_64 10.4+ require GCC 4.0+
-##   all versions *should* have support for the P4 "nocona" mtune option
-##   all *real* Mac hardware should support SSE3 or better
-##   all of the above are true for the dev kit up to the most recent Macs
-##   that said, don't know how much "optimization" below is going to help
-#export USINGGCC=$(echo ${CC} | egrep "(^|/)gcc" | wc -l | tr -d " ")
-#if [ ${USINGGCC} -eq 1 ] ; then
-#	# gcc versions
-#	export GCCVER=$(${CC} --version | head -1 | awk '{print $3}')
-#	export GCCMAJVER=$(echo ${GCCVER} | cut -d\. -f 1)
-#	export GCCMINVER=$(echo ${GCCVER} | cut -d\. -f 2)
-#	# grab all SSE & MMX flags from the CPU feature set
-#	export CPUFLAGS+=$(sysctl -n machdep.cpu.features | tr "[:upper:]" "[:lower:]" | tr " " "\n" | sed s#^#-m#g | egrep -i "(sse|mmx)" | sort -u | xargs echo)
-#	# this should always be true, but being paranoid never hurt anyone
-#	if echo $CPUFLAGS | grep \\-msse >/dev/null 2>&1
-#	then
-#		export CPUFLAGS+=" -mfpmath=sse"
-#	fi
-#	# set the mtune on GCC based on version
-#	# should never need to check for GCC <4, but why not?
-#	if [ ${GCCMAJVER} -eq 4 ] ; then
-#		# use p4/nocona on GCC 4.0... ugly
-#		if [ ${GCCMINVER} -eq 0 ] ; then
-#			export CPUFLAGS+=" -mtune=nocona"
-#			# no SSE4+ w/4.0
-#			export CPUFLAGS=$(echo ${CPUFLAGS} | tr " " "\n" | sort -u | grep -vi sse4 | xargs echo)
-#			# and no SSSE3 on Xcode 2.5; should be gcc 4.0, builds in the 53xx series
-#			${CC} --version | grep -i "build 53" >/dev/null 2>&1
-#			if [ $? == 0 ] ; then
-#				export CPUFLAGS=$(echo ${CPUFLAGS} | tr " " "\n" | sort -u | grep -vi ssse3 | xargs echo)
-#			fi
-#		fi
-#		# use native on 4.2+
-#		if [ ${GCCMINVER} -ge 2 ] ; then
-#			export CPUFLAGS+=" -mtune=native"
-#		fi
-#	fi
-#fi
+# XXX - complicated CPU flag determination removed
 # some extra flags based on CPU features
 export CPUFLAGS="-mmmx -msse -msse2 -msse3 -mfpmath=sse"
 # set our CFLAGS to something useful, and specify we should be using 32-bit
@@ -688,10 +636,10 @@ function install_gettext {
 #
 # jpeg
 #
-JPEGVER="8b"
+JPEGVER="8c"
 JPEGFILE="jpegsrc.v${JPEGVER}.tar.gz"
 JPEGURL="http://www.ijg.org/files/${JPEGFILE}"
-JPEGSHA1SUM="15dc1939ea1a5b9d09baea11cceb13ca59e4f9df"
+JPEGSHA1SUM="f0a3b88ac4db19667798bee971537eeed552bce9"
 JPEGDIR="jpeg-${JPEGVER}"
 function clean_jpeg {
 	clean_source_dir "${JPEGDIR}" "${WINEBUILDPATH}"
@@ -1573,10 +1521,10 @@ function install_libgphoto2 {
 #
 # sane-backends
 #
-SANEBACKENDSVER="1.0.21"
+SANEBACKENDSVER="1.0.22"
 SANEBACKENDSFILE="sane-backends-${SANEBACKENDSVER}.tar.gz"
 SANEBACKENDSURL="ftp://ftp.sane-project.org/pub/sane/sane-backends-${SANEBACKENDSVER}/${SANEBACKENDSFILE}"
-SANEBACKENDSSHA1SUM="4a2789ea9dae1ece090d016abd14b0f2450d9bdb"
+SANEBACKENDSSHA1SUM="dc04d6e6fd18791d8002c3fdb23e89fef3327135"
 SANEBACKENDSDIR="sane-backends-${SANEBACKENDSVER}"
 function clean_sanebackends {
 	clean_source_dir "${SANEBACKENDSDIR}" "${WINEBUILDPATH}"
@@ -1821,10 +1769,10 @@ function install_libtheora {
 # gstreamer
 #
 GSTREAMERBASEVER="0.10"
-GSTREAMERVER="${GSTREAMERBASEVER}.31"
+GSTREAMERVER="${GSTREAMERBASEVER}.32"
 GSTREAMERFILE="gstreamer-${GSTREAMERVER}.tar.bz2"
 GSTREAMERURL="http://gstreamer.freedesktop.org/src/gstreamer/${GSTREAMERFILE}"
-GSTREAMERSHA1SUM="b3545d89418083cce9395475ac5935887869b40c"
+GSTREAMERSHA1SUM="95477044ed23cf94669e56ea43607de05c2a0cb3"
 GSTREAMERDIR="gstreamer-${GSTREAMERVER}"
 function clean_gstreamer {
 	clean_source_dir "${GSTREAMERDIR}" "${WINEBUILDPATH}"
@@ -1859,10 +1807,10 @@ function install_gstreamer {
 #
 # gstpluginsbase
 #
-GSTPLUGINSBASEVER="0.10.31"
+GSTPLUGINSBASEVER="0.10.32"
 GSTPLUGINSBASEFILE="gst-plugins-base-${GSTPLUGINSBASEVER}.tar.bz2"
 GSTPLUGINSBASEURL="http://gstreamer.freedesktop.org/src/gst-plugins-base/${GSTPLUGINSBASEFILE}"
-GSTPLUGINSBASESHA1SUM="a22d944adc6f27f8dc629d868fe15d4ce3aa4096"
+GSTPLUGINSBASESHA1SUM="c1c149272b7ab6cbe5f648532f74525c6541eea5"
 GSTPLUGINSBASEDIR="gst-plugins-base-${GSTPLUGINSBASEVER}"
 function clean_gstpluginsbase {
 	clean_source_dir "${GSTPLUGINSBASEDIR}" "${WINEBUILDPATH}"
@@ -1947,10 +1895,10 @@ function install_cabextract {
 #
 # git
 #
-GITVERSION="1.7.3.5"
+GITVERSION="1.7.4.1"
 GITFILE="git-${GITVERSION}.tar.bz2"
 GITURL="http://kernel.org/pub/software/scm/git/${GITFILE}"
-GITSHA1SUM="cf9587ecf7cae04463d05b9f9ce8990913bd925a"
+GITSHA1SUM="fff10cb498b17decc146c8f18b0b02136d5e9b88"
 GITDIR="git-${GITVERSION}"
 function clean_git {
 	clean_source_dir "${GITDIR}" "${WINEBUILDPATH}"
@@ -1981,20 +1929,33 @@ function install_git {
 #
 # gecko
 #
-GECKOFILE="wine_gecko-${GECKOVERSION}-x86.cab"
-GECKOURL="http://downloads.sourceforge.net/wine/${GECKOFILE}"
+GECKOVERSIONS="1.0.0 1.1.0"
+GECKOSHA1SUMS="afa22c52bca4ca77dcb9edb3c9936eb23793de01 1b6c637207b6f032ae8a52841db9659433482714"
 function get_gecko {
-	get_file "${GECKOFILE}" "${WINESOURCEPATH}" "${GECKOURL}"
+	for GECKOVERSION in ${GECKOVERSIONS} ; do
+		GECKOFILE="wine_gecko-${GECKOVERSION}-x86.cab"
+		GECKOURL="http://downloads.sourceforge.net/wine/${GECKOFILE}"
+		get_file "${GECKOFILE}" "${WINESOURCEPATH}" "${GECKOURL}"
+	done
 }
 function check_gecko {
-	check_sha1sum "${WINESOURCEPATH}/${GECKOFILE}" "${GECKOSHA1SUM}"
+	GECKOSUMPOS=0
+	for GECKOVERSION in ${GECKOVERSIONS} ; do
+		GECKOSUMPOS=$((GECKOSUMPOS+1))
+		GECKOFILE="wine_gecko-${GECKOVERSION}-x86.cab"
+		GECKOSHA1SUM=$(echo ${GECKOSHA1SUMS} | cut -f${GECKOSUMPOS} -d\ )
+		check_sha1sum "${WINESOURCEPATH}/${GECKOFILE}" "${GECKOSHA1SUM}"
+	done
 }
 function install_gecko {
-	if [ ! -d  "${WINEINSTALLPATH}/share/wine/gecko" ] ; then
-		mkdir -p ${WINEINSTALLPATH}/share/wine/gecko || fail_and_exit "could not create directory for Gecko installation"
-	fi
-	echo "installing ${GECKOFILE} into ${WINEINSTALLPATH}/share/wine/gecko"
-	install -m 644 ${WINESOURCEPATH}/${GECKOFILE} ${WINEINSTALLPATH}/share/wine/gecko/${GECKOFILE} || fail_and_exit "could not put the Wine Gecko cab in the proper location"
+	for GECKOVERSION in ${GECKOVERSIONS} ; do
+		GECKOFILE="wine_gecko-${GECKOVERSION}-x86.cab"
+		if [ ! -d  "${WINEINSTALLPATH}/share/wine/gecko" ] ; then
+			mkdir -p ${WINEINSTALLPATH}/share/wine/gecko || fail_and_exit "could not create directory for Gecko installation"
+		fi
+		echo "installing ${GECKOFILE} into ${WINEINSTALLPATH}/share/wine/gecko"
+		install -m 644 ${WINESOURCEPATH}/${GECKOFILE} ${WINEINSTALLPATH}/share/wine/gecko/${GECKOFILE} || fail_and_exit "could not put the Wine Gecko cab in the proper location"
+	done
 }
 
 #
