@@ -35,8 +35,8 @@ function usage {
 	echo "    --help: display this help message"
 	echo ""
 	echo "  Build type options (mutually exclusive):"
-	echo "    --stable: build the stable version of Wine (default)"
-	echo "    --devel: build the development version of Wine"
+	echo "    --devel: build the development version of Wine (default)"
+	echo "    --stable: build the stable version of Wine"
 	echo "    --crossover: build Wine using CrossOver sources"
 	echo "    --cxgames: build Wine using CrossOver Games sources"
 	echo ""
@@ -112,8 +112,8 @@ WINETAG=""
 WINESTABLEVERSION="1.2.2"
 WINESTABLESHA1SUM="8b37c8e0230dd6a665d310054f4e36dcbdab7330"
 #   devel
-WINEDEVELVERSION="1.3.13"
-WINEDEVELSHA1SUM="f7e7aa2dbefc0f3fd48703f8640d13bcdb7312e4"
+WINEDEVELVERSION="1.3.14"
+WINEDEVELSHA1SUM="58456606b6932044de0b8884417e68f089bd46a6"
 #   CrossOver Wine
 CROSSOVERVERSION="10.0.0"
 CROSSOVERSHA1SUM="82ebc5b2205ac26b068a9e4eb2ddbc95813a93a4"
@@ -122,18 +122,18 @@ CXGAMESVERSION="10.0.0"
 CXGAMESSHA1SUM="37f0df806216d572dcd3f9223fdb54ceaaaa6352"
 
 # check our build flag and pick the right version
-if [ ${BUILDFLAG} -eq 1 ] || [ ${BUILDFLAG} -eq 0 ] ; then
+if [ ${BUILDFLAG} -eq 1 ] ; then
 	BUILDSTABLE=1
 	WINEVERSION="${WINESTABLEVERSION}"
 	WINESHA1SUM="${WINESTABLESHA1SUM}"
 	WINETAG="Wine ${WINEVERSION}"
-	echo "found --stable option or no option specified, will build Wine stable version"
-elif [ ${BUILDFLAG} -eq 10 ] ; then
+	echo "found --stable option, will build Wine stable version"
+elif [ ${BUILDFLAG} -eq 10 ] || [ ${BUILDFLAG} -eq 0 ] ; then
 	BUILDDEVEL=1
 	WINEVERSION="${WINEDEVELVERSION}"
 	WINESHA1SUM="${WINEDEVELSHA1SUM}"
 	WINETAG="Wine ${WINEVERSION}"
-	echo "found --devel option, will build Wine devel version"
+	echo "found --devel option or no build options, will build Wine devel version"
 elif [ ${BUILDFLAG} -eq 100 ] ; then
 	BUILDCROSSOVER=1
 	WINEVERSION="${CROSSOVERVERSION}"
@@ -147,14 +147,14 @@ elif [ ${BUILDFLAG} -eq 1000 ] ; then
 	WINETAG="CrossOver Games Wine ${WINEVERSION}"
 	echo "found --cxgames option, will build Wine from CrossOver Games sources"
 else
-	BUILDSTABLE=1
-	BUILDDEVEL=0
+	BUILDSTABLE=0
+	BUILDDEVEL=1
 	BUILDCROSSOVER=0
 	BUILDCXGAMES=0
 	WINEVERSION="${WINESTABLEVERSION}"
 	WINESHA1SUM="${WINESTABLESHA1SUM}"
 	WINETAG="Wine ${WINEVERSION}"
-	echo "found multiple build types, defaulting to Wine stable"
+	echo "found multiple build types or no specified build type, defaulting to Wine devel"
 fi
 
 # what are we building?
@@ -297,7 +297,6 @@ echo "C++ compiler set to: \$CXX = \"${CXX}\""
 #   preprocessor/compiler flags
 export CPPFLAGS="-I${WINEINCLUDEPATH} ${OSXSDK+-isysroot $OSXSDK} -I${X11INC}"
 
-# XXX - complicated CPU flag determination removed
 # some extra flags based on CPU features
 export CPUFLAGS="-mmmx -msse -msse2 -msse3 -mfpmath=sse"
 # set our CFLAGS to something useful, and specify we should be using 32-bit
