@@ -910,11 +910,11 @@ function install_libxslt {
 #
 # glib
 #
-GLIBBASEVER="2.26"
-GLIBVER="${GLIBBASEVER}.1"
+GLIBBASEVER="2.28"
+GLIBVER="${GLIBBASEVER}.2"
 GLIBFILE="glib-${GLIBVER}.tar.bz2"
 GLIBURL="ftp://ftp.gtk.org/pub/glib/${GLIBBASEVER}/${GLIBFILE}"
-GLIBSHA1SUM="8d35d5cf41d681dd6480a16be39f7d3cffbd29f0"
+GLIBSHA1SUM="a15cb7caedde819ec74bd8b5cdf31f7372e5fd14"
 GLIBDIR="glib-${GLIBVER}"
 function clean_glib {
 	clean_source_dir "${GLIBDIR}" "${WINEBUILDPATH}"
@@ -946,10 +946,10 @@ function install_glib {
 #
 # mpg123
 #
-MPG123VER="1.13.1"
+MPG123VER="1.13.2"
 MPG123FILE="mpg123-${MPG123VER}.tar.bz2"
 MPG123URL="http://downloads.sourceforge.net/mpg123/${MPG123FILE}"
-MPG123SHA1SUM="d4d791bec46eef9bd9823d1b1b4e47d1c10b94c6"
+MPG123SHA1SUM="31a9c27f5fa80f930dbe598846c847f9b35d9dc3"
 MPG123DIR="mpg123-${MPG123VER}"
 function clean_mpg123 {
 	clean_source_dir "${MPG123DIR}" "${WINEBUILDPATH}"
@@ -1625,6 +1625,153 @@ function install_libicns {
 }
 
 #
+# sdl
+#
+SDLVER="1.2.14"
+SDLFILE="SDL-${SDLVER}.tar.gz"
+SDLURL="http://www.libsdl.org/release/${SDLFILE}"
+SDLSHA1SUM="ba625b4b404589b97e92d7acd165992debe576dd"
+SDLDIR="SDL-${SDLVER}"
+function clean_sdl {
+	clean_source_dir "${SDLDIR}" "${WINEBUILDPATH}"
+}
+function get_sdl {
+	get_file "${SDLFILE}" "${WINESOURCEPATH}" "${SDLURL}"
+}
+function check_sdl {
+	check_sha1sum "${WINESOURCEPATH}/${SDLFILE}" "${SDLSHA1SUM}"
+}
+function extract_sdl {
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${SDLFILE}" "${WINEBUILDPATH}" "${SDLDIR}"
+}
+function configure_sdl {
+	pushd . >/dev/null 2>&1
+	cd ${WINEBUILDPATH}/${SDLDIR} || fail_and_exit "could not cd to ${WINEBUILDPATH}/${SDLDIR} to patch"
+	sed -i.usr_X11_replacement s#/usr/X11/#${X11DIR}#g configure || fail_and_exit "could not replace /usr/X11/ with ${X11DIR} in ${WINEBUILDPATH}/${SDLDIR}/configure"
+	sed -i.usr_X11R6_replacement s#/usr/X11R6/#${X11DIR}#g configure || fail_and_exit "could not replace /usr/X11R6/ with ${X11DIR} in ${WINEBUILDPATH}/${SDLDIR}/configure"
+	popd >/dev/null 2>&1
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --x-includes=${X11INC} --x-libraries=${X11LIB}" "${WINEBUILDPATH}/${SDLDIR}"
+}
+function build_sdl {
+	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${SDLDIR}"
+}
+function install_sdl {
+	export PRECC=${CC}
+	export PRECXX=${CXX}
+	export CC="${CC} ${CFLAGS}"
+	export CXX="${CXX} ${CXXFLAGS}"
+	clean_sdl
+	extract_sdl
+	configure_sdl
+	build_sdl
+	install_package "${MAKE} install" "${WINEBUILDPATH}/${SDLDIR}"
+	export CC="${PRECC}"
+	export CXX="${PRECXX}"
+}
+
+#
+# SDL_net
+#
+SDLNETVER="1.2.7"
+SDLNETFILE="SDL_net-${SDLNETVER}.tar.gz"
+SDLNETURL="http://www.libsdl.org/projects/SDL_net/release/${SDLNETFILE}"
+SDLNETSHA1SUM="b46c7e3221621cc34fec1238f1b5f0ce8972274d"
+SDLNETDIR="SDL_net-${SDLNETVER}"
+function clean_sdlnet {
+	clean_source_dir "${SDLNETDIR}" "${WINEBUILDPATH}"
+}
+function get_sdlnet {
+	get_file "${SDLNETFILE}" "${WINESOURCEPATH}" "${SDLNETURL}"
+}
+function check_sdlnet {
+	check_sha1sum "${WINESOURCEPATH}/${SDLNETFILE}" "${SDLNETSHA1SUM}"
+}
+function extract_sdlnet {
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${SDLNETFILE}" "${WINEBUILDPATH}" "${SDLNETDIR}"
+}
+function configure_sdlnet {
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${SDLNETDIR}"
+}
+function build_sdlnet {
+	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${SDLNETDIR}"
+}
+function install_sdlnet {
+	clean_sdlnet
+	extract_sdlnet
+	configure_sdlnet
+	build_sdlnet
+	install_package "${MAKE} install" "${WINEBUILDPATH}/${SDLNETDIR}"
+}
+
+#
+# SDL_sound
+#
+SDLSOUNDVER="1.0.3"
+SDLSOUNDFILE="SDL_sound-${SDLSOUNDVER}.tar.gz"
+SDLSOUNDURL="http://icculus.org/SDL_sound/downloads/${SDLSOUNDFILE}"
+SDLSOUNDSHA1SUM="1984bc20b2c756dc71107a5a0a8cebfe07e58cb1"
+SDLSOUNDDIR="SDL_sound-${SDLSOUNDVER}"
+function clean_sdlsound {
+	clean_source_dir "${SDLSOUNDDIR}" "${WINEBUILDPATH}"
+}
+function get_sdlsound {
+	get_file "${SDLSOUNDFILE}" "${WINESOURCEPATH}" "${SDLSOUNDURL}"
+}
+function check_sdlsound {
+	check_sha1sum "${WINESOURCEPATH}/${SDLSOUNDFILE}" "${SDLSOUNDSHA1SUM}"
+}
+function extract_sdlsound {
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${SDLSOUNDFILE}" "${WINEBUILDPATH}" "${SDLSOUNDDIR}"
+}
+function configure_sdlsound {
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${SDLSOUNDDIR}"
+}
+function build_sdlsound {
+	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${SDLSOUNDDIR}"
+}
+function install_sdlsound {
+	clean_sdlsound
+	extract_sdlsound
+	configure_sdlsound
+	build_sdlsound
+	install_package "${MAKE} install" "${WINEBUILDPATH}/${SDLSOUNDDIR}"
+}
+
+#
+# dosbox
+#
+DOSBOXVER="0.74"
+DOSBOXFILE="dosbox-${DOSBOXVER}.tar.gz"
+DOSBOXURL="http://downloads.sourceforge.net/dosbox/${DOSBOXFILE}"
+DOSBOXSHA1SUM="2d99f0013350efb29b769ff19ddc8e4d86f4e77e"
+DOSBOXDIR="dosbox-${DOSBOXVER}"
+function clean_dosbox {
+	clean_source_dir "${DOSBOXDIR}" "${WINEBUILDPATH}"
+}
+function get_dosbox {
+	get_file "${DOSBOXFILE}" "${WINESOURCEPATH}" "${DOSBOXURL}"
+}
+function check_dosbox {
+	check_sha1sum "${WINESOURCEPATH}/${DOSBOXFILE}" "${DOSBOXSHA1SUM}"
+}
+function extract_dosbox {
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${DOSBOXFILE}" "${WINEBUILDPATH}" "${DOSBOXDIR}"
+}
+function configure_dosbox {
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --with-sdl-prefix=${WINEINSTALLPATH}" "${WINEBUILDPATH}/${DOSBOXDIR}"
+}
+function build_dosbox {
+	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${DOSBOXDIR}"
+}
+function install_dosbox {
+	clean_dosbox
+	extract_dosbox
+	configure_dosbox
+	build_dosbox
+	install_package "${MAKE} install" "${WINEBUILDPATH}/${DOSBOXDIR}"
+}
+
+#
 # orc
 #
 ORCVER="0.4.11"
@@ -2133,6 +2280,10 @@ function get_sources {
 	get_sanebackends
 	get_jasper
 	get_libicns
+	get_sdl
+	get_sdlnet
+	get_sdlsound
+	get_dosbox
 	get_orc
 	get_libogg
 	get_libvorbis
@@ -2180,6 +2331,10 @@ function check_sources {
 	check_sanebackends
 	check_jasper
 	check_libicns
+	check_sdl
+	check_sdlnet
+	check_sdlsound
+	check_dosbox
 	check_orc
 	check_libogg
 	check_libvorbis
@@ -2224,9 +2379,13 @@ function install_prereqs {
 	install_sanebackends
 	install_jasper
 	install_libicns
+	install_sdl
+	install_sdlnet
 	install_orc
 	install_libogg
 	install_libvorbis
+	install_sdlsound
+	install_dosbox
 	install_libtheora
 	install_gstreamer
 	install_gstpluginsbase
