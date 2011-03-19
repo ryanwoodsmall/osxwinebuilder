@@ -112,8 +112,8 @@ WINETAG=""
 WINESTABLEVERSION="1.2.2"
 WINESTABLESHA1SUM="8b37c8e0230dd6a665d310054f4e36dcbdab7330"
 #   devel
-WINEDEVELVERSION="1.3.15"
-WINEDEVELSHA1SUM="c0b6137671fc2413ad72c3aa9eb3046a871f7889"
+WINEDEVELVERSION="1.3.16"
+WINEDEVELSHA1SUM="66c39e2a465a99cbe70fa7bfd5f370bcd9dc5f3c"
 #   CrossOver Wine
 CROSSOVERVERSION="10.0.0"
 CROSSOVERSHA1SUM="82ebc5b2205ac26b068a9e4eb2ddbc95813a93a4"
@@ -2075,11 +2075,11 @@ function install_git {
 #
 # gecko
 #
-GECKOVERSIONS="1.0.0 1.1.0"
-GECKOSHA1SUMS="afa22c52bca4ca77dcb9edb3c9936eb23793de01 1b6c637207b6f032ae8a52841db9659433482714"
+GECKOVERSIONS="1.0.0-x86.cab 1.1.0-x86.cab 1.2.0-x86.msi"
+GECKOSHA1SUMS="afa22c52bca4ca77dcb9edb3c9936eb23793de01 1b6c637207b6f032ae8a52841db9659433482714 6964d1877668ab7da07a60f6dcf23fb0e261a808"
 function get_gecko {
 	for GECKOVERSION in ${GECKOVERSIONS} ; do
-		GECKOFILE="wine_gecko-${GECKOVERSION}-x86.cab"
+		GECKOFILE="wine_gecko-${GECKOVERSION}"
 		GECKOURL="http://downloads.sourceforge.net/wine/${GECKOFILE}"
 		get_file "${GECKOFILE}" "${WINESOURCEPATH}" "${GECKOURL}"
 	done
@@ -2088,14 +2088,14 @@ function check_gecko {
 	GECKOSUMPOS=0
 	for GECKOVERSION in ${GECKOVERSIONS} ; do
 		GECKOSUMPOS=$((GECKOSUMPOS+1))
-		GECKOFILE="wine_gecko-${GECKOVERSION}-x86.cab"
+		GECKOFILE="wine_gecko-${GECKOVERSION}"
 		GECKOSHA1SUM=$(echo ${GECKOSHA1SUMS} | cut -f${GECKOSUMPOS} -d\ )
 		check_sha1sum "${WINESOURCEPATH}/${GECKOFILE}" "${GECKOSHA1SUM}"
 	done
 }
 function install_gecko {
 	for GECKOVERSION in ${GECKOVERSIONS} ; do
-		GECKOFILE="wine_gecko-${GECKOVERSION}-x86.cab"
+		GECKOFILE="wine_gecko-${GECKOVERSION}"
 		if [ ! -d  "${WINEINSTALLPATH}/share/wine/gecko" ] ; then
 			mkdir -p ${WINEINSTALLPATH}/share/wine/gecko || fail_and_exit "could not create directory for Gecko installation"
 		fi
