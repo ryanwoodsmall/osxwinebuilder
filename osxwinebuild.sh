@@ -112,8 +112,8 @@ WINETAG=""
 WINESTABLEVERSION="1.2.2"
 WINESTABLESHA1SUM="8b37c8e0230dd6a665d310054f4e36dcbdab7330"
 #   devel
-WINEDEVELVERSION="1.3.16"
-WINEDEVELSHA1SUM="66c39e2a465a99cbe70fa7bfd5f370bcd9dc5f3c"
+WINEDEVELVERSION="1.3.17"
+WINEDEVELSHA1SUM="bdad018e266ed3ae8c17c186e435bb775edcc6bf"
 #   CrossOver Wine
 CROSSOVERVERSION="10.0.0"
 CROSSOVERSHA1SUM="82ebc5b2205ac26b068a9e4eb2ddbc95813a93a4"
@@ -1454,7 +1454,10 @@ function install_libusbcompat {
 #
 GDVER="2.0.36RC1"
 GDFILE="gd-${GDVER}.tar.bz2"
-GDURL="http://www.libgd.org/releases/${GDFILE}"
+# XXX - http://code.google.com/p/osxwinebuilder/issues/detail?id=14
+# XXX - http://www.boutell.com/gd/
+#GDURL="http://www.libgd.org/releases/${GDFILE}"
+GDURL="http://osxwinebuilder.googlecode.com/files/${GDFILE}"
 GDSHA1SUM="415300e288348ed0d806fa2f3b7815604d8b5eec"
 GDDIR="gd-${GDVER}"
 function clean_gd {
