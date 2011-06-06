@@ -1525,7 +1525,9 @@ function install_libgphoto2 {
 #
 SANEBACKENDSVER="1.0.22"
 SANEBACKENDSFILE="sane-backends-${SANEBACKENDSVER}.tar.gz"
-SANEBACKENDSURL="ftp://ftp.sane-project.org/pub/sane/sane-backends-${SANEBACKENDSVER}/${SANEBACKENDSFILE}"
+# XXX - http://code.google.com/p/osxwinebuilder/issues/detail?id=15
+#SANEBACKENDSURL="ftp://ftp.sane-project.org/pub/sane/sane-backends-${SANEBACKENDSVER}/${SANEBACKENDSFILE}"
+SANEBACKENDSURL="https://alioth.debian.org/frs/download.php/3503/${SANEBACKENDSFILE}"
 SANEBACKENDSSHA1SUM="dc04d6e6fd18791d8002c3fdb23e89fef3327135"
 SANEBACKENDSDIR="sane-backends-${SANEBACKENDSVER}"
 function clean_sanebackends {
