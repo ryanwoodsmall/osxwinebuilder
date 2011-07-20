@@ -115,11 +115,11 @@ WINESTABLESHA1SUM="072184c492cc9d137138407732de3bb62ba6c091"
 WINEDEVELVERSION="1.3.24"
 WINEDEVELSHA1SUM="cc0dfc2255d1bc19e1975e5e2f680740d9c2825a"
 #   CrossOver Wine
-CROSSOVERVERSION="10.0.0"
-CROSSOVERSHA1SUM="82ebc5b2205ac26b068a9e4eb2ddbc95813a93a4"
+CROSSOVERVERSION="10.1.0"
+CROSSOVERSHA1SUM="8c934d40706249bfb82a82325dfe13b05fa5ebac"
 #   CrossOver Games Wine
-CXGAMESVERSION="10.0.0"
-CXGAMESSHA1SUM="37f0df806216d572dcd3f9223fdb54ceaaaa6352"
+CXGAMESVERSION="10.1.1"
+CXGAMESSHA1SUM="44404284d82843fb4f01a5e530735b2b1f8927ff"
 
 # check our build flag and pick the right version
 if [ ${BUILDFLAG} -eq 1 ] ; then
@@ -2078,6 +2078,45 @@ function install_git {
 }
 
 #
+# crossover patch(es)
+#
+# XXX - patch needed for Codeweavers Crossover Wine sources
+# XXX - currently need to be run from the Wine source directory with proper 'patch -pX' level
+# XXX - hackity hack hack
+#
+CROSSOVERPATCHFILES=""
+CROSSOVERPATCHSHA1SUMS=""
+if [ ${BUILDCROSSOVER} -eq 1 ] || [ ${BUILDCXGAMES} -eq 1 ] ; then
+	CROSSOVERPATCHFILES="no-quartz-wm-workaround.patch"
+	CROSSOVERPATCHSHA1SUMS="7c16faa0747dc32d010580407afc371a40418309"
+	CROSSOVERPATCHFILEPREFIXSTRIPS="0"
+fi
+function get_crossover_patches {
+	for CROSSOVERPATCHFILE in ${CROSSOVERPATCHFILES} ; do
+		CROSSOVERPATCHURL="http://osxwinebuilder.googlecode.com/files/${CROSSOVERPATCHFILE}"
+		get_file "${CROSSOVERPATCHFILE}" "${WINESOURCEPATH}" "${CROSSOVERPATCHURL}"
+	done
+}
+function check_crossover_patches {
+	CROSSOVERPATCHSUMPOS=0
+	for CROSSOVERPATCHFILE in ${CROSSOVERPATCHFILES} ; do
+		CROSSOVERPATCHSUMPOS=$((CROSSOVERPATCHSUMPOS+1))
+		CROSSOVERPATCHSHA1SUM=$(echo ${CROSSOVERPATCHSHA1SUMS} | cut -f${CROSSOVERPATCHSUMPOS} -d\ )
+		check_sha1sum "${WINESOURCEPATH}/${CROSSOVERPATCHFILE}" "${CROSSOVERPATCHSHA1SUM}"
+	done
+}
+function run_crossover_patches {
+	CROSSOVERPATCHPOS=0
+	for CROSSOVERPATCHFILE in ${CROSSOVERPATCHFILES} ; do
+		CROSSOVERPATCHPOS=$((CROSSOVERPATCHPOS+1))
+		CROSSOVERPATCHFILEPREFIXSTRIP=$(echo ${CROSSOVERPATCHFILEPREFIXSTRIPS} | cut -f${CROSSOVERPATCHPOS} -d\ )
+		echo "attempting to run patch '${CROSSOVERPATCHFILE}' with a prefix strip of '${CROSSOVERPATCHFILEPREFIXSTRIP}'"
+		patch -p${CROSSOVERPATCHFILEPREFIXSTRIP} < ${WINESOURCEPATH}/${CROSSOVERPATCHFILE} || fail_and_exit "could not successfully use patch ${CROSSOVERPATCHFILE}"
+		echo "command 'patch -p${CROSSOVERPATCHFILEPREFIXSTRIP} < ${WINESOURCEPATH}/${CROSSOVERPATCHFILE}' completed successfully"
+	done
+}
+
+#
 # gecko
 #
 GECKOVERSIONS="1.0.0-x86.cab 1.1.0-x86.cab 1.2.0-x86.msi"
@@ -2168,6 +2207,10 @@ function configure_wine {
 	EXTRAXMLOPTS=""
 	if [ ${BUILDCROSSOVER} -eq 1 ] || [ ${BUILDCXGAMES} -eq 1 ] ; then
 		EXTRAXMLOPTS="=native"
+		pushd . >/dev/null 2>&1
+		cd ${WINEBUILDPATH}/${WINEDIR} || fail_and_exit "could not cd into Wine directory '${WINEBUILDPATH}/${WINEDIR}'"
+		run_crossover_patches
+		popd >/dev/null 2>&1
 	fi
 	WINECONFIGUREOPTS=""
 	WINECONFIGUREOPTS+="--verbose "
@@ -2270,6 +2313,9 @@ function get_sources {
 	get_gstpluginsbase
 	get_cabextract
 	get_git
+	if [ ${BUILDCROSSOVER} -eq 1 ] || [ ${BUILDCXGAMES} -eq 1 ] ; then
+		get_crossover_patches
+	fi
 	get_gecko
 	get_winetricks
 	get_wine
@@ -2320,6 +2366,9 @@ function check_sources {
 	check_gstpluginsbase
 	check_cabextract
 	check_git
+	if [ ${BUILDCROSSOVER} -eq 1 ] || [ ${BUILDCXGAMES} -eq 1 ] ; then
+		check_crossover_patches
+	fi
 	check_gecko
 	check_wine
 }
