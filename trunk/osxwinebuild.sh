@@ -2153,7 +2153,8 @@ function install_gecko {
 #
 # always get latest version, install as exectuable
 WINETRICKSFILE="winetricks"
-WINETRICKSURL="http://www.kegel.com/wine/${WINETRICKSFILE}"
+#WINETRICKSURL="http://www.kegel.com/wine/${WINETRICKSFILE}"
+WINETRICKSURL="http://winetricks.org/${WINETRICKSFILE}"
 function get_winetricks {
 	# always get winetricks
 	pushd . >/dev/null 2>&1
