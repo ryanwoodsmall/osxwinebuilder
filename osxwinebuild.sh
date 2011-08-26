@@ -112,8 +112,8 @@ WINETAG=""
 WINESTABLEVERSION="1.2.3"
 WINESTABLESHA1SUM="072184c492cc9d137138407732de3bb62ba6c091"
 #   devel
-WINEDEVELVERSION="1.3.26"
-WINEDEVELSHA1SUM="a609ebb1f8c0908fb86948edcb1f7f9ccca47e7f"
+WINEDEVELVERSION="1.3.27"
+WINEDEVELSHA1SUM="5323bdb9eda5c53650f4d16dff16e11e3e53dfa3"
 #   CrossOver Wine
 CROSSOVERVERSION="10.1.0"
 CROSSOVERSHA1SUM="8c934d40706249bfb82a82325dfe13b05fa5ebac"
@@ -894,7 +894,7 @@ function extract_libxslt {
 	extract_file "${TARGZ}" "${WINESOURCEPATH}/${LIBXSLTFILE}" "${WINEBUILDPATH}" "${LIBXSLTDIR}"
 }
 function configure_libxslt {
-	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --with-libxml-prefix=${WINEINSTALLPATH} --without-crypto --without-python" "${WINEBUILDPATH}/${LIBXSLTDIR}"
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --with-libxml-prefix=${WINEINSTALLPATH} --without-python" "${WINEBUILDPATH}/${LIBXSLTDIR}"
 }
 function build_libxslt {
 	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${LIBXSLTDIR}"
@@ -2119,8 +2119,8 @@ function run_crossover_patches {
 #
 # gecko
 #
-GECKOVERSIONS="1.0.0-x86.cab 1.1.0-x86.cab 1.2.0-x86.msi"
-GECKOSHA1SUMS="afa22c52bca4ca77dcb9edb3c9936eb23793de01 1b6c637207b6f032ae8a52841db9659433482714 6964d1877668ab7da07a60f6dcf23fb0e261a808"
+GECKOVERSIONS="1.0.0-x86.cab 1.1.0-x86.cab 1.2.0-x86.msi 1.3-x86.msi"
+GECKOSHA1SUMS="afa22c52bca4ca77dcb9edb3c9936eb23793de01 1b6c637207b6f032ae8a52841db9659433482714 6964d1877668ab7da07a60f6dcf23fb0e261a808 acc6a5bc15ebb3574e00f8ef4f23912239658b41"
 function get_gecko {
 	for GECKOVERSION in ${GECKOVERSIONS} ; do
 		GECKOFILE="wine_gecko-${GECKOVERSION}"
@@ -2387,7 +2387,7 @@ function install_prereqs {
 	install_libpng12
 	#install_libpng14
 	install_libxml2
-	install_libxslt
+	# XXX - move to *after* gnutls - install_libxslt
 	install_glib
 	install_mpg123
 	install_gsm
@@ -2398,6 +2398,7 @@ function install_prereqs {
 	install_libgpgerror
 	install_libgcrypt
 	install_gnutls
+	install_libxslt
 	install_libexif
 	install_libusb
 	install_libusbcompat
