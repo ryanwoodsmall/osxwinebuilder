@@ -2387,7 +2387,6 @@ function install_prereqs {
 	install_libpng12
 	#install_libpng14
 	install_libxml2
-	# XXX - move to *after* gnutls - install_libxslt
 	install_glib
 	install_mpg123
 	install_gsm
