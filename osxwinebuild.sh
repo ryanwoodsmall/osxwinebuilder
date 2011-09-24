@@ -112,8 +112,8 @@ WINETAG=""
 WINESTABLEVERSION="1.2.3"
 WINESTABLESHA1SUM="072184c492cc9d137138407732de3bb62ba6c091"
 #   devel
-WINEDEVELVERSION="1.3.28"
-WINEDEVELSHA1SUM="240778556a4103c40bb59a986203a2111ed0350d"
+WINEDEVELVERSION="1.3.29"
+WINEDEVELSHA1SUM="9826f3d354f2249bf09e839b95276d9fb362c185"
 #   CrossOver Wine
 CROSSOVERVERSION="10.1.0"
 CROSSOVERSHA1SUM="8c934d40706249bfb82a82325dfe13b05fa5ebac"
@@ -2313,7 +2313,7 @@ function get_sources {
 	get_gstreamer
 	get_gstpluginsbase
 	get_cabextract
-	get_git
+	#get_git
 	if [ ${BUILDCROSSOVER} -eq 1 ] || [ ${BUILDCXGAMES} -eq 1 ] ; then
 		get_crossover_patches
 	fi
@@ -2366,7 +2366,7 @@ function check_sources {
 	check_gstreamer
 	check_gstpluginsbase
 	check_cabextract
-	check_git
+	#check_git
 	if [ ${BUILDCROSSOVER} -eq 1 ] || [ ${BUILDCXGAMES} -eq 1 ] ; then
 		check_crossover_patches
 	fi
@@ -2418,7 +2418,7 @@ function install_prereqs {
 	install_gstpluginsbase
 	install_unixodbc
 	install_cabextract
-	install_git
+	#install_git
 	install_winetricks
 	install_gecko
 }
