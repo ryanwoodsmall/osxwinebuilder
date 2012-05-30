@@ -631,7 +631,7 @@ function configure_gettext {
 		sed -i.ORIG 's#extern char \*stpncpy#//extern char *stpncpy#g' gettext-tools/configure  || fail_and_exit "in place sed for gettext-tools/configure"
 		echo "successfully changed gettext-tools/configure for Darwin 11+"
 	fi
-	echo "successfully changed gettext-tools/Makefile.in and gettext-tools/configure for Darwin 11+"
+	echo "successfully changed gettext-tools/Makefile.in"
 	popd
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --disable-java --disable-native-java --without-emacs --without-git" "${WINEBUILDPATH}/${GETTEXTDIR}"
 }
