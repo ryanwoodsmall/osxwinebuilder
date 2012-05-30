@@ -633,7 +633,7 @@ function configure_gettext {
 	fi
 	echo "successfully changed gettext-tools/Makefile.in"
 	popd
-	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --disable-java --disable-native-java --without-emacs --without-git" "${WINEBUILDPATH}/${GETTEXTDIR}"
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --disable-java --disable-native-java --without-emacs --without-git --without-cvs --disable-csharp --disable-native-java" "${WINEBUILDPATH}/${GETTEXTDIR}"
 }
 function build_gettext {
 	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${GETTEXTDIR}"
