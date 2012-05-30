@@ -226,6 +226,7 @@ export WINEINCLUDEPATH="${WINEINSTALLPATH}/include"
 export WINELIBPATH="${WINEINSTALLPATH}/lib"
 
 # darwin/os x major version
+#   10.7 = Darwin 11
 #   10.6 = Darwin 10
 #   10.5 = Darwin 9
 #   ...
@@ -619,6 +620,19 @@ function extract_gettext {
 	extract_file "${TARGZ}" "${WINESOURCEPATH}/${GETTEXTFILE}" "${WINEBUILDPATH}" "${GETTEXTDIR}"
 }
 function configure_gettext {
+	echo "attempting to fixup gettext"
+	pushd . >/dev/null 2>&1
+	cd "${WINEBUILDPATH}/${GETTEXTDIR}" || fail_and_exit "could not cd into gettext dir ${WINEBUILDPATH}/${GETTEXTDIR}"
+	# turn off examples subdir manually
+	sed -i.ORIG 's# gnulib-tests examples# gnulib-tests#g' gettext-tools/Makefile.in  || fail_and_exit "in place sed for gettext-tools/Makefile.in failed"
+	# stpncpy broken/defined on Lion?
+	if [ ${DARWINMAJ} -ge 11 ] ; then
+		echo "attempting to fixup gettext for Darwin 11+"
+		sed -i.ORIG 's#extern char \*stpncpy#//extern char *stpncpy#g' gettext-tools/configure  || fail_and_exit "in place sed for gettext-tools/configure"
+		echo "successfully changed gettext-tools/configure for Darwin 11+"
+	fi
+	echo "successfully changed gettext-tools/Makefile.in and gettext-tools/configure for Darwin 11+"
+	popd
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --disable-java --disable-native-java --without-emacs --without-git" "${WINEBUILDPATH}/${GETTEXTDIR}"
 }
 function build_gettext {
