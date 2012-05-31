@@ -347,6 +347,7 @@ echo "base downloader command: ${CURL} ${CURLOPTS}"
 #   currently we only have gzip/bzip2 tar files
 export TARGZ="tar -zxvf"
 export TARBZ2="tar -jxvf"
+export XZ="xz"
 
 # git needs these?
 #   not using Git yet, but we will in the future
@@ -1922,10 +1923,10 @@ function install_dosbox {
 #
 # orc
 #
-ORCVER="0.4.11"
+ORCVER="0.4.16"
 ORCFILE="orc-${ORCVER}.tar.gz"
 ORCURL="http://code.entropywave.com/download/orc/${ORCFILE}"
-ORCSHA1SUM="e99f684fc551c2bb3a5cdefe6fa5165174508a5f"
+ORCSHA1SUM="b67131881e7834b0c820bfba468f668100fb2e91"
 ORCDIR="orc-${ORCVER}"
 function clean_orc {
 	clean_source_dir "${ORCDIR}" "${WINEBUILDPATH}"
@@ -1960,10 +1961,10 @@ function install_orc {
 #
 # libogg
 #
-LIBOGGVER="1.2.2"
+LIBOGGVER="1.3.0"
 LIBOGGFILE="libogg-${LIBOGGVER}.tar.gz"
 LIBOGGURL="http://downloads.xiph.org/releases/ogg/${LIBOGGFILE}"
-LIBOGGSHA1SUM="deeb1959f84de9277e74bca17ec66fa20ced9f08"
+LIBOGGSHA1SUM="a900af21b6d7db1c7aa74eb0c39589ed9db991b8"
 LIBOGGDIR="libogg-${LIBOGGVER}"
 function clean_libogg {
 	clean_source_dir "${LIBOGGDIR}" "${WINEBUILDPATH}"
@@ -1994,10 +1995,10 @@ function install_libogg {
 #
 # libvorbis
 #
-LIBVORBISVER="1.3.2"
-LIBVORBISFILE="libvorbis-${LIBVORBISVER}.tar.bz2"
+LIBVORBISVER="1.3.3"
+LIBVORBISFILE="libvorbis-${LIBVORBISVER}.tar.gz"
 LIBVORBISURL="http://downloads.xiph.org/releases/vorbis/${LIBVORBISFILE}"
-LIBVORBISSHA1SUM="4c44da8215d1fc56676fccc1af8dd6b422d9e676"
+LIBVORBISSHA1SUM="8dae60349292ed76db0e490dc5ee51088a84518b"
 LIBVORBISDIR="libvorbis-${LIBVORBISVER}"
 function clean_libvorbis {
 	clean_source_dir "${LIBVORBISDIR}" "${WINEBUILDPATH}"
@@ -2009,7 +2010,7 @@ function check_libvorbis {
 	check_sha1sum "${WINESOURCEPATH}/${LIBVORBISFILE}" "${LIBVORBISSHA1SUM}"
 }
 function extract_libvorbis {
-	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${LIBVORBISFILE}" "${WINEBUILDPATH}" "${LIBVORBISDIR}"
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${LIBVORBISFILE}" "${WINEBUILDPATH}" "${LIBVORBISDIR}"
 }
 function configure_libvorbis {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${LIBVORBISDIR}"
@@ -2063,10 +2064,10 @@ function install_libtheora {
 # gstreamer
 #
 GSTREAMERBASEVER="0.10"
-GSTREAMERVER="${GSTREAMERBASEVER}.32"
+GSTREAMERVER="${GSTREAMERBASEVER}.36"
 GSTREAMERFILE="gstreamer-${GSTREAMERVER}.tar.bz2"
 GSTREAMERURL="http://gstreamer.freedesktop.org/src/gstreamer/${GSTREAMERFILE}"
-GSTREAMERSHA1SUM="95477044ed23cf94669e56ea43607de05c2a0cb3"
+GSTREAMERSHA1SUM="ff95b5316b920e7c2836588bba18fa61395fbd03"
 GSTREAMERDIR="gstreamer-${GSTREAMERVER}"
 function clean_gstreamer {
 	clean_source_dir "${GSTREAMERDIR}" "${WINEBUILDPATH}"
@@ -2101,10 +2102,10 @@ function install_gstreamer {
 #
 # gstpluginsbase
 #
-GSTPLUGINSBASEVER="0.10.32"
+GSTPLUGINSBASEVER="0.10.36"
 GSTPLUGINSBASEFILE="gst-plugins-base-${GSTPLUGINSBASEVER}.tar.bz2"
 GSTPLUGINSBASEURL="http://gstreamer.freedesktop.org/src/gst-plugins-base/${GSTPLUGINSBASEFILE}"
-GSTPLUGINSBASESHA1SUM="c1c149272b7ab6cbe5f648532f74525c6541eea5"
+GSTPLUGINSBASESHA1SUM="e675401b62a6bf2e5ea966e833afd005a585e978"
 GSTPLUGINSBASEDIR="gst-plugins-base-${GSTPLUGINSBASEVER}"
 function clean_gstpluginsbase {
 	clean_source_dir "${GSTPLUGINSBASEDIR}" "${WINEBUILDPATH}"
