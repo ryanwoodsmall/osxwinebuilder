@@ -649,10 +649,10 @@ function install_gettext {
 #
 # jpeg
 #
-JPEGVER="8c"
+JPEGVER="8d"
 JPEGFILE="jpegsrc.v${JPEGVER}.tar.gz"
 JPEGURL="http://www.ijg.org/files/${JPEGFILE}"
-JPEGSHA1SUM="f0a3b88ac4db19667798bee971537eeed552bce9"
+JPEGSHA1SUM="f080b2fffc7581f7d19b968092ba9ebc234556ff"
 JPEGDIR="jpeg-${JPEGVER}"
 function clean_jpeg {
 	clean_source_dir "${JPEGDIR}" "${WINEBUILDPATH}"
@@ -754,10 +754,10 @@ function install_jbigkit {
 #
 # tiff
 #
-TIFFVER="3.9.4"
+TIFFVER="3.9.6"
 TIFFFILE="tiff-${TIFFVER}.tar.gz"
 TIFFURL="http://download.osgeo.org/libtiff/${TIFFFILE}"
-TIFFSHA1SUM="a4e32d55afbbcabd0391a9c89995e8e8a19961de"
+TIFFSHA1SUM="f0e86d3fc3a52b29f4ca76b8436f5b5d6618b18b"
 TIFFDIR="tiff-${TIFFVER}"
 function clean_tiff {
 	clean_source_dir "${TIFFDIR}" "${WINEBUILDPATH}"
@@ -788,8 +788,8 @@ function install_tiff {
 #
 # libpng12
 #
-LIBPNG12VER="1.2.44"
-LIBPNG12SHA1SUM="776bb8e42d86bd71ae58e0d96f85472c1d63beeb"
+LIBPNG12VER="1.2.49"
+LIBPNG12SHA1SUM="e60a69770a7dddca252578a2de5e79e24e3f94dd"
 LIBPNG12FILE="libpng-${LIBPNG12VER}.tar.gz"
 LIBPNG12URL="http://downloads.sourceforge.net/libpng/${LIBPNG12FILE}"
 LIBPNG12DIR="libpng-${LIBPNG12VER}"
@@ -1191,10 +1191,10 @@ function install_lcms {
 #
 # lzo
 #
-LZOVER="2.04"
+LZOVER="2.06"
 LZOFILE="lzo-${LZOVER}.tar.gz"
 LZOURL="http://www.oberhumer.com/opensource/lzo/download/${LZOFILE}"
-LZOSHA1SUM="f5bf5c7ae4116e60513e5788d156ef78946677e7"
+LZOSHA1SUM="a11768b8a168ec607750842bbef406f11547b904"
 LZODIR="lzo-${LZOVER}"
 function clean_lzo {
 	clean_source_dir "${LZODIR}" "${WINEBUILDPATH}"
@@ -1398,10 +1398,10 @@ function install_libexif {
 #
 # libusb
 #
-LIBUSBVER="1.0.8"
+LIBUSBVER="1.0.9"
 LIBUSBFILE="libusb-${LIBUSBVER}.tar.bz2"
 LIBUSBURL="http://downloads.sourceforge.net/libusb/${LIBUSBFILE}"
-LIBUSBSHA1SUM="5484397860f709c9b51611d224819f8ed5994063"
+LIBUSBSHA1SUM="025582ff2f6216e2dbc2610ae16b2e073e1b3346"
 LIBUSBDIR="libusb-${LIBUSBVER}"
 function clean_libusb {
 	clean_source_dir "${LIBUSBDIR}" "${WINEBUILDPATH}"
@@ -1432,10 +1432,10 @@ function install_libusb {
 #
 # libusb-compat
 #
-LIBUSBCOMPATVER="0.1.3"
+LIBUSBCOMPATVER="0.1.4"
 LIBUSBCOMPATFILE="libusb-compat-${LIBUSBCOMPATVER}.tar.bz2"
 LIBUSBCOMPATURL="http://downloads.sourceforge.net/libusb/${LIBUSBCOMPATFILE}"
-LIBUSBCOMPATSHA1SUM="d5710d5bc4b67c5344e779475b76168c7ccc5e69"
+LIBUSBCOMPATSHA1SUM="fdc1df6f5cf7b71de7a74292aeea1aa2a39552ae"
 LIBUSBCOMPATDIR="libusb-compat-${LIBUSBCOMPATVER}"
 function clean_libusbcompat {
 	clean_source_dir "${LIBUSBCOMPATDIR}" "${WINEBUILDPATH}"
@@ -1621,10 +1621,10 @@ function install_jasper {
 #
 # libicns
 #
-LIBICNSVER="0.7.1"
+LIBICNSVER="0.8.0"
 LIBICNSFILE="libicns-${LIBICNSVER}.tar.gz"
 LIBICNSURL="http://downloads.sourceforge.net/icns/${LIBICNSFILE}"
-LIBICNSSHA1SUM="e12a6ca21988929d56320ac1b96a1a059af0fd43"
+LIBICNSSHA1SUM="f74701266ad68df57a2fdc16780e7d75d8ec73b1"
 LIBICNSDIR="libicns-${LIBICNSVER}"
 function clean_libicns {
 	clean_source_dir "${LIBICNSDIR}" "${WINEBUILDPATH}"
@@ -1655,10 +1655,10 @@ function install_libicns {
 #
 # sdl
 #
-SDLVER="1.2.14"
+SDLVER="1.2.15"
 SDLFILE="SDL-${SDLVER}.tar.gz"
 SDLURL="http://www.libsdl.org/release/${SDLFILE}"
-SDLSHA1SUM="ba625b4b404589b97e92d7acd165992debe576dd"
+SDLSHA1SUM="0c5f193ced810b0d7ce3ab06d808cbb5eef03a2c"
 SDLDIR="SDL-${SDLVER}"
 function clean_sdl {
 	clean_source_dir "${SDLDIR}" "${WINEBUILDPATH}"
@@ -1700,10 +1700,10 @@ function install_sdl {
 #
 # SDL_net
 #
-SDLNETVER="1.2.7"
+SDLNETVER="1.2.8"
 SDLNETFILE="SDL_net-${SDLNETVER}.tar.gz"
 SDLNETURL="http://www.libsdl.org/projects/SDL_net/release/${SDLNETFILE}"
-SDLNETSHA1SUM="b46c7e3221621cc34fec1238f1b5f0ce8972274d"
+SDLNETSHA1SUM="fd393059fef8d9925dc20662baa3b25e02b8405d"
 SDLNETDIR="SDL_net-${SDLNETVER}"
 function clean_sdlnet {
 	clean_source_dir "${SDLNETDIR}" "${WINEBUILDPATH}"
@@ -2031,10 +2031,10 @@ function install_gstpluginsbase {
 #
 # cabextract
 #
-CABEXTRACTVER="1.3"
+CABEXTRACTVER="1.4"
 CABEXTRACTFILE="cabextract-${CABEXTRACTVER}.tar.gz"
 CABEXTRACTURL="http://www.cabextract.org.uk/${CABEXTRACTFILE}"
-CABEXTRACTSHA1SUM="112469b9e58497a5cfa2ecb3d9eeb9d3a4151c9f"
+CABEXTRACTSHA1SUM="b1d5dd668d2dbe95b47aad6e92c0b7183ced70f1"
 CABEXTRACTDIR="cabextract-${CABEXTRACTVER}"
 function clean_cabextract {
 	clean_source_dir "${CABEXTRACTDIR}" "${WINEBUILDPATH}"
