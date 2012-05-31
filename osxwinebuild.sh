@@ -628,7 +628,7 @@ function configure_gettext {
 	# stpncpy broken/defined on Lion?
 	if [ ${DARWINMAJ} -ge 11 ] ; then
 		echo "attempting to fixup gettext for Darwin 11+"
-		sed -i.ORIG 's#extern char \*stpncpy#//extern char *stpncpy#g' gettext-tools/configure  || fail_and_exit "in place sed for gettext-tools/configure"
+		sed -i.ORIG 's#^extern char \*stpncpy#//extern char *stpncpy#g' gettext-tools/configure  || fail_and_exit "in place sed for gettext-tools/configure"
 		echo "successfully changed gettext-tools/configure for Darwin 11+"
 	fi
 	echo "successfully changed gettext-tools/Makefile.in"
@@ -1558,6 +1558,15 @@ function extract_sanebackends {
 }
 function configure_sanebackends {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --with-gphoto2 --enable-libusb_1_0" "${WINEBUILDPATH}/${SANEBACKENDSDIR}"
+	if [ ${DARWINMAJ} -ge 11 ] ; then
+		echo "attempting to run fixup on SANE backends include"
+		pushd . >/dev/null 2>&1
+		cd ${WINEBUILDPATH}/${SANEBACKENDSDIR} || fail_and_exit "could not cd into ${WINEBUILDPATH}/${SANEBACKENDSDIR}"
+		cp include/sane/sane.h{,.ORIG} || fail_and_exit "could not backup include/sane/sane.h"
+		( ( echo '#include <sys/types.h>' ; cat include/sane/sane.h.ORIG ) > include/sane/sane.h ) || fail_and_exit "could not rewrite include/sane/sane.h"
+		popd
+		echo "successfully fixed SANE backends include"
+	fi
 }
 function build_sanebackends {
 	# 'make -j#' fails for #>1 on OS X <10.6/sane-backends 1.0.21.
