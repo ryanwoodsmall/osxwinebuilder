@@ -12,8 +12,8 @@ I will attempt to keep this page updated with every Subversion check in, but svn
 || *Project* || *Version* || *Home* || *License* || *Other Info* ||
 || cabextract || 1.3 || [http://www.cabextract.org.uk/] || GPL || used by winetricks ||
 || DOSBox || 0.74 || [http://www.dosbox.com/] || GPL || DOS support for Wine ||
-|| !FreeType || 2.4.4 || [http://freetype.sourceforge.net/] || GPL/BSD || font rendering in Wine; patented hinting and subpixel rendering enabled ||
 || Fontconfig || 2.8 || [http://www.fontconfig.org/wiki/] || copyright Keith Packard || font configurations for Wine ||
+|| !FreeType || 2.4.4 || [http://freetype.sourceforge.net/] || GPL/BSD || font rendering in Wine; patented hinting and subpixel rendering enabled ||
 || GD || 2.0.36RC1 || [http://www.libgd.org/], [https://bitbucket.org/pierrejoye/gd-libgd] || BSD-like || image manipulation support for libgphoto2 ||
 || gecko || varies || [http://wiki.winehq.org/Gecko], [https://developer.mozilla.org/en/Gecko] || Mozilla tri-license (MPL/GPL/LGPL) || used for HTML rendering in Wine ||
 || gettext || 0.18.1.1 || [http://www.gnu.org/software/gettext/] || LGPL/GPL/GFDL || used for translations ||
@@ -35,11 +35,11 @@ I will attempt to keep this page updated with every Subversion check in, but svn
 || libpng || 1.2.44 || [http://www.libpng.org/] || libpng license || PNG support in Wine ||
 || libtheora|| 1.1.1 || [http://theora.org/] || BSD || Theora video compression format (gst-plugins-base) ||
 || libtiff || 3.9.4 || [http://www.remotesensing.org/libtiff/], [http://libtiff.maptools.org/] || coypright Sam Leffler, Silicon Graphics, Inc || used for TIFF support in Wine ||
+|| libusb || 1.0.8 || [http://www.libusb.org/] || LGPL || used by sane-backends ||
+|| libusb-compat || 0.1.3 || [http://www.libusb.org/] || LGPL || used by libgphoto2 ||
 || libvorbis || 1.3.2 || [http://www.xiph.org/vorbis/] || BSD || Vorbis audio compression format (gst-plugins-base) ||
 || libxml2 || 2.7.8 || [http://xmlsoft.org/] || copyright Daniel Veillard || XML support in Wine ||
 || libxslt || 1.1.26 || [http://xmlsoft.org/] || copyright Thomas Broyer, Charlie Bozeman and Daniel Veillard || XSL/XSLT support in Wine ||
-|| libusb || 1.0.8 || [http://www.libusb.org/] || LGPL || used by sane-backends ||
-|| libusb-compat || 0.1.3 || [http://www.libusb.org/] || LGPL || used by libgphoto2 ||
 || lzo || 2.04 || [http://www.oberhumer.com/opensource/lzo/] || GPL || used by GnuTLS ||
 || mpg123 || 1.13.2 || [http://www.mpg123.de/] || LGPL || used for MP3/audio support in Wine ||
 || orc || 0.4.11 || [http://code.entropywave.com/projects/orc/] || Copyright David A. Schleef, Makoto Matsumoto, Takuji Nishimura|| Oil Runtime Compiler - used for GStreamer plugins||
@@ -51,6 +51,5 @@ I will attempt to keep this page updated with every Subversion check in, but svn
 || toast (GSM) || 1.0.13 || [http://www.quut.com/gsm/] || see [http://osxwinebuilder.googlecode.com/files/gsm-COPYRIGHT] || used by Wine for audio encode/decode ||
 || unixODBC || 2.3.0 || [http://www.unixodbc.org/] || LGPL || used for native ODBC bridge to Wine ||
 || winetricks || varies || [http://code.google.com/p/winetricks/] || LGPL || quick install script for some Windows programs ||
-|| wisotool || varies || [http://wiki.winehq.org/wisotool], [http://winezeug.googlecode.com/svn/trunk/wisotool] || LGPL || quick install/building blocks for common games/demos/etc. ||
 || Wine || 1.4 (stable), 1.5.5 (development) || [http://www.winehq.org/] || LGPL || Wine is used for Wine, right? ||
 || !CodeWeavers !CrossOver Wine sources || 10.1.1/10.1.0 (Games and standard, respectively) || [http://www.codeweavers.com/products/source] || LGPL || !CodeWeavers builds custom Wine versions for stability and performance purposes ||
