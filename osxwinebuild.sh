@@ -856,10 +856,10 @@ function install_libpng14 {
 #
 # libxml
 #
-LIBXML2VER="2.7.8"
+LIBXML2VER="2.8.0"
 LIBXML2FILE="libxml2-${LIBXML2VER}.tar.gz"
 LIBXML2URL="ftp://xmlsoft.org/libxml2/${LIBXML2FILE}"
-LIBXML2SHA1SUM="859dd535edbb851cc15b64740ee06551a7a17d40"
+LIBXML2SHA1SUM="a0c553bd51ba79ab6fff26dc700004c6a41f5250"
 LIBXML2DIR="libxml2-${LIBXML2VER}"
 function clean_libxml2 {
 	clean_source_dir "${LIBXML2DIR}" "${WINEBUILDPATH}"
@@ -927,7 +927,8 @@ function install_libxslt {
 GLIBBASEVER="2.28"
 GLIBVER="${GLIBBASEVER}.2"
 GLIBFILE="glib-${GLIBVER}.tar.bz2"
-GLIBURL="ftp://ftp.gtk.org/pub/glib/${GLIBBASEVER}/${GLIBFILE}"
+#GLIBURL="ftp://ftp.gtk.org/pub/glib/${GLIBBASEVER}/${GLIBFILE}"
+GLIBURL="http://ftp.gnome.org/pub/gnome/sources/glib/${GLIBBASEVER}/${GLIBFILE}"
 GLIBSHA1SUM="a15cb7caedde819ec74bd8b5cdf31f7372e5fd14"
 GLIBDIR="glib-${GLIBVER}"
 function clean_glib {
@@ -960,10 +961,10 @@ function install_glib {
 #
 # mpg123
 #
-MPG123VER="1.13.2"
+MPG123VER="1.14.2"
 MPG123FILE="mpg123-${MPG123VER}.tar.bz2"
 MPG123URL="http://downloads.sourceforge.net/mpg123/${MPG123FILE}"
-MPG123SHA1SUM="31a9c27f5fa80f930dbe598846c847f9b35d9dc3"
+MPG123SHA1SUM="887a453e49e3d49d539a712ee66a8d9da16e3325"
 MPG123DIR="mpg123-${MPG123VER}"
 function clean_mpg123 {
 	clean_source_dir "${MPG123DIR}" "${WINEBUILDPATH}"
@@ -1068,10 +1069,10 @@ function install_gsm {
 #
 # freetype
 #
-FREETYPEVER="2.4.4"
+FREETYPEVER="2.4.9"
 FREETYPEFILE="freetype-${FREETYPEVER}.tar.bz2"
 FREETYPEURL="http://downloads.sourceforge.net/freetype/freetype2/${FREETYPEFILE}"
-FREETYPESHA1SUM="1d136cbc51c67b212c91ba04dc5db797f35e64e6"
+FREETYPESHA1SUM="5cb80ab9d369c4e81a2221bcf45adcea2c996b9b"
 FREETYPEDIR="freetype-${FREETYPEVER}"
 function clean_freetype {
 	clean_source_dir "${FREETYPEDIR}" "${WINEBUILDPATH}"
@@ -1122,10 +1123,10 @@ function install_freetype {
 #
 # fontconfig
 #
-FONTCONFIGVER="2.8.0"
+FONTCONFIGVER="2.9.0"
 FONTCONFIGFILE="fontconfig-${FONTCONFIGVER}.tar.gz"
 FONTCONFIGURL="http://www.freedesktop.org/software/fontconfig/release/${FONTCONFIGFILE}"
-FONTCONFIGSHA1SUM="570fb55eb14f2c92a7b470b941e9d35dbfafa716"
+FONTCONFIGSHA1SUM="1ab2f437c2261028ae7969892277af2d8d8db489"
 FONTCONFIGDIR="fontconfig-${FONTCONFIGVER}"
 function clean_fontconfig {
 	clean_source_dir "${FONTCONFIGDIR}" "${WINEBUILDPATH}"
@@ -1262,10 +1263,10 @@ function install_libgpgerror {
 #
 # libgcrypt
 #
-LIBGCRYPTVER="1.4.6"
+LIBGCRYPTVER="1.5.0"
 LIBGCRYPTFILE="libgcrypt-${LIBGCRYPTVER}.tar.bz2"
 LIBGCRYPTURL="ftp://ftp.gnupg.org/gcrypt/libgcrypt/${LIBGCRYPTFILE}"
-LIBGCRYPTSHA1SUM="445b9e158aaf91e24eae3d1040c6213e9d9f5ba6"
+LIBGCRYPTSHA1SUM="3e776d44375dc1a710560b98ae8437d5da6e32cf"
 LIBGCRYPTDIR="libgcrypt-${LIBGCRYPTVER}"
 function clean_libgcrypt {
 	clean_source_dir "${LIBGCRYPTDIR}" "${WINEBUILDPATH}"
@@ -1280,7 +1281,7 @@ function extract_libgcrypt {
 	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${LIBGCRYPTFILE}" "${WINEBUILDPATH}" "${LIBGCRYPTDIR}"
 }
 function configure_libgcrypt {
-	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --with-gpg-error-prefix=${WINEINSTALLPATH}" "${WINEBUILDPATH}/${LIBGCRYPTDIR}"
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --with-gpg-error-prefix=${WINEINSTALLPATH} --disable-asm --disable-padlock-support --disable-aesni-support" "${WINEBUILDPATH}/${LIBGCRYPTDIR}"
 }
 function build_libgcrypt {
 	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${LIBGCRYPTDIR}"
@@ -1294,12 +1295,131 @@ function install_libgcrypt {
 }
 
 #
+# gmp
+#
+GMPVER="5.0.5"
+GMPFILE="gmp-${GMPVER}.tar.bz2"
+GMPURL="ftp://ftp.gmplib.org/pub/gmp-${GMPVER}/${GMPFILE}"
+GMPSHA1SUM="12a662456033e21aed3e318aef4177f4000afe3b"
+GMPDIR="gmp-${GMPVER}"
+function clean_gmp {
+	clean_source_dir "${GMPDIR}" "${WINEBUILDPATH}"
+}
+function get_gmp {
+	get_file "${GMPFILE}" "${WINESOURCEPATH}" "${GMPURL}"
+}
+function check_gmp {
+	check_sha1sum "${WINESOURCEPATH}/${GMPFILE}" "${GMPSHA1SUM}"
+}
+function extract_gmp {
+	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${GMPFILE}" "${WINEBUILDPATH}" "${GMPDIR}"
+}
+function configure_gmp {
+	export ABI=32
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${GMPDIR}"
+	unset ABI
+}
+function build_gmp {
+	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${GMPDIR}"
+}
+function install_gmp {
+	clean_gmp
+	extract_gmp
+	configure_gmp
+	build_gmp
+	install_package "${MAKE} install" "${WINEBUILDPATH}/${GMPDIR}"
+}
+
+#
+# nettle
+#
+NETTLEVER="2.4"
+NETTLEFILE="nettle-${NETTLEVER}.tar.gz"
+NETTLEURL="ftp://ftp.lysator.liu.se/pub/security/lsh/${NETTLEFILE}"
+NETTLESHA1SUM="1df0cd013e83f73b78a5521411a67e331de3dfa6"
+NETTLEDIR="nettle-${NETTLEVER}"
+function clean_nettle {
+	clean_source_dir "${NETTLEDIR}" "${WINEBUILDPATH}"
+}
+function get_nettle {
+	get_file "${NETTLEFILE}" "${WINESOURCEPATH}" "${NETTLEURL}"
+}
+function check_nettle {
+	check_sha1sum "${WINESOURCEPATH}/${NETTLEFILE}" "${NETTLESHA1SUM}"
+}
+function extract_nettle {
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${NETTLEFILE}" "${WINEBUILDPATH}" "${NETTLEDIR}"
+}
+function configure_nettle {
+	echo "attempting to fix nettle libraries for configure"
+	pushd . >/dev/null 2>&1 
+	cd ${WINEBUILDPATH}/${NETTLEDIR} || fail_and_exit "could not cd into ${WINEBUILDPATH}/${NETTLEDIR}"
+	sed -i.NETTLELIBS "s#LIBNETTLE_LIBS=''#LIBNETTLE_LIBS='\$(LDFLAGS) \$(LIBS)'#g" configure
+	sed -i.HOGWEEDLIBS "s#LIBHOGWEED_LIBS=''#LIBHOGWEED_LIBS='\$(LDFLAGS) \$(LIBS) -L. -lnettle -lgmp'#g" configure
+	echo "nettle libraries fixed successfully"
+	export OLDCC=${CC}
+	export CC="${CC} -m32 -arch i386"
+	export ABI=32
+	export LIBS="-lgmp"
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --disable-assembler" "${WINEBUILDPATH}/${NETTLEDIR}"
+	unset LIBS
+	unset ABI
+	export CC=${OLDCC}
+	sed -i.TESTSUITE 's#testsuite##g' Makefile
+	popd
+}
+function build_nettle {
+	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${NETTLEDIR}"
+}
+function install_nettle {
+	clean_nettle
+	extract_nettle
+	configure_nettle
+	build_nettle
+	install_package "${MAKE} install" "${WINEBUILDPATH}/${NETTLEDIR}"
+}
+
+#
+# p11-kit
+#
+P11KITVER="0.12"
+P11KITFILE="p11-kit-${P11KITVER}.tar.gz"
+P11KITURL="http://p11-glue.freedesktop.org/releases/${P11KITFILE}"
+P11KITSHA1SUM="25671198425b8055024067b3cc469a8d955581b0"
+P11KITDIR="p11-kit-${P11KITVER}"
+function clean_p11kit {
+	clean_source_dir "${P11KITDIR}" "${WINEBUILDPATH}"
+}
+function get_p11kit {
+	get_file "${P11KITFILE}" "${WINESOURCEPATH}" "${P11KITURL}"
+}
+function check_p11kit {
+	check_sha1sum "${WINESOURCEPATH}/${P11KITFILE}" "${P11KITSHA1SUM}"
+}
+function extract_p11kit {
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${P11KITFILE}" "${WINEBUILDPATH}" "${P11KITDIR}"
+}
+function configure_p11kit {
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${P11KITDIR}"
+}
+function build_p11kit {
+	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${P11KITDIR}"
+}
+function install_p11kit {
+	clean_p11kit
+	extract_p11kit
+	configure_p11kit
+	build_p11kit
+	install_package "${MAKE} install" "${WINEBUILDPATH}/${P11KITDIR}"
+}
+
+#
 # gnutls
 #
-GNUTLSVER="2.10.3"
+GNUTLSVER="2.12.9"
 GNUTLSFILE="gnutls-${GNUTLSVER}.tar.bz2"
 GNUTLSURL="ftp://ftp.gnu.org/pub/gnu/gnutls/${GNUTLSFILE}"
-GNUTLSSHA1SUM="b17b23d462ecf829f3b9aff3248d25d4979ebe4f"
+GNUTLSSHA1SUM="9a775466d5bf6976e77e5f659d136e0a4733a58a"
 GNUTLSDIR="gnutls-${GNUTLSVER}"
 function clean_gnutls {
 	clean_source_dir "${GNUTLSDIR}" "${WINEBUILDPATH}"
@@ -1503,10 +1623,10 @@ function install_gd {
 #
 # libgphoto2
 #
-LIBGPHOTO2VER="2.4.10.1"
+LIBGPHOTO2VER="2.4.14"
 LIBGPHOTO2FILE="libgphoto2-${LIBGPHOTO2VER}.tar.bz2"
 LIBGPHOTO2URL="http://downloads.sourceforge.net/gphoto/libgphoto/${LIBGPHOTO2FILE}"
-LIBGPHOTO2SHA1SUM="2806b147d3cf2c3cfdcb5cb8db8b82c1180d5f36"
+LIBGPHOTO2SHA1SUM="c932f44d51e820245ff3394ee01a5e9df429dfef"
 LIBGPHOTO2DIR="libgphoto2-${LIBGPHOTO2VER}"
 function clean_libgphoto2 {
 	clean_source_dir "${LIBGPHOTO2DIR}" "${WINEBUILDPATH}"
@@ -2069,10 +2189,11 @@ function install_cabextract {
 #
 # git
 #
-GITVERSION="1.7.4.1"
+GITVERSION="1.7.10.3"
 GITFILE="git-${GITVERSION}.tar.bz2"
-GITURL="http://kernel.org/pub/software/scm/git/${GITFILE}"
-GITSHA1SUM="fff10cb498b17decc146c8f18b0b02136d5e9b88"
+#GITURL="http://kernel.org/pub/software/scm/git/${GITFILE}"
+GITURL="http://git-core.googlecode.com/files/${GITFILE}"
+GITSHA1SUM="172c6ad5a55276213c5e40b83a4c270f6f931b3e"
 GITDIR="git-${GITVERSION}"
 function clean_git {
 	clean_source_dir "${GITDIR}" "${WINEBUILDPATH}"
@@ -2315,6 +2436,9 @@ function get_sources {
 	get_lzo
 	get_libgpgerror
 	get_libgcrypt
+	get_gmp
+	get_nettle
+	get_p11kit
 	get_gnutls
 	get_unixodbc
 	get_libexif
@@ -2368,6 +2492,9 @@ function check_sources {
 	check_lzo
 	check_libgpgerror
 	check_libgcrypt
+	check_gmp
+	check_nettle
+	check_p11kit
 	check_gnutls
 	check_unixodbc
 	check_libexif
@@ -2419,6 +2546,9 @@ function install_prereqs {
 	install_lzo
 	install_libgpgerror
 	install_libgcrypt
+	install_gmp
+	install_nettle
+	install_p11kit
 	install_gnutls
 	install_libxslt
 	install_libexif
