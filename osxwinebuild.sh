@@ -2,7 +2,7 @@
 #
 # Compile and install Wine and many prerequisites in a self-contained directory.
 #
-# Copyright (C) 2009,2010,2011 Ryan Woodsmall <rwoodsmall@gmail.com>
+# Copyright (C) 2009,2010,2011,2012 Ryan Woodsmall <rwoodsmall@gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
