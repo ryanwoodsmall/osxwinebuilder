@@ -567,6 +567,40 @@ function install_package {
 #
 
 #
+# xz
+#
+XZVER="5.0.3"
+XZFILE="xz-${XZVER}.tar.bz2"
+XZURL="http://tukaani.org/xz/${XZFILE}"
+XZSHA1SUM="79661fd1c24603437e325d76732046b1da683b32"
+XZDIR="xz-${XZVER}"
+function clean_xz {
+	clean_source_dir "${XZDIR}" "${WINEBUILDPATH}"
+}
+function get_xz {
+	get_file "${XZFILE}" "${WINESOURCEPATH}" "${XZURL}"
+}
+function check_xz {
+	check_sha1sum "${WINESOURCEPATH}/${XZFILE}" "${XZSHA1SUM}"
+}
+function extract_xz {
+	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${XZFILE}" "${WINEBUILDPATH}" "${XZDIR}"
+}
+function configure_xz {
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --enable-small --disable-assembler" "${WINEBUILDPATH}/${XZDIR}"
+}
+function build_xz {
+	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${XZDIR}"
+}
+function install_xz {
+	clean_xz
+	extract_xz
+	configure_xz
+	build_xz
+	install_package "${MAKE} install" "${WINEBUILDPATH}/${XZDIR}"
+}
+
+#
 # pkg-config
 #
 PKGCONFIGVER="0.25"
@@ -2419,6 +2453,7 @@ function install_wine {
 #   fetches all source packages
 #
 function get_sources {
+	get_xz
 	get_pkgconfig
 	get_gettext
 	get_jpeg
@@ -2475,6 +2510,7 @@ function get_sources {
 #   checks all source SHA-1 sums
 #
 function check_sources {
+	check_xz
 	check_pkgconfig
 	check_gettext
 	check_jpeg
@@ -2530,6 +2566,7 @@ function check_sources {
 #   extracts, builds and installs prereqs
 #
 function install_prereqs {
+	install_xz
 	install_pkgconfig
 	install_gettext
 	install_jpeg
