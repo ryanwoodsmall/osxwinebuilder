@@ -347,6 +347,7 @@ echo "base downloader command: ${CURL} ${CURLOPTS}"
 #   currently we only have gzip/bzip2 tar files
 export TARGZ="tar -zxvf"
 export TARBZ2="tar -jxvf"
+export TARXZ="tarxz"
 export XZ="xz"
 
 # git needs these?
@@ -476,7 +477,11 @@ function extract_file {
 	fi
 	pushd . >/dev/null 2>&1
 	cd ${EXTRACTDIR} || fail_and_exit "could not cd into ${EXTRACTDIR}"
-	${EXTRACTCMD} ${EXTRACTFILE} || fail_and_exit "could not extract ${EXTRACTFILE}"
+	if [ "${EXTRACTCMD}" == "tarxz" ] ; then
+		xzcat ${EXTRACTFILE} | tar -xvf - || fail_and_exit "could not extract ${EXTRACTFILE}"
+	else
+		${EXTRACTCMD} ${EXTRACTFILE} || fail_and_exit "could not extract ${EXTRACTFILE}"
+	fi
 	echo "successfully extracted ${EXTRACTFILE}"
 	popd >/dev/null 2>&1
 }
@@ -601,6 +606,40 @@ function install_xz {
 }
 
 #
+# libffi
+#
+LIBFFIVER="3.0.11"
+LIBFFIFILE="libffi-${LIBFFIVER}.tar.gz"
+LIBFFIURL="ftp://sourceware.org/pub/libffi/${LIBFFIFILE}"
+LIBFFISHA1SUM="bff6a6c886f90ad5e30dee0b46676e8e0297d81d"
+LIBFFIDIR="libffi-${LIBFFIVER}"
+function clean_libffi {
+	clean_source_dir "${LIBFFIDIR}" "${WINEBUILDPATH}"
+}
+function get_libffi {
+	get_file "${LIBFFIFILE}" "${WINESOURCEPATH}" "${LIBFFIURL}"
+}
+function check_libffi {
+	check_sha1sum "${WINESOURCEPATH}/${LIBFFIFILE}" "${LIBFFISHA1SUM}"
+}
+function extract_libffi {
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${LIBFFIFILE}" "${WINEBUILDPATH}" "${LIBFFIDIR}"
+}
+function configure_libffi {
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${LIBFFIDIR}"
+}
+function build_libffi {
+	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${LIBFFIDIR}"
+}
+function install_libffi {
+	clean_libffi
+	extract_libffi
+	configure_libffi
+	build_libffi
+	install_package "${MAKE} install" "${WINEBUILDPATH}/${LIBFFIDIR}"
+}
+
+#
 # pkg-config
 #
 PKGCONFIGVER="0.25"
@@ -632,6 +671,40 @@ function install_pkgconfig {
 	configure_pkgconfig
 	build_pkgconfig
 	install_package "${MAKE} install" "${WINEBUILDPATH}/${PKGCONFIGDIR}"
+}
+
+#
+# pkgconfig026
+#
+PKGCONFIG026VER="0.26"
+PKGCONFIG026FILE="pkg-config-${PKGCONFIG026VER}.tar.gz"
+PKGCONFIG026URL="http://pkgconfig.freedesktop.org/releases/${PKGCONFIG026FILE}"
+PKGCONFIG026SHA1SUM="fd71a70b023b9087c8a7bb76a0dc135a61059652"
+PKGCONFIG026DIR="pkg-config-${PKGCONFIG026VER}"
+function clean_pkgconfig026 {
+	clean_source_dir "${PKGCONFIG026DIR}" "${WINEBUILDPATH}"
+}
+function get_pkgconfig026 {
+	get_file "${PKGCONFIG026FILE}" "${WINESOURCEPATH}" "${PKGCONFIG026URL}"
+}
+function check_pkgconfig026 {
+	check_sha1sum "${WINESOURCEPATH}/${PKGCONFIG026FILE}" "${PKGCONFIG026SHA1SUM}"
+}
+function extract_pkgconfig026 {
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${PKGCONFIG026FILE}" "${WINEBUILDPATH}" "${PKGCONFIG026DIR}"
+}
+function configure_pkgconfig026 {
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${PKGCONFIG026DIR}"
+}
+function build_pkgconfig026 {
+	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${PKGCONFIG026DIR}"
+}
+function install_pkgconfig026 {
+	clean_pkgconfig026
+	extract_pkgconfig026
+	configure_pkgconfig026
+	build_pkgconfig026
+	install_package "${MAKE} install" "${WINEBUILDPATH}/${PKGCONFIG026DIR}"
 }
 
 #
@@ -668,7 +741,7 @@ function configure_gettext {
 	fi
 	echo "successfully changed gettext-tools/Makefile.in"
 	popd
-	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --disable-java --disable-native-java --without-emacs --without-git --without-cvs --disable-csharp --disable-native-java" "${WINEBUILDPATH}/${GETTEXTDIR}"
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --disable-java --disable-native-java --without-emacs --without-git --without-cvs --disable-csharp --disable-native-java --with-included-gettext --with-included-glib --with-included-libcroco --with-included-libxml" "${WINEBUILDPATH}/${GETTEXTDIR}"
 }
 function build_gettext {
 	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${GETTEXTDIR}"
@@ -959,12 +1032,11 @@ function install_libxslt {
 #
 # glib
 #
-GLIBBASEVER="2.28"
-GLIBVER="${GLIBBASEVER}.2"
-GLIBFILE="glib-${GLIBVER}.tar.bz2"
-#GLIBURL="ftp://ftp.gtk.org/pub/glib/${GLIBBASEVER}/${GLIBFILE}"
+GLIBBASEVER="2.32"
+GLIBVER="${GLIBBASEVER}.3"
+GLIBFILE="glib-${GLIBVER}.tar.xz"
 GLIBURL="http://ftp.gnome.org/pub/gnome/sources/glib/${GLIBBASEVER}/${GLIBFILE}"
-GLIBSHA1SUM="a15cb7caedde819ec74bd8b5cdf31f7372e5fd14"
+GLIBSHA1SUM="429355327aaf69d2c21cbefcb20c61db94e0acec"
 GLIBDIR="glib-${GLIBVER}"
 function clean_glib {
 	clean_source_dir "${GLIBDIR}" "${WINEBUILDPATH}"
@@ -976,7 +1048,8 @@ function check_glib {
 	check_sha1sum "${WINESOURCEPATH}/${GLIBFILE}" "${GLIBSHA1SUM}"
 }
 function extract_glib {
-	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${GLIBFILE}" "${WINEBUILDPATH}" "${GLIBDIR}"
+	#extract_file "${TARBZ2}" "${WINESOURCEPATH}/${GLIBFILE}" "${WINEBUILDPATH}" "${GLIBDIR}"
+	extract_file "${TARXZ}" "${WINESOURCEPATH}/${GLIBFILE}" "${WINEBUILDPATH}" "${GLIBDIR}"
 }
 function configure_glib {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${GLIBDIR}"
@@ -2225,8 +2298,7 @@ function install_cabextract {
 # git
 #
 GITVERSION="1.7.10.3"
-GITFILE="git-${GITVERSION}.tar.bz2"
-#GITURL="http://kernel.org/pub/software/scm/git/${GITFILE}"
+GITFILE="git-${GITVERSION}.tar.gz"
 GITURL="http://git-core.googlecode.com/files/${GITFILE}"
 GITSHA1SUM="172c6ad5a55276213c5e40b83a4c270f6f931b3e"
 GITDIR="git-${GITVERSION}"
@@ -2240,7 +2312,7 @@ function check_git {
 	check_sha1sum "${WINESOURCEPATH}/${GITFILE}" "${GITSHA1SUM}"
 }
 function extract_git {
-	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${GITFILE}" "${WINEBUILDPATH}" "${GITDIR}"
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${GITFILE}" "${WINEBUILDPATH}" "${GITDIR}"
 }
 function configure_git {
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX}" "${WINEBUILDPATH}/${GITDIR}"
@@ -2454,7 +2526,9 @@ function install_wine {
 #
 function get_sources {
 	get_xz
+	get_libffi
 	get_pkgconfig
+	get_pkgconfig026
 	get_gettext
 	get_jpeg
 	get_jbigkit
@@ -2496,7 +2570,7 @@ function get_sources {
 	get_gstreamer
 	get_gstpluginsbase
 	get_cabextract
-	#get_git
+	get_git
 	if [ ${BUILDCROSSOVER} -eq 1 ] || [ ${BUILDCXGAMES} -eq 1 ] ; then
 		get_crossover_patches
 	fi
@@ -2511,7 +2585,9 @@ function get_sources {
 #
 function check_sources {
 	check_xz
+	check_libffi
 	check_pkgconfig
+	check_pkgconfig026
 	check_gettext
 	check_jpeg
 	check_jbigkit
@@ -2553,7 +2629,7 @@ function check_sources {
 	check_gstreamer
 	check_gstpluginsbase
 	check_cabextract
-	#check_git
+	check_git
 	if [ ${BUILDCROSSOVER} -eq 1 ] || [ ${BUILDCXGAMES} -eq 1 ] ; then
 		check_crossover_patches
 	fi
@@ -2566,16 +2642,18 @@ function check_sources {
 #   extracts, builds and installs prereqs
 #
 function install_prereqs {
-	install_xz
 	install_pkgconfig
 	install_gettext
+	install_xz
+	install_libffi
+	install_glib
+	install_pkgconfig026
 	install_jpeg
 	install_jbigkit
 	install_tiff
 	install_libpng12
 	#install_libpng14
 	install_libxml2
-	install_glib
 	install_mpg123
 	install_gsm
 	install_freetype
