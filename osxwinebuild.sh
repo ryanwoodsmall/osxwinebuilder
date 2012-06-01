@@ -1048,7 +1048,6 @@ function check_glib {
 	check_sha1sum "${WINESOURCEPATH}/${GLIBFILE}" "${GLIBSHA1SUM}"
 }
 function extract_glib {
-	#extract_file "${TARBZ2}" "${WINESOURCEPATH}/${GLIBFILE}" "${WINEBUILDPATH}" "${GLIBDIR}"
 	extract_file "${TARXZ}" "${WINESOURCEPATH}/${GLIBFILE}" "${WINEBUILDPATH}" "${GLIBDIR}"
 }
 function configure_glib {
