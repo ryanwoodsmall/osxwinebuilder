@@ -383,7 +383,7 @@ int main(void)
   return(0);
 }
 EOF
-	${CC} ${CFLAGS} ${WINEBUILDPATH}/$$_compiler_check.c -o ${WINEBUILDPATH}/$$_compiler_check || fail_and_exit "compiler cannot output executables"
+	${CC} ${CFLAGS} ${WINEBUILDPATH}/$$_compiler_check.c -o ${WINEBUILDPATH}/$$_compiler_check || fail_and_exit "compiler cannot output executables; please make sure Xcode command line tools/Unix development bits are installed"
 	${WINEBUILDPATH}/$$_compiler_check | grep hello >/dev/null 2>&1 || fail_and_exit "source compiled fine, but unexpected output was encountered"
 	echo "compiler works fine for a simple test"
 	rm -f ${WINEBUILDPATH}/$$_compiler_check.c ${WINEBUILDPATH}/$$_compiler_check
@@ -1523,10 +1523,10 @@ function install_p11kit {
 #
 # gnutls
 #
-GNUTLSVER="2.12.9"
+GNUTLSVER="2.12.19"
 GNUTLSFILE="gnutls-${GNUTLSVER}.tar.bz2"
 GNUTLSURL="ftp://ftp.gnu.org/pub/gnu/gnutls/${GNUTLSFILE}"
-GNUTLSSHA1SUM="9a775466d5bf6976e77e5f659d136e0a4733a58a"
+GNUTLSSHA1SUM="643620216ba54b195e41e29abfdcc31125f92d25"
 GNUTLSDIR="gnutls-${GNUTLSVER}"
 function clean_gnutls {
 	clean_source_dir "${GNUTLSDIR}" "${WINEBUILDPATH}"
