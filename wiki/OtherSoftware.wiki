@@ -11,9 +11,11 @@ I will attempt to keep this page updated with every Subversion check in, but svn
 
 || *Project* || *Version* || *Home* || *License* || *Other Info* ||
 || cabextract || 1.4 || [http://www.cabextract.org.uk/] || GPL || used by winetricks ||
+|| ccache || 3.1.7 || [http://ccache.samba.org/] || GPL || cache compiler results ||
 || DOSBox || 0.74 || [http://www.dosbox.com/] || GPL || DOS support for Wine ||
 || Fontconfig || 2.9.0 || [http://www.fontconfig.org/wiki/] || copyright Keith Packard || font configurations for Wine ||
 || !FreeType || 2.4.9 || [http://freetype.sourceforge.net/] || GPL/BSD || font rendering in Wine; patented hinting and subpixel rendering enabled ||
+|| GCC || 4.2.1 (Apple 5666.3) || [http://opensource.apple.com/tarballs/gcc/] || GPL || GNU Compiler Collection for Apple Mac OS X (Lion and newer for now) ||
 || GD || 2.0.36RC1 || [http://www.libgd.org/], [https://bitbucket.org/pierrejoye/gd-libgd] || BSD-like || image manipulation support for libgphoto2 ||
 || gecko || varies || [http://wiki.winehq.org/Gecko], [https://developer.mozilla.org/en/Gecko] || Mozilla tri-license (MPL/GPL/LGPL) || used for HTML rendering in Wine ||
 || gettext || 0.18.1.1 || [http://www.gnu.org/software/gettext/] || LGPL/GPL/GFDL || used for translations ||

@@ -197,6 +197,10 @@ elif [ ${BUILDCXGAMES} -eq 1 ] ; then
 fi
 export WINEINSTALLPATH="${WINEBASEDIR}/${WINEINSTALLDIRPREPEND+${WINEINSTALLDIRPREPEND}}wine-${WINEVERSION}"
 
+# tools path
+#   ccache, gcc, etc.
+export WINETOOLSINSTALLPATH="${WINEBASEDIR}/tools"
+
 echo "${WINETAG} will be installed into ${WINEINSTALLPATH}"
 
 # wine source path
@@ -216,6 +220,9 @@ fi
 # binary path
 #   ~/wine/wine-X.Y.Z/bin
 export WINEBINPATH="${WINEINSTALLPATH}/bin"
+
+# tools binary path
+export WINETOOLSBINPATH="${WINETOOLSINSTALLPATH}/bin"
 
 # include path
 #   ~/wine/wine-X.Y.Z/include
@@ -333,6 +340,9 @@ export CONFIGURE="./configure"
 export CONFIGURECOMMONPREFIX="--prefix=${WINEINSTALLPATH}"
 export CONFIGURECOMMONLIBOPTS="--enable-shared=yes --enable-static=no"
 
+# configure - tools prefix
+export CONFIGURETOOLSPREFIX="--prefix=${WINETOOLSINSTALLPATH}"
+
 # SHA-1 sum program
 #   openssl is available everywhere
 export SHA1SUM="openssl dgst -sha1"
@@ -361,7 +371,7 @@ export NO_DARWIN_PORTS=1
 #   pull out fink, macports, gentoo - what about homebrew?
 #   set our Wine install dir's bin and X11 bin before everything else
 export PATH=$(echo $PATH | tr ":" "\n" | egrep -v ^"(/opt/local|/sw|/opt/gentoo)" | xargs echo  | tr " " ":")
-export PATH="${WINEBINPATH}:${X11BIN}:${PATH}"
+export PATH="${WINEBINPATH}:${WINETOOLSBINPATH}:${X11BIN}:${PATH}"
 
 #
 # helpers
@@ -572,6 +582,132 @@ function install_package {
 #
 
 #
+# ccache
+#
+CCACHEVER="3.1.7"
+CCACHEFILE="ccache-${CCACHEVER}.tar.bz2"
+CCACHEURL="http://samba.org/ftp/ccache/${CCACHEFILE}"
+CCACHESHA1SUM="910313f94b107c8d100f35d580deb95e7e1fd219"
+CCACHEDIR="ccache-${CCACHEVER}"
+function clean_ccache {
+	clean_source_dir "${CCACHEDIR}" "${WINEBUILDPATH}"
+}
+function get_ccache {
+	get_file "${CCACHEFILE}" "${WINESOURCEPATH}" "${CCACHEURL}"
+}
+function check_ccache {
+	check_sha1sum "${WINESOURCEPATH}/${CCACHEFILE}" "${CCACHESHA1SUM}"
+}
+function extract_ccache {
+	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${CCACHEFILE}" "${WINEBUILDPATH}" "${CCACHEDIR}"
+}
+function configure_ccache {
+	configure_package "${CONFIGURE} ${CONFIGURETOOLSPREFIX}" "${WINEBUILDPATH}/${CCACHEDIR}"
+}
+function build_ccache {
+	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${CCACHEDIR}"
+}
+function install_ccache {
+	clean_ccache
+	extract_ccache
+	configure_ccache
+	build_ccache
+	install_package "${MAKE} install" "${WINEBUILDPATH}/${CCACHEDIR}"
+	CCACHECOUNT=$(which ccache | wc -l | tr -d ' ')
+	if [ ${CCACHECOUNT} -ge 1 ] ; then
+		echo "ccache installed, setting CC and C++ variables"
+		echo ${CC} | grep -i ccache >/dev/null 2>&1
+		if [ $? -ne 0 ] ; then
+			export CC="ccache ${CC}"
+		fi
+		echo ${CXX} | grep -i ccache >/dev/null 2>&1
+		if [ $? -ne 0 ] ; then
+			export CXX="ccache ${CXX}"
+		fi
+		echo "C compiler set to: \$CC = \"${CC}\""
+		echo "C++ compiler set to: \$CXX = \"${CXX}\""
+		# XXX - recheck compiler here
+	fi
+}
+
+#
+# apple-gcc
+#   4.2.1 build 5666 dot 3
+#
+APPLEGCCVER="5666.3"
+APPLEGCCFILE="20120601014516_gcc-${APPLEGCCVER}_patched.tar.bz2"
+APPLEGCCURL="http://osxwinebuilder.googlecode.com/files/${APPLEGCCFILE}"
+APPLEGCCSHA1SUM="5af0a9a1c90f876f92e5e0569d4bfbf0b8ee27b6"
+APPLEGCCDIR="gcc-${APPLEGCCVER}"
+function clean_applegcc {
+	clean_source_dir "${APPLEGCCDIR}" "${WINEBUILDPATH}"
+}
+function get_applegcc {
+	get_file "${APPLEGCCFILE}" "${WINESOURCEPATH}" "${APPLEGCCURL}"
+}
+function check_applegcc {
+	check_sha1sum "${WINESOURCEPATH}/${APPLEGCCFILE}" "${APPLEGCCSHA1SUM}"
+}
+function extract_applegcc {
+	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${APPLEGCCFILE}" "${WINEBUILDPATH}" "${APPLEGCCDIR}"
+}
+function install_applegcc {
+	# only build gcc if our default CC is LLVM/CLANG
+	${CC} --version | egrep -i '(llvm|clang)' >/dev/null 2>&1
+	if [ $? -eq 0 ] ; then
+		echo "installing Apple-patched GCC 4.2.1 for i386 only"
+		clean_applegcc
+		extract_applegcc
+		pushd . >/dev/null 2>&1
+		GCCBASEDIR="${WINEBUILDPATH}/${APPLEGCCDIR}"
+		cd ${GCCBASEDIR} || fail_and_exit "could not cd into ${GCCBASEDIR}"
+		# env vars
+		OLDCC=${CC}
+		export LANGUAGES="c,c++,objc,obj-c++"
+		# make install/build_gcc arguments
+		export CC="${CC} -m32 -std=gnu89"
+		export PREFIX="${WINETOOLSINSTALLPATH}"
+		export SRCROOT="${GCCBASEDIR}"
+		export OBJROOT="${SRCROOT}/obj"
+		export SYMROOT="${SRCROOT}/sym"
+		export DSTROOT="${SRCROOT}/dst"
+		export RC_NONARCH_CFLAGS="-pipe -std=gnu89"
+		export RC_OS="macos"
+		export RC_ARCHS="i386"
+		export TARGETS="i386"
+		make install CC="${CC}" PREFIX="${PREFIX}" SRCROOT="${SRCROOT}" OBJROOT="${OBJROOT}" SYMROOT="${SYMROOT}" DSTROOT="${DSTROOT}" RC_NONARCH_CFLAGS="${RC_NONARCH_CFLAGS}" RC_OS="${RC_OS}" RC_ARCHS="${RC_ARCHS}" TARGETS="${TARGETS}" || fail_and_exit "failed to build GCC"
+		echo "copying compiler from '${DSTROOT}${PREFIX}' into place in '${WINETOOLSINSTALLPATH}'"
+		rsync -avHS ${DSTROOT}${PREFIX}/. ${WINETOOLSINSTALLPATH}/. || fail_and_exit "could not copy compiler from '${DSTROOT}${PREFIX}' into '${WINETOOLSINSTALLPATH}'"
+		unset TARGETS
+		unset RC_ARCHS
+		unset RC_OS
+		unset RC_NONARCH_CFLAGS
+		unset DSTROOT
+		unset SYMROOT
+		unset OBJROOT
+		unset SRCROOT
+		unset PREFIX
+		unset LANGUAGES
+		export CC=${OLDCC}
+		popd >/dev/null 2>&1
+		echo "compiler installed, setting up symlinks"
+		pushd . >/dev/null 2>&1
+		cd ${WINETOOLSBINPATH} || fail_and_exit "could not cd into ${WINETOOLSBINPATH} to fix compiler symlinks"
+		ln -Ffs gcc-apple-4.2 cc || fail_and_exit "could not setup 'cc' symlink in ${WINETOOLSBINPATH}"
+		ln -Ffs c++-apple-4.2 c++ || fail_and_exit "could not setup 'c++' symlink in ${WINETOOLSBINPATH}"
+		ln -Ffs cpp-apple-4.2 cpp || fail_and_exit "could not setup 'cpp' symlink in ${WINETOOLSBINPATH}"
+		ln -Ffs gcc-apple-4.2 gcc || fail_and_exit "could not setup 'gcc' symlink in ${WINETOOLSBINPATH}"
+		ln -Ffs g++-apple-4.2 g++ || fail_and_exit "could not setup 'g++' symlink in ${WINETOOLSBINPATH}"
+		ln -Ffs gcov-apple-4.2 gcov || fail_and_exit "could not setup 'gcov' symlink in ${WINETOOLSBINPATH}"
+		popd >/dev/null 2>&1
+		echo "compiler symlinks created"
+		# XXX - recheck compiler here
+	else
+		echo "it doesn't look like LLVM or clang are in use - assuming GCC is working"
+	fi
+}
+
+#
 # xz
 #
 XZVER="5.0.3"
@@ -740,7 +876,7 @@ function configure_gettext {
 		echo "successfully changed gettext-tools/configure for Darwin 11+"
 	fi
 	echo "successfully changed gettext-tools/Makefile.in"
-	popd
+	popd >/dev/null 2>&1
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --disable-java --disable-native-java --without-emacs --without-git --without-cvs --disable-csharp --disable-native-java --with-included-gettext --with-included-glib --with-included-libcroco --with-included-libxml" "${WINEBUILDPATH}/${GETTEXTDIR}"
 }
 function build_gettext {
@@ -1473,7 +1609,7 @@ function configure_nettle {
 	unset ABI
 	export CC=${OLDCC}
 	sed -i.TESTSUITE 's#testsuite##g' Makefile
-	popd
+	popd >/dev/null 2>&1
 }
 function build_nettle {
 	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${NETTLEDIR}"
@@ -1791,7 +1927,7 @@ function configure_sanebackends {
 		cd ${WINEBUILDPATH}/${SANEBACKENDSDIR} || fail_and_exit "could not cd into ${WINEBUILDPATH}/${SANEBACKENDSDIR}"
 		cp include/sane/sane.h{,.ORIG} || fail_and_exit "could not backup include/sane/sane.h"
 		( ( echo '#include <sys/types.h>' ; cat include/sane/sane.h.ORIG ) > include/sane/sane.h ) || fail_and_exit "could not rewrite include/sane/sane.h"
-		popd
+		popd >/dev/null 2>&1
 		echo "successfully fixed SANE backends include"
 	fi
 }
@@ -2202,7 +2338,7 @@ function install_gstreamer {
 	pushd . >/dev/null 2>&1
 	cd ${WINEINCLUDEPATH} || fail_and_exit "could not change into ${WINEINCLUDEPATH}"
 	ln -Ffs gstreamer-${GSTREAMERBASEVER}/gst . || fail_and_exit "could not symlink gstreamer-${GSTREAMERBASEVER}/gst to ${WINEINCLUDEPATH}/gst"
-	popd
+	popd >/dev/null 2>&1
 }
 
 #
@@ -2524,6 +2660,8 @@ function install_wine {
 #   fetches all source packages
 #
 function get_sources {
+	get_ccache
+	get_applegcc
 	get_xz
 	get_libffi
 	get_pkgconfig
@@ -2583,6 +2721,8 @@ function get_sources {
 #   checks all source SHA-1 sums
 #
 function check_sources {
+	check_ccache
+	check_applegcc
 	check_xz
 	check_libffi
 	check_pkgconfig
@@ -2641,6 +2781,11 @@ function check_sources {
 #   extracts, builds and installs prereqs
 #
 function install_prereqs {
+	install_ccache
+	# XXX - only install Apple-specific GCC 4.2.1 on Lion/10.7+
+	if [ ${DARWINMAJ} -ge 11 ] ; then
+		install_applegcc
+	fi
 	install_pkgconfig
 	install_gettext
 	install_xz
