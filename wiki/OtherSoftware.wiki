@@ -45,8 +45,9 @@ I will attempt to keep this page updated with every Subversion check in, but svn
 || libxml2 || 2.8.0 || [http://xmlsoft.org/] || copyright Daniel Veillard || XML support in Wine ||
 || libxslt || 1.1.26 || [http://xmlsoft.org/] || copyright Thomas Broyer, Charlie Bozeman and Daniel Veillard || XSL/XSLT support in Wine ||
 || lzo || 2.06 || [http://www.oberhumer.com/opensource/lzo/] || GPL || used by GnuTLS ||
-|| nettle || 2.4 || [http://www.lysator.liu.se/~nisse/nettle/] || LGPL || crypto library used by gnutls ||
+|| mono || varies || [http://wiki.winehq.org/Mono] || GPL/LGPL/MIT || Mono Wine package for .Net support ||
 || mpg123 || 1.14.2 || [http://www.mpg123.de/] || LGPL || used for MP3/audio support in Wine ||
+|| nettle || 2.4 || [http://www.lysator.liu.se/~nisse/nettle/] || LGPL || crypto library used by gnutls ||
 || orc || 0.4.16 || [http://code.entropywave.com/projects/orc/] || Copyright David A. Schleef, Makoto Matsumoto, Takuji Nishimura|| Oil Runtime Compiler - used for GStreamer plugins||
 || p11-kit || 0.12 || [http://p11-glue.freedesktop.org/] || BSD 3 clause || PKCS#11 support for gnutls ||
 || pkg-config || 0.25/0.26 || [http://pkg-config.freedesktop.org/wiki/] || GPL || used by multiple packages ||

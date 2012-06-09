@@ -112,8 +112,8 @@ WINETAG=""
 WINESTABLEVERSION="1.4"
 WINESTABLESHA1SUM="ce5d56b9b949c01dde663ab39739ffcfb41a73c4"
 #   devel
-WINEDEVELVERSION="1.5.5"
-WINEDEVELSHA1SUM="523c15277995f4edac539b333ab980b5b208f8d0"
+WINEDEVELVERSION="1.5.6"
+WINEDEVELSHA1SUM="c1cd750d974f9e6f0e4958f483264b2492c20150"
 #   CrossOver Wine
 CROSSOVERVERSION="10.1.0"
 CROSSOVERSHA1SUM="8c934d40706249bfb82a82325dfe13b05fa5ebac"
@@ -414,7 +414,7 @@ function get_file {
 	cd ${DIRECTORY} || fail_and_exit "could not cd to ${DIRECTORY}"
 	if [ ! -f ${FILE} ] ; then
 		echo "downloading file ${URL} to ${DIRECTORY}/${FILE}"
-		${CURL} ${CURLOPTS} -o ${FILE} ${URL}
+		${CURL} ${CURLOPTS} -o ${FILE} "${URL}"
 	else
 		echo "${DIRECTORY}/${FILE} already exists - not fetching"
 		popd >/dev/null 2>&1
@@ -2535,6 +2535,38 @@ function install_gecko {
 }
 
 #
+# mono
+#
+MONOVERSIONS="0.0.4"
+MONOSHA1SUMS="7d827f7d28a88ae0da95a136573783124ffce4b1"
+function get_mono {
+	for MONOVERSION in ${MONOVERSIONS} ; do
+		MONOFILE="wine-mono-${MONOVERSION}.msi"
+		MONOURL="http://downloads.sourceforge.net/wine/Wine%20Mono/${MONOVERSION}/${MONOFILE}"
+		get_file "${MONOFILE}" "${WINESOURCEPATH}" "${MONOURL}"
+	done
+}
+function check_mono {
+	MONOSUMPOS=0
+	for MONOVERSION in ${MONOVERSIONS} ; do
+		MONOSUMPOS=$((MONOSUMPOS+1))
+		MONOFILE="wine-mono-${MONOVERSION}.msi"
+		MONOSHA1SUM=$(echo ${MONOSHA1SUMS} | cut -f${MONOSUMPOS} -d\ )
+		check_sha1sum "${WINESOURCEPATH}/${MONOFILE}" "${MONOSHA1SUM}"
+	done
+}
+function install_mono {
+	for MONOVERSION in ${MONOVERSIONS} ; do
+		MONOFILE="wine-mono-${MONOVERSION}.msi"
+		if [ ! -d  "${WINEINSTALLPATH}/share/wine/mono" ] ; then
+			mkdir -p ${WINEINSTALLPATH}/share/wine/mono || fail_and_exit "could not create directory for mono installation"
+		fi
+		echo "installing ${MONOFILE} into ${WINEINSTALLPATH}/share/wine/mono"
+		install -m 644 ${WINESOURCEPATH}/${MONOFILE} ${WINEINSTALLPATH}/share/wine/mono/${MONOFILE} || fail_and_exit "could not put the Wine mono cab in the proper location"      
+	done
+}
+
+#
 # winetricks
 #
 # always get latest version, install as exectuable
@@ -2712,6 +2744,7 @@ function get_sources {
 		get_crossover_patches
 	fi
 	get_gecko
+	get_mono
 	get_winetricks
 	get_wine
 }
@@ -2773,6 +2806,7 @@ function check_sources {
 		check_crossover_patches
 	fi
 	check_gecko
+	check_mono
 	check_wine
 }
 
@@ -2834,6 +2868,7 @@ function install_prereqs {
 	#install_git
 	install_winetricks
 	install_gecko
+	install_mono
 }
 
 #
