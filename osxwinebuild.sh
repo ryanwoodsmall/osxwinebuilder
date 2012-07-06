@@ -112,8 +112,8 @@ WINETAG=""
 WINESTABLEVERSION="1.4.1"
 WINESTABLESHA1SUM="cb79601ca92e8ecb8a5b6b64edc45fd366c3e579"
 #   devel
-WINEDEVELVERSION="1.5.7"
-WINEDEVELSHA1SUM="ae98c193cc885078a775edb03762ba22a398255e"
+WINEDEVELVERSION="1.5.8"
+WINEDEVELSHA1SUM="941fd13262e498e8825c14e2347762d2bd7211ac"
 #   CrossOver Wine
 CROSSOVERVERSION="10.1.0"
 CROSSOVERSHA1SUM="8c934d40706249bfb82a82325dfe13b05fa5ebac"
@@ -308,7 +308,7 @@ export CPPFLAGS="-I${WINEINCLUDEPATH} ${OSXSDK+-isysroot $OSXSDK} -I${X11INC}"
 # some extra flags based on CPU features
 export CPUFLAGS="-mmmx -msse -msse2 -msse3 -mfpmath=sse"
 # set our CFLAGS to something useful, and specify we should be using 32-bit
-export CFLAGS="-g -O2 -arch i386 -m32 ${CPUFLAGS} ${OSXSDK+-isysroot $OSXSDK} ${OSXVERSIONMIN+-mmacosx-version-min=$OSXVERSIONMIN} ${CPPFLAGS}"
+export CFLAGS="-g -O2 -arch i386 -m32 -pipe ${CPUFLAGS} ${OSXSDK+-isysroot $OSXSDK} ${OSXVERSIONMIN+-mmacosx-version-min=$OSXVERSIONMIN} ${CPPFLAGS}"
 export CXXFLAGS=${CFLAGS}
 echo "CFLAGS and CXXFLAGS set to: ${CFLAGS}"
 
