@@ -1578,7 +1578,7 @@ function install_gmp {
 #
 NETTLEVER="2.4"
 NETTLEFILE="nettle-${NETTLEVER}.tar.gz"
-NETTLEURL="ftp://ftp.lysator.liu.se/pub/security/lsh/${NETTLEFILE}"
+NETTLEURL="ftp://ftp.gnu.org/gnu/nettle/${NETTLEFILE}"
 NETTLESHA1SUM="1df0cd013e83f73b78a5521411a67e331de3dfa6"
 NETTLEDIR="nettle-${NETTLEVER}"
 function clean_nettle {
