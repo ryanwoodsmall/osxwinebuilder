@@ -49,6 +49,8 @@ function usage {
 }
 
 # options
+#   XXX - build gcc, patches, etc. flags
+#   TODO - kill cxgames, update crossover
 #   set Wine build type to zero, handle below using flags
 BUILDSTABLE=0
 BUILDDEVEL=0
@@ -112,8 +114,8 @@ WINETAG=""
 WINESTABLEVERSION="1.4.1"
 WINESTABLESHA1SUM="cb79601ca92e8ecb8a5b6b64edc45fd366c3e579"
 #   devel
-WINEDEVELVERSION="1.5.19"
-WINEDEVELSHA1SUM="c98afb2d045e8f744a771b7c7bcc4eb0932d5417"
+WINEDEVELVERSION="1.5.20"
+WINEDEVELSHA1SUM="d1d0ac60d7fe3a710fe886a76cd407e135a47072"
 #   CrossOver Wine
 CROSSOVERVERSION="10.1.0"
 CROSSOVERSHA1SUM="8c934d40706249bfb82a82325dfe13b05fa5ebac"
