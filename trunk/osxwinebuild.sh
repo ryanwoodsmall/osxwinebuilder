@@ -303,7 +303,9 @@ export X11LIB="${X11DIR}/lib"
 export CC
 export CXX
 echo "C compiler set to: \$CC = \"${CC}\""
+echo "full path to ${CC} is:" $(which ${CC})
 echo "C++ compiler set to: \$CXX = \"${CXX}\""
+echo "full path to ${CXX} is:" $(which ${CXX})
 #   preprocessor/compiler flags
 export CPPFLAGS="-I${WINEINCLUDEPATH} ${OSXSDK+-isysroot $OSXSDK} -I${X11INC}"
 
