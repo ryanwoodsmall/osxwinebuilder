@@ -235,11 +235,13 @@ export WINEINCLUDEPATH="${WINEINSTALLPATH}/include"
 export WINELIBPATH="${WINEINSTALLPATH}/lib"
 
 # darwin/os x major version
+#   10.8 = Darwin 12
 #   10.7 = Darwin 11
 #   10.6 = Darwin 10
 #   10.5 = Darwin 9
 #   ...
 export DARWINMAJ=$(uname -r | awk -F. '{print $1}')
+echo "your OS reports itself as:" $(uname -a)
 
 # 16-bit code flag
 #   enable by default, disable on 10.5
@@ -376,6 +378,7 @@ export NO_DARWIN_PORTS=1
 #   set our Wine install dir's bin and X11 bin before everything else
 export PATH=$(echo $PATH | tr ":" "\n" | egrep -v ^"(/opt/local|/sw|/opt/gentoo)" | xargs echo  | tr " " ":")
 export PATH="${WINEBINPATH}:${WINETOOLSBINPATH}:${X11BIN}:${PATH}"
+echo "your path is set to: \${PATH} = ${PATH}"
 
 #
 # helpers
