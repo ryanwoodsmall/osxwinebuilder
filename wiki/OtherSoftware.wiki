@@ -39,6 +39,7 @@ I will attempt to keep this page updated with every Subversion check in, but svn
 || libpng || 1.2.49 || [http://www.libpng.org/] || libpng license || PNG support in Wine ||
 || libtheora|| 1.1.1 || [http://theora.org/] || BSD || Theora video compression format (gst-plugins-base) ||
 || libtiff || 3.9.6 || [http://www.remotesensing.org/libtiff/], [http://libtiff.maptools.org/] || coypright Sam Leffler, Silicon Graphics, Inc || used for TIFF support in Wine ||
+|| libtool || 2.4.2 || [http://www.gnu.org/software/libtool/] || GPL || provides libltdl for Lion+ ||
 || libusb || 1.0.9 || [http://www.libusb.org/] || LGPL || used by sane-backends ||
 || libusb-compat || 0.1.4 || [http://www.libusb.org/] || LGPL || used by libgphoto2 ||
 || libvorbis || 1.3.3 || [http://www.xiph.org/vorbis/] || BSD || Vorbis audio compression format (gst-plugins-base) ||

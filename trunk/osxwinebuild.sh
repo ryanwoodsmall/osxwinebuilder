@@ -298,6 +298,13 @@ export X11BIN="${X11DIR}/bin"
 export X11INC="${X11DIR}/include"
 export X11LIB="${X11DIR}/lib"
 
+# path
+#   pull out fink, macports, gentoo - what about homebrew?
+#   set our Wine install dir's bin and X11 bin before everything else
+export PATH=$(echo $PATH | tr ":" "\n" | egrep -v ^"(/opt/local|/sw|/opt/gentoo)" | xargs echo  | tr " " ":")
+export PATH="${WINEBINPATH}:${WINETOOLSBINPATH}:${X11BIN}:${PATH}"
+echo "your path is set to: \${PATH} = ${PATH}"
+
 # compiler and preprocessor flags
 #   default - set to GCC
 : ${CC:="gcc"}
@@ -372,13 +379,6 @@ export XZ="xz"
 #   so much smarter than us, Git
 export NO_FINK=1
 export NO_DARWIN_PORTS=1
-
-# path
-#   pull out fink, macports, gentoo - what about homebrew?
-#   set our Wine install dir's bin and X11 bin before everything else
-export PATH=$(echo $PATH | tr ":" "\n" | egrep -v ^"(/opt/local|/sw|/opt/gentoo)" | xargs echo  | tr " " ":")
-export PATH="${WINEBINPATH}:${WINETOOLSBINPATH}:${X11BIN}:${PATH}"
-echo "your path is set to: \${PATH} = ${PATH}"
 
 #
 # helpers
@@ -712,6 +712,52 @@ function install_applegcc {
 	else
 		echo "it doesn't look like LLVM or clang are in use - assuming GCC is working"
 	fi
+}
+
+#
+# libtool
+#   XXX - needed for libltdl on (mountain) lion
+#
+LTOOLVER="2.4.2"
+LTOOLFILE="libtool-${LTOOLVER}.tar.gz"
+LTOOLURL="http://ftpmirror.gnu.org/libtool/${LTOOLFILE}"
+LTOOLDIR="libtool-${LTOOLVER}"
+LTOOLSHA1SUM="22b71a8b5ce3ad86e1094e7285981cae10e6ff88"
+function clean_libtool {
+	clean_source_dir "${LTOOLDIR}" "${WINEBUILDPATH}"
+}
+function get_libtool {
+	get_file "${LTOOLFILE}" "${WINESOURCEPATH}" "${LTOOLURL}"
+}
+function check_libtool {
+	check_sha1sum "${WINESOURCEPATH}/${LTOOLFILE}" "${LTOOLSHA1SUM}"
+}
+function extract_libtool {
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${LTOOLFILE}" "${WINEBUILDPATH}" "${LTOOLDIR}"
+}
+function configure_libtool {
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${LTOOLDIR}"
+}
+function build_libtool {
+	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${LTOOLDIR}"
+}
+function install_libtool {
+	clean_libtool
+	extract_libtool
+	configure_libtool
+	build_libtool
+	install_package "${MAKE} install" "${WINEBUILDPATH}/${LTOOLDIR}"
+	pushd . >/dev/null 2>&1
+	#cd "${WINEBUILDPATH}/${LTOOLDIR}/libltdl/.libs"
+	#if [ ! -e ${WINELIBPATH} ] ; then
+	#	mkdir -p ${WINELIBPATH} || fail_and_exit "could not create '${WINELIBPATH}' directory for libtool files"
+	#fi
+	#cp libltdl*.dylib libltdl*.la ${WINELIBPATH}/
+	cd ${WINEBINPATH}
+	for LTBIN in libtool libtoolize ; do
+		mv ${LTBIN}{,.DISABLED}
+	done
+	popd >/dev/null 2>&1
 }
 
 #
@@ -2331,6 +2377,13 @@ function extract_gstreamer {
 	extract_file "${TARBZ2}" "${WINESOURCEPATH}/${GSTREAMERFILE}" "${WINEBUILDPATH}" "${GSTREAMERDIR}"
 }
 function configure_gstreamer {
+	# XXX - ugly - fix flex version reporting on Lion+
+	if [ ${DARWINMAJ} -ge 11 ] ; then
+		pushd . >/dev/null 2>&1
+		cd ${WINEBUILDPATH}/${GSTREAMERDIR}
+		sed -i.ORIG 's/flex_version=\(.*\)/flex_version=2.5.35/g' configure
+		popd >/dev/null 2>&1
+	fi
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS}" "${WINEBUILDPATH}/${GSTREAMERDIR}"
 }
 function build_gstreamer {
@@ -2701,6 +2754,7 @@ function install_wine {
 function get_sources {
 	get_ccache
 	get_applegcc
+	get_libtool
 	get_xz
 	get_libffi
 	get_pkgconfig
@@ -2763,6 +2817,7 @@ function get_sources {
 function check_sources {
 	check_ccache
 	check_applegcc
+	check_libtool
 	check_xz
 	check_libffi
 	check_pkgconfig
@@ -2826,6 +2881,7 @@ function install_prereqs {
 	# XXX - only install Apple-specific GCC 4.2.1 on Lion/10.7+
 	if [ ${DARWINMAJ} -ge 11 ] ; then
 		install_applegcc
+		install_libtool
 	fi
 	install_pkgconfig
 	install_gettext
