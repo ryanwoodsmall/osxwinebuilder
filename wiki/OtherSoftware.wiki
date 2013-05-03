@@ -52,7 +52,7 @@ I will attempt to keep this page updated with every Subversion check in, but svn
 || orc || 0.4.16 || [http://code.entropywave.com/projects/orc/] || Copyright David A. Schleef, Makoto Matsumoto, Takuji Nishimura|| Oil Runtime Compiler - used for GStreamer plugins||
 || p11-kit || 0.12 || [http://p11-glue.freedesktop.org/] || BSD 3 clause || PKCS#11 support for gnutls ||
 || pkg-config || 0.25/0.26 || [http://pkg-config.freedesktop.org/wiki/] || GPL || used by multiple packages ||
-|| SANE Backends || 1.0.22 || [http://www.sane-project.org/] || GPL || scanner/imaging access in Wine ||
+|| SANE Backends || 1.0.23 || [http://www.sane-project.org/] || GPL || scanner/imaging access in Wine ||
 || SDL || 1.2.15 || [http://www.libsdl.org/] || LGPL || cross-platform media library, required for DOSBox ||
 || SDL_net || 1.2.8 || [http://www.libsdl.org/projects/SDL_net/] || LGPL || networking for SDL ||
 || SDL_sound || 1.0.3 || [http://icculus.org/SDL_sound/] || GPL || sound library for SDL ||
