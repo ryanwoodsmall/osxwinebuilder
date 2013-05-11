@@ -114,8 +114,8 @@ WINETAG=""
 WINESTABLEVERSION="1.4.1"
 WINESTABLESHA1SUM="cb79601ca92e8ecb8a5b6b64edc45fd366c3e579"
 #   devel
-WINEDEVELVERSION="1.5.29"
-WINEDEVELSHA1SUM="19c2ee4e44d9ef4db32cb2c16e5603c195c8f42d"
+WINEDEVELVERSION="1.5.30"
+WINEDEVELSHA1SUM="4a2810982794606c3d6d3dde8e0b41432a8d6a90"
 #   CrossOver Wine
 CROSSOVERVERSION="10.1.0"
 CROSSOVERSHA1SUM="8c934d40706249bfb82a82325dfe13b05fa5ebac"
@@ -2714,7 +2714,6 @@ function configure_wine {
 	WINECONFIGUREOPTS+="--with-mpg123 "
 	WINECONFIGUREOPTS+="--with-openal "
 	WINECONFIGUREOPTS+="--with-opengl "
-	WINECONFIGUREOPTS+="--with-openssl "
 	WINECONFIGUREOPTS+="--with-png "
 	WINECONFIGUREOPTS+="--with-pthread "
 	WINECONFIGUREOPTS+="--with-sane "
@@ -2740,11 +2739,22 @@ function install_wine {
 	clean_wine
 	extract_wine
 	configure_wine
-	#depend_wine
 	build_wine
 	install_package "${MAKE} install" "${WINEBUILDPATH}/${WINEDIR}"
 	if [ ${BUILDCROSSOVER} -eq 1 ] || [ ${BUILDCXGAMES} -eq 1 ] ; then
 		ln -Ffs wineloader ${WINEINSTALLPATH}/bin/wine
+	fi
+	# XXX - copy in libwine dylibs if we can't find them
+	# all the cd'ing isn't necessary, just more explicit sanity checking
+	if [ ! -e ${WINELIBPATH}/libwine.1.0.dylib ] ; then
+		echo "could not find installed libwine dynamic lib; copying one in manually"
+		pushd . >/dev/null 2>&1
+		cd ${WINEBUILDPATH}/${WINEDIR}/libs/wine || fail_and_exit "could not cd into ${WINEBUILDPATH}/${WINEDIR}/libs/wine"
+		cp libwine.1.0.dylib ${WINELIBPATH}/ || fail_and_exit "could not copy ${WINEBUILDPATH}/${WINEDIR}/libs/wine/libwine.1.0.dylib into ${WINELIBPATH}"
+		cd ${WINELIBPATH} || fail_and_exit "could not cd into ${WINELIBPATH}"
+		ln -Ffs libwine.1.0.dylib libwine.1.dylib || fail_and_exit "could not symlink libwine.1.0.dylib libwine.1.dylib in ${WINELIBPATH}"
+		ln -Ffs libwine.1.dylib libwine.dylib || fail_and_exit "could not symlink libwine.1.dylib libwine.dylib in ${WINELIBPATH}"
+		popd >/dev/null 2>&1
 	fi
 }
 
