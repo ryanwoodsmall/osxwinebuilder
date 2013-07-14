@@ -2,7 +2,7 @@
 #
 # Compile and install Wine and many prerequisites in a self-contained directory.
 #
-# Copyright (C) 2009,2010,2011,2012 Ryan Woodsmall <rwoodsmall@gmail.com>
+# Copyright (C) 2009,2010,2011,2012,2013 Ryan Woodsmall <rwoodsmall@gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -114,8 +114,8 @@ WINETAG=""
 WINESTABLEVERSION="1.4.1"
 WINESTABLESHA1SUM="cb79601ca92e8ecb8a5b6b64edc45fd366c3e579"
 #   devel
-WINEDEVELVERSION="1.6-rc4"
-WINEDEVELSHA1SUM="8980040f6c27df4e4fd54eb7b29cdac93635b68f"
+WINEDEVELVERSION="1.6-rc5"
+WINEDEVELSHA1SUM="a19c39fab54c83d9e03e06bb506b7885fc45e94b"
 #   CrossOver Wine
 CROSSOVERVERSION="10.1.0"
 CROSSOVERSHA1SUM="8c934d40706249bfb82a82325dfe13b05fa5ebac"
