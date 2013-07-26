@@ -60,5 +60,5 @@ I will attempt to keep this page updated with every Subversion check in, but svn
 || unixODBC || 2.3.0 || [http://www.unixodbc.org/] || LGPL || used for native ODBC bridge to Wine ||
 || winetricks || varies || [http://code.google.com/p/winetricks/] || LGPL || quick install script for some Windows programs ||
 || xz || 5.0.3 || [http://tukaani.org/xz/] || public domain, GPL, LGPL || XZ/LZMA archive support ||
-|| Wine || 1.4.1 (stable), 1.6-rc5 (development) || [http://www.winehq.org/] || LGPL || Wine is used for Wine, right? ||
+|| Wine || 1.6 (stable), 1.6 (development) || [http://www.winehq.org/] || LGPL || Wine is used for Wine, right? ||
 || !CodeWeavers !CrossOver Wine sources || 10.1.1/10.1.0 (Games and standard, respectively) || [http://www.codeweavers.com/products/source] || LGPL || !CodeWeavers builds custom Wine versions for stability and performance purposes ||
