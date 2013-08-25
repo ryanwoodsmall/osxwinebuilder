@@ -28,7 +28,7 @@ I will attempt to keep this page updated with every Subversion check in, but svn
 || !JasPer || 1.900.1 || [http://www.ece.uvic.ca/~mdadams/jasper/] || !JasPer-2.0 || JPEG-2000 support for libicns ||
 || JBIG-KIT || 2.0 || [http://www.cl.cam.ac.uk/~mgk25/jbigkit/] || GPL || used by tiff ||
 || jpeg || 8d || [http://www.ijg.org/] || Independent JPEG Group, copyright Thomas G. Lane, Guido Vollbeding || JPEG support in Wine ||
-|| lcms || 1.19 || [http://www.littlecms.com/] || copyright Marti Maria Saguer, MIT license || used for color management in Wine ||
+|| lcms || 1.19/2.5 || [http://www.littlecms.com/] || copyright Marti Maria Saguer, MIT license || used for color management in Wine ||
 || libexif || 0.6.20 || [http://libexif.sourceforge.net/] || LGPL || used by libgphoto2 ||
 || libffi || 3.0.11 || [http://sourceware.org/libffi/] || something liberal || foreign function interface for glib ||
 || libgcrypt || 1.5.0 || [http://www.gnupg.org/] || GPL || used by GnuTLS ||
@@ -60,5 +60,5 @@ I will attempt to keep this page updated with every Subversion check in, but svn
 || unixODBC || 2.3.0 || [http://www.unixodbc.org/] || LGPL || used for native ODBC bridge to Wine ||
 || winetricks || varies || [http://code.google.com/p/winetricks/] || LGPL || quick install script for some Windows programs ||
 || xz || 5.0.3 || [http://tukaani.org/xz/] || public domain, GPL, LGPL || XZ/LZMA archive support ||
-|| Wine || 1.6 (stable), 1.6 (development) || [http://www.winehq.org/] || LGPL || Wine is used for Wine, right? ||
+|| Wine || 1.6 (stable), 1.7.0 (development) || [http://www.winehq.org/] || LGPL || Wine is used for Wine, right? ||
 || !CodeWeavers !CrossOver Wine sources || 10.1.1/10.1.0 (Games and standard, respectively) || [http://www.codeweavers.com/products/source] || LGPL || !CodeWeavers builds custom Wine versions for stability and performance purposes ||

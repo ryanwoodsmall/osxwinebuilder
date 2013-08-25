@@ -114,8 +114,8 @@ WINETAG=""
 WINESTABLEVERSION="1.6"
 WINESTABLESHA1SUM="f0feb6b5314d0f638fc6d4bdc43cabc028776a9c"
 #   devel
-WINEDEVELVERSION="1.6"
-WINEDEVELSHA1SUM="f0feb6b5314d0f638fc6d4bdc43cabc028776a9c"
+WINEDEVELVERSION="1.7.0"
+WINEDEVELSHA1SUM="6747086821b4ed0a452c5e2d6793f1e09372d06c"
 #   CrossOver Wine
 CROSSOVERVERSION="10.1.0"
 CROSSOVERSHA1SUM="8c934d40706249bfb82a82325dfe13b05fa5ebac"
@@ -1486,6 +1486,42 @@ function install_lcms {
 }
 
 #
+# lcms2
+#
+LCMS2MAJ="2"
+LCMS2MIN="5"
+LCMS2VER="${LCMS2MAJ}.${LCMS2MIN}"
+LCMS2FILE="lcms${LCMS2MAJ}-${LCMS2VER}.tar.gz"
+LCMS2URL="http://downloads.sourceforge.net/lcms/${LCMS2VER}/${LCMS2FILE}"
+LCMS2SHA1SUM="bab3470471fc7756c5fbe71be9a3c7d677d2ee7b"
+LCMS2DIR="lcms${LCMS2MAJ}-${LCMS2VER}"
+function clean_lcms2 {
+	clean_source_dir "${LCMS2DIR}" "${WINEBUILDPATH}"
+}
+function get_lcms2 {
+	get_file "${LCMS2FILE}" "${WINESOURCEPATH}" "${LCMS2URL}"
+}
+function check_lcms2 {
+	check_sha1sum "${WINESOURCEPATH}/${LCMS2FILE}" "${LCMS2SHA1SUM}"
+}
+function extract_lcms2 {
+	extract_file "${TARGZ}" "${WINESOURCEPATH}/${LCMS2FILE}" "${WINEBUILDPATH}" "${LCMS2DIR}"
+}
+function configure_lcms2 {
+	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --with-jpeg --with-tiff --with-zlib" "${WINEBUILDPATH}/${LCMS2DIR}"
+}
+function build_lcms2 {
+	build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${LCMS2DIR}"
+}
+function install_lcms2 {
+	clean_lcms2
+	extract_lcms2
+	configure_lcms2
+	build_lcms2
+	install_package "${MAKE} install" "${WINEBUILDPATH}/${LCMS2DIR}"
+}
+
+#
 # lzo
 #
 LZOVER="2.06"
@@ -2784,6 +2820,7 @@ function get_sources {
 	get_freetype
 	get_fontconfig
 	get_lcms
+	get_lcms2
 	get_lzo
 	get_libgpgerror
 	get_libgcrypt
@@ -2847,6 +2884,7 @@ function check_sources {
 	check_freetype
 	check_fontconfig
 	check_lcms
+	check_lcms2
 	check_lzo
 	check_libgpgerror
 	check_libgcrypt
@@ -2911,6 +2949,7 @@ function install_prereqs {
 	install_freetype
 	install_fontconfig
 	install_lcms
+	install_lcms2
 	install_lzo
 	install_libgpgerror
 	install_libgcrypt
