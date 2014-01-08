@@ -2,7 +2,7 @@
 #
 # Compile and install Wine and many prerequisites in a self-contained directory.
 #
-# Copyright (C) 2009,2010,2011,2012,2013 Ryan Woodsmall <rwoodsmall@gmail.com>
+# Copyright (C) 2009,2010,2011,2012,2013,2014 Ryan Woodsmall <rwoodsmall@gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -235,6 +235,7 @@ export WINEINCLUDEPATH="${WINEINSTALLPATH}/include"
 export WINELIBPATH="${WINEINSTALLPATH}/lib"
 
 # darwin/os x major version
+#   10.9 = Darwin 13
 #   10.8 = Darwin 12
 #   10.7 = Darwin 11
 #   10.6 = Darwin 10
