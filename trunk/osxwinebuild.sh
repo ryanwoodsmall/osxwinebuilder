@@ -406,7 +406,7 @@ function compiler_check {
 	${CC} ${CFLAGS} ${WINEBUILDPATH}/$$_compiler_check_c.c -o ${WINEBUILDPATH}/$$_compiler_check_c || fail_and_exit "compiler '${CC}' cannot output executables; please make sure Xcode command line tools/Unix development bits are installed"
 	${WINEBUILDPATH}/$$_compiler_check_c | grep hello >/dev/null 2>&1 || fail_and_exit "C source compiled fine, but unexpected output was encountered"
 	echo "compiler '${CC}' works fine for a simple test"
-	rm -f ${WINEBUILDPATH}/$$_compiler_check_c.c ${WINEBUILDPATH}/$$_compiler_check_c
+	rm -rf ${WINEBUILDPATH}/$$_compiler_check_c.c ${WINEBUILDPATH}/$$_compiler_check_c ${WINEBUILDPATH}/$$_compiler_check_c.dSYM
 	# check C++ compiler
 	echo "checking compiler '${CXX}'"
 	cat > ${WINEBUILDPATH}/$$_compiler_check_cc.cc <<- EOF
@@ -421,7 +421,7 @@ function compiler_check {
 	${CXX} ${CXXFLAGS} ${WINEBUILDPATH}/$$_compiler_check_cc.cc -o ${WINEBUILDPATH}/$$_compiler_check_cc || fail_and_exit "compiler '${CXX}' cannot output executables; please make sure Xcode command line tools/Unix development bits are installed"
 	${WINEBUILDPATH}/$$_compiler_check_cc | grep hello >/dev/null 2>&1 || fail_and_exit "C++ source compiled fine, but unexpected output was encountered"
 	echo "compiler '${CXX}' works fine for a simple test"
-	rm -f ${WINEBUILDPATH}/$$_compiler_check_cc.cc ${WINEBUILDPATH}/$$_compiler_check_cc
+	rm -rf ${WINEBUILDPATH}/$$_compiler_check_cc.cc ${WINEBUILDPATH}/$$_compiler_check_cc ${WINEBUILDPATH}/$$_compiler_check_cc.dSYM
 }
 
 #
@@ -640,6 +640,7 @@ function install_ccache {
 	install_package "${MAKE} install" "${WINEBUILDPATH}/${CCACHEDIR}"
 	CCACHECOUNT=$(which ccache | wc -l | tr -d ' ')
 	if [ ${CCACHECOUNT} -ge 1 ] ; then
+		echo "ccache found in path at: `which ccache | xargs echo`"
 		echo "ccache installed, setting CC and C++ variables"
 		echo ${CC} | grep -i ccache >/dev/null 2>&1
 		if [ $? -ne 0 ] ; then
