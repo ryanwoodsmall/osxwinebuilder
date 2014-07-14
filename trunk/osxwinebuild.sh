@@ -393,18 +393,35 @@ function compiler_check {
 	if [ ! -d ${WINEBUILDPATH} ] ; then
 		mkdir -p ${WINEBUILDPATH} || fail_and_exit "build directory ${WINEBUILDPATH} doesn't exist and cannot be created"
 	fi
-	cat > ${WINEBUILDPATH}/$$_compiler_check.c << EOF
-#include <stdio.h>
-int main(void)
-{
-  printf("hello\n");
-  return(0);
-}
-EOF
-	${CC} ${CFLAGS} ${WINEBUILDPATH}/$$_compiler_check.c -o ${WINEBUILDPATH}/$$_compiler_check || fail_and_exit "compiler cannot output executables; please make sure Xcode command line tools/Unix development bits are installed"
-	${WINEBUILDPATH}/$$_compiler_check | grep hello >/dev/null 2>&1 || fail_and_exit "source compiled fine, but unexpected output was encountered"
-	echo "compiler works fine for a simple test"
-	rm -f ${WINEBUILDPATH}/$$_compiler_check.c ${WINEBUILDPATH}/$$_compiler_check
+	# check C compiler
+	echo "checking compiler '${CC}'"
+	cat > ${WINEBUILDPATH}/$$_compiler_check_c.c <<- EOF
+	#include <stdio.h>
+	int main(void)
+	{
+	  printf("hello\n");
+	  return(0);
+	}
+	EOF
+	${CC} ${CFLAGS} ${WINEBUILDPATH}/$$_compiler_check_c.c -o ${WINEBUILDPATH}/$$_compiler_check_c || fail_and_exit "compiler '${CC}' cannot output executables; please make sure Xcode command line tools/Unix development bits are installed"
+	${WINEBUILDPATH}/$$_compiler_check_c | grep hello >/dev/null 2>&1 || fail_and_exit "C source compiled fine, but unexpected output was encountered"
+	echo "compiler '${CC}' works fine for a simple test"
+	rm -f ${WINEBUILDPATH}/$$_compiler_check_c.c ${WINEBUILDPATH}/$$_compiler_check_c
+	# check C++ compiler
+	echo "checking compiler '${CXX}'"
+	cat > ${WINEBUILDPATH}/$$_compiler_check_cc.cc <<- EOF
+	#include <iostream>
+	using namespace std;
+	int main(void)
+	{
+	  cout << "hello" << endl;
+	  return(0);
+	}
+	EOF
+	${CXX} ${CXXFLAGS} ${WINEBUILDPATH}/$$_compiler_check_cc.cc -o ${WINEBUILDPATH}/$$_compiler_check_cc || fail_and_exit "compiler '${CXX}' cannot output executables; please make sure Xcode command line tools/Unix development bits are installed"
+	${WINEBUILDPATH}/$$_compiler_check_cc | grep hello >/dev/null 2>&1 || fail_and_exit "C++ source compiled fine, but unexpected output was encountered"
+	echo "compiler '${CXX}' works fine for a simple test"
+	rm -f ${WINEBUILDPATH}/$$_compiler_check_cc.cc ${WINEBUILDPATH}/$$_compiler_check_cc
 }
 
 #
@@ -634,7 +651,8 @@ function install_ccache {
 		fi
 		echo "C compiler set to: \$CC = \"${CC}\""
 		echo "C++ compiler set to: \$CXX = \"${CXX}\""
-		# XXX - recheck compiler here
+		# recheck compiler
+		compiler_check
 	fi
 }
 
