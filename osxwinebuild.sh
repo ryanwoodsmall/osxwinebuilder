@@ -2150,6 +2150,9 @@ function configure_sdl {
 	cd ${WINEBUILDPATH}/${SDLDIR} || fail_and_exit "could not cd to ${WINEBUILDPATH}/${SDLDIR} to patch"
 	sed -i.usr_X11_replacement s#/usr/X11/#${X11DIR}#g configure || fail_and_exit "could not replace /usr/X11/ with ${X11DIR} in ${WINEBUILDPATH}/${SDLDIR}/configure"
 	sed -i.usr_X11R6_replacement s#/usr/X11R6/#${X11DIR}#g configure || fail_and_exit "could not replace /usr/X11R6/ with ${X11DIR} in ${WINEBUILDPATH}/${SDLDIR}/configure"
+	if [ ${DARWINMAJ} -ge 13 ] ; then
+		sed -i.CGDirectPaletteRef s#CGDirectPaletteRef#//CGDirectPaletteRef#g src/video/quartz/SDL_QuartzVideo.h || fail_and_exit "could not fix SDL_QuartzVideo.h for Mavericks+"
+	fi
 	popd >/dev/null 2>&1
 	configure_package "${CONFIGURE} ${CONFIGURECOMMONPREFIX} ${CONFIGURECOMMONLIBOPTS} --x-includes=${X11INC} --x-libraries=${X11LIB}" "${WINEBUILDPATH}/${SDLDIR}"
 }
