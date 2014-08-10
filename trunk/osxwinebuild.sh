@@ -29,7 +29,7 @@ function fail_and_exit {
 # usage
 #   defined early; may be called if "--help" or a bunk option is passed
 function usage {
-	echo "usage: $(basename ${0}) [--help] [--stable] [--devel] [--crossover] [--cxgames] [--no-clean-prefix] [--no-clean-source] [--no-rebuild] [--no-reconfigure]"
+	echo "usage: $(basename ${0}) [--help] [--stable] [--devel] [--crossover] [--no-clean-prefix] [--no-clean-source] [--no-rebuild] [--no-reconfigure]"
 	echo ""
 	echo "  Informational option(s):"
 	echo "    --help: display this help message"
@@ -38,7 +38,6 @@ function usage {
 	echo "    --devel: build the development version of Wine (default)"
 	echo "    --stable: build the stable version of Wine"
 	echo "    --crossover: build Wine using CrossOver sources"
-	echo "    --cxgames: build Wine using CrossOver Games sources"
 	echo ""
 	echo "  Common build options:"
 	echo "    --no-clean-prefix: do not move and create a new prefix if one already exists"
@@ -50,12 +49,11 @@ function usage {
 
 # options
 #   XXX - build gcc, patches, etc. flags
-#   TODO - kill cxgames, update crossover
+#   TODO - update crossover
 #   set Wine build type to zero, handle below using flags
 BUILDSTABLE=0
 BUILDDEVEL=0
 BUILDCROSSOVER=0
-BUILDCXGAMES=0
 #   use this flag to track which Wine we're building
 BUILDFLAG=0
 #   we remove and rebuild everything in a new prefix by default
@@ -82,23 +80,22 @@ if [ ${#} -gt 0 ] ; then
 					BUILDFLAG=$((${BUILDFLAG}+100))
 				fi
 				shift ;;
-			--cxgames)
-				if [ ${BUILDFLAG} -ne 1000 ] ; then
-					BUILDFLAG=$((${BUILDFLAG}+1000))
-				fi
-				shift ;;
 			--no-clean-prefix)
 				NOCLEANPREFIX=1
-				echo "found --no-clean-prefix option, will install to existing prefix if it exists" ; shift ;;
+				echo "found --no-clean-prefix option, will install to existing prefix if it exists"
+				shift ;;
 			--no-clean-source)
 				NOCLEANSOURCE=1
-				echo "found --no-clean-source option, will not remove/rextract existing source directories" ; shift ;;
+				echo "found --no-clean-source option, will not remove/rextract existing source directories"
+				shift ;;
 			--no-rebuild)
 				NOREBUILD=1
-				echo "found --no-rebuild option, will not re-run 'make' on existing source directories" ; shift ;;
+				echo "found --no-rebuild option, will not re-run 'make' on existing source directories"
+				shift ;;
 			--no-reconfigure)
 				NORECONFIGURE=1
-				echo "found --no-reconfigure option, will not re-run 'configure' on existing source directories" ; shift ;;
+				echo "found --no-reconfigure option, will not re-run 'configure' on existing source directories"
+				shift ;;
 			--help)
 				usage ; exit 0 ;;
 			*)
@@ -117,11 +114,8 @@ WINESTABLESHA1SUM="574b9ccedbf213622b7ee55f715764673fc27692"
 WINEDEVELVERSION="1.7.24"
 WINEDEVELSHA1SUM="821fbf2d1d9acbc3e0cb023f4e673f87df7f86fb"
 #   CrossOver Wine
-CROSSOVERVERSION="10.1.0"
-CROSSOVERSHA1SUM="8c934d40706249bfb82a82325dfe13b05fa5ebac"
-#   CrossOver Games Wine
-CXGAMESVERSION="10.1.1"
-CXGAMESSHA1SUM="44404284d82843fb4f01a5e530735b2b1f8927ff"
+CROSSOVERVERSION="13.2.0"
+CROSSOVERSHA1SUM="8bf2283543eb10f7077534bbb9d080a159baee68"
 
 # check our build flag and pick the right version
 if [ ${BUILDFLAG} -eq 1 ] ; then
@@ -142,17 +136,10 @@ elif [ ${BUILDFLAG} -eq 100 ] ; then
 	WINESHA1SUM="${CROSSOVERSHA1SUM}"
 	WINETAG="CrossOver Wine ${WINEVERSION}"
 	echo "found --crossover option, will build Wine from CrossOver sources"
-elif [ ${BUILDFLAG} -eq 1000 ] ; then
-	BUILDCXGAMES=1
-	WINEVERSION="${CXGAMESVERSION}"
-	WINESHA1SUM="${CXGAMESSHA1SUM}"
-	WINETAG="CrossOver Games Wine ${WINEVERSION}"
-	echo "found --cxgames option, will build Wine from CrossOver Games sources"
 else
 	BUILDSTABLE=0
 	BUILDDEVEL=1
 	BUILDCROSSOVER=0
-	BUILDCXGAMES=0
 	WINEVERSION="${WINEDEVELVERSION}"
 	WINESHA1SUM="${WINEDEVELSHA1SUM}"
 	WINETAG="Wine ${WINEVERSION}"
@@ -167,14 +154,10 @@ if [ ${BUILDSTABLE} -eq 1 ] || [ ${BUILDDEVEL} -eq 1 ] ; then
 	WINEFILE="wine-${WINEVERSION}.tar.bz2"
 	WINEURL="http://downloads.sourceforge.net/wine/${WINEFILE}"
 	WINEDIR="wine-${WINEVERSION}"
-elif [ ${BUILDCROSSOVER} -eq 1 ] || [ ${BUILDCXGAMES} -eq 1 ] ; then
-	if [ ${BUILDCROSSOVER} -eq 1 ] ; then
-		WINEFILE="crossover-sources-${WINEVERSION}.tar.gz"
-	elif [ ${BUILDCXGAMES} -eq 1 ] ; then
-		WINEFILE="crossover-games-sources-${WINEVERSION}.tar.gz"
-	fi
+elif [ ${BUILDCROSSOVER} -eq 1 ] ; then
+	WINEFILE="crossover-sources-${WINEVERSION}.tar.gz"
 	WINEURL="http://media.codeweavers.com/pub/crossover/source/${WINEFILE}"
-	WINEDIR="wine"
+	WINEDIR="sources/wine"
 fi
 
 # timestamp
@@ -194,8 +177,6 @@ fi
 WINEINSTALLDIRPREPEND=""
 if [ ${BUILDCROSSOVER} -eq 1 ] ; then
 	WINEINSTALLDIRPREPEND="crossover-"
-elif [ ${BUILDCXGAMES} -eq 1 ] ; then
-	WINEINSTALLDIRPREPEND="crossover-games-"
 fi
 export WINEINSTALLPATH="${WINEBASEDIR}/${WINEINSTALLDIRPREPEND+${WINEINSTALLDIRPREPEND}}wine-${WINEVERSION}"
 
@@ -2592,7 +2573,8 @@ function install_git {
 #
 CROSSOVERPATCHFILES=""
 CROSSOVERPATCHSHA1SUMS=""
-if [ ${BUILDCROSSOVER} -eq 1 ] || [ ${BUILDCXGAMES} -eq 1 ] ; then
+# XXX - disable patches
+if [ ${BUILDCROSSOVER} -eq 69 ] ; then
 	CROSSOVERPATCHFILES="no-quartz-wm-workaround.patch"
 	CROSSOVERPATCHSHA1SUMS="7c16faa0747dc32d010580407afc371a40418309"
 	CROSSOVERPATCHFILEPREFIXSTRIPS="0"
@@ -2729,14 +2711,14 @@ function check_wine {
 function extract_wine {
 	if [ ${BUILDSTABLE} -eq 1 ] || [ ${BUILDDEVEL} -eq 1 ] ; then
 		extract_file "${TARBZ2}" "${WINESOURCEPATH}/${WINEFILE}" "${WINEBUILDPATH}" "${WINEDIR}"
-	elif [ ${BUILDCROSSOVER} -eq 1 ] || [ ${BUILDCXGAMES} -eq 1 ] ; then
+	elif [ ${BUILDCROSSOVER} -eq 1 ] ; then
 		extract_file "${TARGZ}" "${WINESOURCEPATH}/${WINEFILE}" "${WINEBUILDPATH}" "${WINEDIR}"
 		# kill the extra source directories
-		for CXGAMESEXTRADIR in cxgui freetype loki samba ; do
-			if [ -d ${WINEBUILDPATH}/${CXGAMESEXTRADIR} ] ; then
+		for CROSSOVEREXTRADIR in cxgui freetype htmltextview loki makedep quartz-wm samba ; do
+			if [ -d ${WINEBUILDPATH}/sources/${CROSSOVEREXTRADIR} ] ; then
 				pushd . >/dev/null 2>&1
-				cd ${WINEBUILDPATH}
-				rm -rf ${CXGAMESEXTRADIR} || fail_and_exit "could not remove ${WINETAG} extra directory ${WINEBUILDPATH}/${CXGAMESEXTRADIR}"
+				cd ${WINEBUILDPATH}/sources/
+				rm -rf ${CROSSOVEREXTRADIR} || fail_and_exit "could not remove ${WINETAG} extra directory ${WINEBUILDPATH}/sources/${CROSSOVEREXTRADIR}"
 				popd >/dev/null 2>&1
 			fi
 		done
@@ -2744,7 +2726,8 @@ function extract_wine {
 }
 function configure_wine {
 	EXTRAXMLOPTS=""
-	if [ ${BUILDCROSSOVER} -eq 1 ] || [ ${BUILDCXGAMES} -eq 1 ] ; then
+	# XXX - disable handling of extra crossover stuff for now
+	if [ ${BUILDCROSSOVER} -eq 69 ] ; then
 		EXTRAXMLOPTS="=native"
 		pushd . >/dev/null 2>&1
 		cd ${WINEBUILDPATH}/${WINEDIR} || fail_and_exit "could not cd into Wine directory '${WINEBUILDPATH}/${WINEDIR}'"
@@ -2790,7 +2773,7 @@ function build_wine {
 	# CrossOver has some issues building with concurrent make processes for some reason
 	if [ ${BUILDSTABLE} -eq 1 ] || [ ${BUILDDEVEL} -eq 1 ] ; then
 		build_package "${CONCURRENTMAKE}" "${WINEBUILDPATH}/${WINEDIR}"
-	elif [ ${BUILDCROSSOVER} -eq 1 ] || [ ${BUILDCXGAMES} -eq 1 ] ; then
+	elif [ ${BUILDCROSSOVER} -eq 1 ] ; then
 		build_package "${MAKE}" "${WINEBUILDPATH}/${WINEDIR}"
 	fi
 }
@@ -2800,8 +2783,8 @@ function install_wine {
 	configure_wine
 	build_wine
 	install_package "${MAKE} install" "${WINEBUILDPATH}/${WINEDIR}"
-	if [ ${BUILDCROSSOVER} -eq 1 ] || [ ${BUILDCXGAMES} -eq 1 ] ; then
-		ln -Ffs wineloader ${WINEINSTALLPATH}/bin/wine
+	if [ ${BUILDCROSSOVER} -eq 1 ] ; then
+		test -e ${WINEINSTALLPATH}/bin/wine || ln -Ffs wineloader ${WINEINSTALLPATH}/bin/wine
 	fi
 	# XXX - copy in libwine dylibs if we can't find them
 	# all the cd'ing isn't necessary, just more explicit sanity checking
@@ -2872,7 +2855,7 @@ function get_sources {
 	get_gstpluginsbase
 	get_cabextract
 	get_git
-	if [ ${BUILDCROSSOVER} -eq 1 ] || [ ${BUILDCXGAMES} -eq 1 ] ; then
+	if [ ${BUILDCROSSOVER} -eq 1 ] ; then
 		get_crossover_patches
 	fi
 	get_gecko
@@ -2936,7 +2919,7 @@ function check_sources {
 	check_gstpluginsbase
 	check_cabextract
 	check_git
-	if [ ${BUILDCROSSOVER} -eq 1 ] || [ ${BUILDCXGAMES} -eq 1 ] ; then
+	if [ ${BUILDCROSSOVER} -eq 1 ] ; then
 		check_crossover_patches
 	fi
 	check_gecko
