@@ -11,7 +11,7 @@ I will attempt to keep this page updated with every Subversion check in, but svn
 
 || *Project* || *Version* || *Home* || *License* || *Other Info* ||
 || cabextract || 1.4 || [http://www.cabextract.org.uk/] || GPL || used by winetricks ||
-|| ccache || 3.1.9 || [http://ccache.samba.org/] || GPL || cache compiler results ||
+|| ccache || 3.1.10 || [http://ccache.samba.org/] || GPL || cache compiler results ||
 || DOSBox || 0.74 || [http://www.dosbox.com/] || GPL || DOS support for Wine ||
 || Fontconfig || 2.9.0 || [http://www.fontconfig.org/wiki/] || copyright Keith Packard || font configurations for Wine ||
 || !FreeType || 2.4.9 || [http://freetype.sourceforge.net/] || GPL/BSD || font rendering in Wine; patented hinting and subpixel rendering enabled ||
@@ -60,5 +60,5 @@ I will attempt to keep this page updated with every Subversion check in, but svn
 || unixODBC || 2.3.0 || [http://www.unixodbc.org/] || LGPL || used for native ODBC bridge to Wine ||
 || winetricks || varies || [http://code.google.com/p/winetricks/] || LGPL || quick install script for some Windows programs ||
 || xz || 5.0.3 || [http://tukaani.org/xz/] || public domain, GPL, LGPL || XZ/LZMA archive support ||
-|| Wine || 1.6.2 (stable), 1.7.28 (development) || [http://www.winehq.org/] || LGPL || Wine is used for Wine, right? ||
+|| Wine || 1.6.2 (stable), 1.7.29 (development) || [http://www.winehq.org/] || LGPL || Wine is used for Wine, right? ||
 || !CodeWeavers !CrossOver Wine sources || 13.2.0 || [http://www.codeweavers.com/products/source] || LGPL || !CodeWeavers builds custom Wine versions for stability and performance purposes ||
