@@ -114,8 +114,8 @@ WINESTABLESHA1SUM="574b9ccedbf213622b7ee55f715764673fc27692"
 WINEDEVELVERSION="1.7.29"
 WINEDEVELSHA1SUM="581fcf915cba4cbf4f55f2e73b55439e090e96c5"
 #   CrossOver Wine
-CROSSOVERVERSION="13.2.0"
-CROSSOVERSHA1SUM="8bf2283543eb10f7077534bbb9d080a159baee68"
+CROSSOVERVERSION="14.0.0"
+CROSSOVERSHA1SUM="9dfa0a0ee1ced9affde1fc00f4d80da2ce976246"
 
 # check our build flag and pick the right version
 if [ ${BUILDFLAG} -eq 1 ] ; then
@@ -2714,7 +2714,7 @@ function extract_wine {
 	elif [ ${BUILDCROSSOVER} -eq 1 ] ; then
 		extract_file "${TARGZ}" "${WINESOURCEPATH}/${WINEFILE}" "${WINEBUILDPATH}" "${WINEDIR}"
 		# kill the extra source directories
-		for CROSSOVEREXTRADIR in cxgui freetype htmltextview loki makedep quartz-wm samba ; do
+		for CROSSOVEREXTRADIR in cxgui freetype htmltextview loki makedep pyxdg quartz-wm samba samba3 ; do
 			if [ -d ${WINEBUILDPATH}/sources/${CROSSOVEREXTRADIR} ] ; then
 				pushd . >/dev/null 2>&1
 				cd ${WINEBUILDPATH}/sources/
@@ -2722,6 +2722,15 @@ function extract_wine {
 				popd >/dev/null 2>&1
 			fi
 		done
+		# create a dummy distversion.h
+		pushd . >/dev/null 2>&1
+		cd ${WINEBUILDPATH}/sources/wine/include/ || fail_and_exit "could not cd into '${WINEBUILDPATH}/sources/wine/include/'"
+		if [ ! -e distversion.h ] ; then
+			touch distversion.h || fail_and_exit "could not create '${PWD}/distversion.h'"
+			echo '#define WINDEBUG_WHAT_HAPPENED_MESSAGE   "Something broke."' >> distversion.h
+			echo '#define WINDEBUG_USER_SUGGESTION_MESSAGE "File a bug report."' >> distversion.h
+		fi
+		popd >/dev/null 2>&1
 	fi
 }
 function configure_wine {
